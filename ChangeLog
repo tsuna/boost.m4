@@ -1,0 +1,10 @@
+2007-10-31  Benoit Sigoure  <tsuna@lrde.epita.fr>
+
+	Initial version.
+	* ChangeLog: New.
+	* Makefile.am: New.
+	* bootstrap: New.
+	* build-aux/boost.m4: New.
+	(BOOST_REQUIRE): New.
+	* configure.ac: New.
+
