@@ -1,5 +1,14 @@
 2007-10-31  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
+	Add a testsuite.
+	* Makefile.am (SUBDIRS): New.
+	* configure.ac: Adjust for the testsuite.
+	* tests/Makefile.am: New.
+	* tests/atlocal.in: Copy from Makefile.am.
+	* tests/testsuite.at: New.
+
+2007-10-31  Benoit Sigoure  <tsuna@lrde.epita.fr>
+
 	Initial version.
 	* ChangeLog: New.
 	* Makefile.am: New.

@@ -17,6 +17,8 @@ AC_INIT([boost-m4-test], [0.1], [tsuna@lrde.epita.fr])
 AC_CONFIG_AUX_DIR([build-aux])
 AM_INIT_AUTOMAKE([foreign])
 
+AC_PROG_GREP
+AC_PROG_EGREP
 AC_PROG_CXX
 
 version=1.34
@@ -29,6 +31,14 @@ dnl BOOST_REQUIRE([plop])
 dnl m4_define([b_version], [1.34])
 dnl BOOST_REQUIRE(b_version)
 
-AC_CONFIG_FILES([Makefile])
+# Initialize the test suite.
+AC_CONFIG_TESTDIR([tests])
+AM_MISSING_PROG([AUTOM4TE], [autom4te])
+
+AC_CONFIG_FILES([
+  Makefile
+    tests/Makefile
+    tests/atlocal
+])
 
 AC_OUTPUT
