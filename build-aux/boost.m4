@@ -282,6 +282,16 @@ AC_DEFUN([BOOST_FOREACH],
 [BOOST_FIND_HEADER([boost/foreach.hpp])])
 
 
+# BOOST_GRAPH([PREFERED-RT-OPT])
+# ------------------------------
+# Look for Boost.Graphs.  For the documentation of PREFERED-RT-OPT, see the
+# documentation of BOOST_FIND_LIB above.
+AC_DEFUN([BOOST_GRAPH],
+[BOOST_FIND_LIB([graph], [$1],
+                [boost/graph/adjacency_list.hpp], [boost::adjacency_list g;])
+])#BOOST_GRAPH
+
+
 # BOOST_THREADS([PREFERED-RT-OPT])
 # --------------------------------
 # Look for Boost.Threads.  For the documentation of PREFERED-RT-OPT, see the
