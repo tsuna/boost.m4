@@ -242,8 +242,9 @@ AT_CHECK_MACRO([BOOST_REQUIRE $var 0.0], [var=0.0; BOOST_REQUIRE([$var])])
 AT_CHECK_MACRO_CROSS([BOOST_REQUIRE $var 1.0], [var=1.0; BOOST_REQUIRE([$var])])
 AT_CHECK_MACRO([BOOST_REQUIRE $var 1.1.1], [var=1.1.1; BOOST_REQUIRE([$var])])
 
-AT_BANNER([Boost header libraries])
+AT_BANNER([Boost header-only libraries])
 
+AT_CHECK_MACRO([BOOST_CONVERSION])
 AT_CHECK_MACRO([BOOST_FOREACH])
 
 AT_BANNER([Boost libraries])

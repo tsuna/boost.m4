@@ -275,6 +275,15 @@ AC_LANG_POP([C++])dnl
 ])# BOOST_FIND_LIB
 
 
+# BOOST_CONVERSION()
+# ------------------
+# Look for Boost.Conversion (cast / lexical_cast)
+AC_DEFUN([BOOST_CONVERSION],
+[BOOST_FIND_HEADER([boost/cast.hpp])
+BOOST_FIND_HEADER([boost/lexical_cast.hpp])
+])# BOOST_CONVERSION
+
+
 # BOOST_FILESYSTEM([PREFERED-RT-OPT])
 # -----------------------------------
 # Look for Boost.Filesystem.  For the documentation of PREFERED-RT-OPT, see the
@@ -282,7 +291,7 @@ AC_LANG_POP([C++])dnl
 AC_DEFUN([BOOST_FILESYSTEM],
 [BOOST_FIND_LIB([filesystem], [$1],
                 [boost/filesystem.hpp], [boost::filesystem::path p;])
-])#BOOST_FILESYSTEM
+])# BOOST_FILESYSTEM
 
 
 # BOOST_FOREACH()
@@ -299,7 +308,7 @@ AC_DEFUN([BOOST_FOREACH],
 AC_DEFUN([BOOST_GRAPH],
 [BOOST_FIND_LIB([graph], [$1],
                 [boost/graph/adjacency_list.hpp], [boost::adjacency_list g;])
-])#BOOST_GRAPH
+])# BOOST_GRAPH
 
 
 # BOOST_THREADS([PREFERED-RT-OPT])
@@ -309,7 +318,7 @@ AC_DEFUN([BOOST_GRAPH],
 AC_DEFUN([BOOST_THREADS],
 [BOOST_FIND_LIB([thread], [$1],
                 [boost/thread.hpp], [boost::thread t; boost::mutex m;])
-])#BOOST_THREADS
+])# BOOST_THREADS
 
 
 # _BOOST_FIND_COMPILER_TAG()
