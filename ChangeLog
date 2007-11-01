@@ -1,5 +1,10 @@
 2007-11-01  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
+	Add some cross-compilation tests.
+	* tests/testsuite.at: Here.
+
+2007-11-01  Benoit Sigoure  <tsuna@lrde.epita.fr>
+
 	Add a check for Boost.Graph.
 	* build-aux/boost.m4 (BOOST_GRAPH): New.
 	* tests/testsuite.at: Test the new macro.
