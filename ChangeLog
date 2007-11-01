@@ -1,3 +1,11 @@
+2007-11-01  Benoit Sigoure  <tsuna@lrde.epita.fr>
+
+	Add macros to check for Boost libraries and headers.
+	* build-aux/boost.m4 (BOOST_REQUIRE): Restrain variable names to the
+	pseudo /_?boost/i namespace.  Look up the version string of Boost in
+	boost/version.hpp.
+	(BOOST_FIND_HEADER, BOOST_FIND_LIB): New.
+
 2007-10-31  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
 	Add a testsuite.
