@@ -1,5 +1,11 @@
 2007-11-01  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
+	Add macros for Boost.Foreach and Boost.Threads.
+	* build-aux/boost.m4 (BOOST_FOREACH, BOOST_THREADS): New.
+	* tests/testsuite.at: Test the new macros.
+
+2007-11-01  Benoit Sigoure  <tsuna@lrde.epita.fr>
+
 	Fix distcheck.
 	* configure.ac: Use AC_CONFIG_HEADERS.
 	* tests/Makefile.am (CLEANFILES): New.

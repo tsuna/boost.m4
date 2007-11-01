@@ -275,6 +275,23 @@ AC_LANG_POP([C++])dnl
 ])# BOOST_FIND_LIB
 
 
+# BOOST_FOREACH()
+# ---------------
+# Look for Boost.Foreach
+AC_DEFUN([BOOST_FOREACH],
+[BOOST_FIND_HEADER([boost/foreach.hpp])])
+
+
+# BOOST_THREADS([PREFERED-RT-OPT])
+# --------------------------------
+# Look for Boost.Threads.  For the documentation of PREFERED-RT-OPT, see the
+# documentation of BOOST_FIND_LIB above.
+AC_DEFUN([BOOST_THREADS],
+[BOOST_FIND_LIB([thread], [$1],
+                [boost/thread.hpp], [boost::thread t; boost::mutex m;])
+])#BOOST_THREADS
+
+
 # _BOOST_FIND_COMPILER_TAG()
 # --------------------------
 # Internal.  When Boost is installed without --layout=system, each library
