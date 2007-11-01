@@ -123,7 +123,9 @@ m4_define([AT_CHECK_AUTOCONF],
 # Using --srcdir is more expensive.
 m4_define([AT_CHECK_CONFIGURE],
 [AT_CAPTURE_FILE([config.log])[]dnl
- AT_CHECK([top_srcdir=$abs_top_srcdir ./configure $1],
+ AT_CHECK([top_srcdir=$abs_top_srcdir \
+           ./configure --host=$host --build=$build \
+           $CONFIGURE_FLAGS "CXX=$CXX" "LD=$LD" $1],
 	  [$2],
 	  m4_default([$3], [ignore]), [$4])])
 

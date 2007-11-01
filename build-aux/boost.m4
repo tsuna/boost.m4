@@ -71,6 +71,8 @@ m4_bmatch([$1],
 AC_ARG_WITH([boost],
    [AS_HELP_STRING([--with-boost=DIR],
                    [prefix of Boost]BOOST_VERSION_REQ[ @<:@guess@:>@])])dnl
+AC_SUBST([DISTCHECK_CONFIGURE_FLAGS],
+         ["$DISTCHECK_CONFIGURE_FLAGS '--with-boost=$with_boost'"])
   AC_CACHE_CHECK([for Boost headers[]BOOST_VERSION_REQ],
     [boost_cv_inc_path],
     [boost_cv_inc_path=no

@@ -18,6 +18,8 @@ AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_HEADERS([config.h])
 AM_INIT_AUTOMAKE([foreign])
 
+AC_CANONICAL_HOST
+
 AC_PROG_GREP
 AC_PROG_EGREP
 AC_PROG_CXX
@@ -33,6 +35,7 @@ AC_CONFIG_FILES([
   Makefile
     tests/Makefile
     tests/atlocal
+    tests/package.m4
 ])
 
 AC_OUTPUT

@@ -1,5 +1,21 @@
 2007-11-01  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
+	Fix the testsuite to preserve the various arguments of configure.
+	* build-aux/boost.m4 (BOOST_REQUIRE): Define
+	DISTCHECK_CONFIGURE_FLAGS to automatically preserve the --with-boost
+	argument.
+	* configure.ac: Use AC_CANONICAL_HOST.
+	(AC_CONFIG_FILES): Generate tests/package.m4.
+	* tests/Makefile.am (EXTRA_DIST, $(TESTSUITE)): Adjust.
+	No longer need to generate package.m4 since it's now generated from
+	package.m4.in.
+	* tests/atlocal.in (CXX, LD, CONFIGURE_FLAGS, build, host): New.
+	* tests/package.m4.in: New.
+	* tests/testsuite.at: Invoke configure with the proper flags (that
+	is, preserve the original configuration).
+
+2007-11-01  Benoit Sigoure  <tsuna@lrde.epita.fr>
+
 	Add a README.
 	* README: New.
 	* build-aux/boost.m4: Advertise the Git repository.
