@@ -275,6 +275,15 @@ AC_LANG_POP([C++])dnl
 ])# BOOST_FIND_LIB
 
 
+# --------------------------------------- #
+# Checks for the various Boost libraries. #
+# --------------------------------------- #
+
+# List of boost libraries: http://www.boost.org/libs/libraries.htm
+# The page http://beta.boost.org/doc/libs is useful: it gives the first release
+# version of each library (among other things).
+
+
 # BOOST_CONVERSION()
 # ------------------
 # Look for Boost.Conversion (cast / lexical_cast)
@@ -301,6 +310,17 @@ AC_DEFUN([BOOST_FOREACH],
 [BOOST_FIND_HEADER([boost/foreach.hpp])])
 
 
+# BOOST_FORMAT()
+# ------------------
+# Look for Boost.Format
+# Note: we can't check for boost/format/format_fwd.hpp because the header isn't
+# standalone.  It can't be compiled because it triggers the following error:
+# boost/format/detail/config_macros.hpp:88: error: 'locale' in namespace 'std'
+#                                                  does not name a type
+AC_DEFUN([BOOST_FORMAT],
+[BOOST_FIND_HEADER([boost/format.hpp])])
+
+
 # BOOST_GRAPH([PREFERED-RT-OPT])
 # ------------------------------
 # Look for Boost.Graphs.  For the documentation of PREFERED-RT-OPT, see the
@@ -319,6 +339,14 @@ AC_DEFUN([BOOST_THREADS],
 [BOOST_FIND_LIB([thread], [$1],
                 [boost/thread.hpp], [boost::thread t; boost::mutex m;])
 ])# BOOST_THREADS
+
+
+# BOOST_UTILITY()
+# ---------------
+# Look for Boost.Utility (noncopyable, result_of, base-from-member idiom,
+# etc.)
+AC_DEFUN([BOOST_UTILITY],
+[BOOST_FIND_HEADER([boost/utility.hpp])])
 
 
 # _BOOST_FIND_COMPILER_TAG()
