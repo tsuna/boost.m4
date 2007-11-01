@@ -356,6 +356,11 @@ AC_DEFUN([BOOST_VARIANT],
 [BOOST_FIND_HEADER([boost/variant/variant_fwd.hpp])
 BOOST_FIND_HEADER([boost/variant.hpp])])
 
+# _BOOST_gcc_test(MAJOR, MINOR)
+# -----------------------------
+# Internal helper for _BOOST_FIND_COMPILER_TAG.
+m4_define([_BOOST_gcc_test],
+["defined __GNUC__ && __GNUC__ == $1 && __GNUC_MINOR__ == $2 && !defined __ICC @ gcc$1$2"])dnl
 
 # _BOOST_FIND_COMPILER_TAG()
 # --------------------------
@@ -380,19 +385,27 @@ AC_CACHE_CHECK([for the toolset name used by Boost for $CXX], [boost_cv_lib_tag]
   #   como, edg, kcc, bck, mp, sw, tru, xlc
   # I'm not sure about my test for `il' (be careful: Intel's ICC pre-defines
   # the same defines as GCC's).
+  # TODO: Move the test on GCC 4.3 up once it's released.
   for i in \
-    "defined __GNUC__ && __GNUC__ == 4 && !defined __ICC @ gcc4" \
+    _BOOST_gcc_test(4, 2) \
+    _BOOST_gcc_test(4, 1) \
+    _BOOST_gcc_test(4, 0) \
     "defined __GNUC__ && __GNUC__ == 3 && !defined __ICC \
      && (defined WIN32 || defined WINNT || defined _WIN32 || defined __WIN32 \
          || defined __WIN32__ || defined __WINNT || defined __WINNT__) @ mgw" \
-    "defined __GNUC__ && __GNUC__ == 3 && !defined __ICC @ gcc3" \
+    _BOOST_gcc_test(3, 4) \
+    _BOOST_gcc_test(3, 3) \
     "defined _MSC_VER && _MSC_VER >= 1400 @ vc80" \
+    _BOOST_gcc_test(3, 2) \
     "defined _MSC_VER && _MSC_VER == 1310 @ vc71" \
+    _BOOST_gcc_test(3, 1) \
+    _BOOST_gcc_test(3, 0) \
     "defined __BORLANDC__ @ bcb" \
-    "defined __ICL @ iw" \
     "defined __ICC && (defined __unix || defined __unix__) @ il" \
+    "defined __ICL @ iw" \
     "defined _MSC_VER && _MSC_VER == 1300 @ vc7" \
-    "defined __GNUC__ && __GNUC__ == 2 @ gcc2" \
+    _BOOST_gcc_test(4, 3) \
+    _BOOST_gcc_test(2, 95) \
     "defined __MWERKS__ && __MWERKS__ <= 0x32FF @ cw9" \
     "defined _MSC_VER && _MSC_VER < 1300 && !defined UNDER_CE @ vc6" \
     "defined _MSC_VER && _MSC_VER < 1300 && defined UNDER_CE @ evc4" \

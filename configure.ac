@@ -23,6 +23,7 @@ AC_PROG_EGREP
 AC_PROG_CXX
 
 BOOST_REQUIRE([1.34])
+_BOOST_FIND_COMPILER_TAG
 
 # Initialize the test suite.
 AC_CONFIG_TESTDIR([tests])

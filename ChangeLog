@@ -1,5 +1,14 @@
 2007-11-01  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
+	Fix the detection of the toolset name for GCC.
+	* build-aux/boost.m4 (_BOOST_gcc_test): New internal helper.
+	(_BOOST_FIND_COMPILER_TAG): Use _BOOST_gcc_test to take into account
+	the minor version number of GCC into the toolset name.
+	* configure.ac: Invoke _BOOST_FIND_COMPILER_TAG to warn earlier
+	about unknown toolsets.
+
+2007-11-01  Benoit Sigoure  <tsuna@lrde.epita.fr>
+
 	Add a test for Boost.Variant.
 	* build-aux/boost.m4 (BOOST_VARIANT): New.
 	* tests/testsuite.at: Test the new macro.
