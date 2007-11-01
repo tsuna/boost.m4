@@ -1,5 +1,11 @@
 2007-11-01  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
+	Add a test for Boost.Variant.
+	* build-aux/boost.m4 (BOOST_VARIANT): New.
+	* tests/testsuite.at: Test the new macro.
+
+2007-11-01  Benoit Sigoure  <tsuna@lrde.epita.fr>
+
 	Add tests for Boost.Format and Boost.Utility.
 	* build-aux/boost.m4 (BOOST_FORMAT, BOOST_UTILITY): New.
 	* tests/testsuite.at: Test the new macros.

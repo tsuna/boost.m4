@@ -349,6 +349,14 @@ AC_DEFUN([BOOST_UTILITY],
 [BOOST_FIND_HEADER([boost/utility.hpp])])
 
 
+# BOOST_VARIANT()
+# ---------------
+# Look for Boost.Variant.
+AC_DEFUN([BOOST_VARIANT],
+[BOOST_FIND_HEADER([boost/variant/variant_fwd.hpp])
+BOOST_FIND_HEADER([boost/variant.hpp])])
+
+
 # _BOOST_FIND_COMPILER_TAG()
 # --------------------------
 # Internal.  When Boost is installed without --layout=system, each library
