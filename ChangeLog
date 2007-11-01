@@ -1,5 +1,11 @@
 2007-11-01  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
+	Add a check for Boost.Filesystem.
+	* build-aux/boost.m4 (BOOST_FILESYSTEM): New.
+	* tests/testsuite.at: Add a test for the new macro.
+
+2007-11-01  Benoit Sigoure  <tsuna@lrde.epita.fr>
+
 	Add some cross-compilation tests.
 	* tests/testsuite.at: Here.
 

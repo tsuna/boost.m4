@@ -275,6 +275,16 @@ AC_LANG_POP([C++])dnl
 ])# BOOST_FIND_LIB
 
 
+# BOOST_FILESYSTEM([PREFERED-RT-OPT])
+# -----------------------------------
+# Look for Boost.Filesystem.  For the documentation of PREFERED-RT-OPT, see the
+# documentation of BOOST_FIND_LIB above.
+AC_DEFUN([BOOST_FILESYSTEM],
+[BOOST_FIND_LIB([filesystem], [$1],
+                [boost/filesystem.hpp], [boost::filesystem::path p;])
+])#BOOST_FILESYSTEM
+
+
 # BOOST_FOREACH()
 # ---------------
 # Look for Boost.Foreach
