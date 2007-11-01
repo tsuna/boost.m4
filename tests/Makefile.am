@@ -15,8 +15,9 @@
 
 EXTRA_DIST = testsuite.at $(TESTSUITE) atlocal.in package.m4
 TESTSUITE = $(srcdir)/testsuite
+CLEANFILES = atconfig
 
-$(srcdir)/package.m4: Makefile
+$(srcdir)/package.m4: Makefile.in
 	{					\
 	  echo '# Signature of the current package.'; \
 	  echo 'm4_define([AT_PACKAGE_NAME],      [$(PACKAGE_NAME)])'; \
@@ -29,9 +30,9 @@ $(srcdir)/package.m4: Makefile
 check-local: atconfig atlocal $(TESTSUITE)
 	$(SHELL) $(TESTSUITE) $(TESTSUITEFLAGS)
 
-# Run the test suite on the *installed* tree.
-installcheck-local: atconfig atlocal $(TESTSUITE)
-	$(SHELL) $(TESTSUITE) AUTOTEST_PATH="$(bindir)" $(TESTSUITEFLAGS)
+# Run the test suite on the *installed* tree (not necessary ATM => disabled).
+#installcheck-local: atconfig atlocal $(TESTSUITE)
+#	$(SHELL) $(TESTSUITE) AUTOTEST_PATH="$(bindir)" $(TESTSUITEFLAGS)
 
 clean-local:
 	test ! -f $(TESTSUITE) || $(SHELL) $(TESTSUITE) --clean

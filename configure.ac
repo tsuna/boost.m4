@@ -15,21 +15,14 @@
 
 AC_INIT([boost-m4-test], [0.1], [tsuna@lrde.epita.fr])
 AC_CONFIG_AUX_DIR([build-aux])
+AC_CONFIG_HEADERS([config.h])
 AM_INIT_AUTOMAKE([foreign])
 
 AC_PROG_GREP
 AC_PROG_EGREP
 AC_PROG_CXX
 
-version=1.34
-dnl version=bad
-dnl version=1.
-dnl BOOST_REQUIRE([$version])
 BOOST_REQUIRE([1.34])
-dnl BOOST_REQUIRE
-dnl BOOST_REQUIRE([plop])
-dnl m4_define([b_version], [1.34])
-dnl BOOST_REQUIRE(b_version)
 
 # Initialize the test suite.
 AC_CONFIG_TESTDIR([tests])

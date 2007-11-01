@@ -1,5 +1,12 @@
 2007-11-01  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
+	Fix distcheck.
+	* configure.ac: Use AC_CONFIG_HEADERS.
+	* tests/Makefile.am (CLEANFILES): New.
+	Make package.m4 depend on Makefile.in.  Disable installcheck-local.
+
+2007-11-01  Benoit Sigoure  <tsuna@lrde.epita.fr>
+
 	Add macros to check for Boost libraries and headers.
 	* build-aux/boost.m4 (BOOST_REQUIRE): Restrain variable names to the
 	pseudo /_?boost/i namespace.  Look up the version string of Boost in
