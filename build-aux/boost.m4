@@ -15,6 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # serial 1
+# Original sources can be found at http://repo.or.cz/w/boost.m4.git
 
 # ------ #
 # README #
