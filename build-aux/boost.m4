@@ -358,6 +358,7 @@ CPPFLAGS="$CPPFLAGS $boost_cv_pthread_flag"
 BOOST_FIND_LIB([thread], [$1],
                 [boost/thread.hpp], [boost::thread t; boost::mutex m;])
 BOOST_THREAD_LIBS="$BOOST_THREAD_LIBS $boost_cv_pthread_flag"
+BOOST_CPPFLAGS="$BOOST_CPPFLAGS $boost_cv_pthread_flag"
 LIBS=$boost_threads_save_LIBS
 CPPFLAGS=$boost_threads_save_CPPFLAGS
 ])# BOOST_THREADS

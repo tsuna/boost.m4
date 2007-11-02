@@ -1,5 +1,11 @@
 2007-11-02  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
+	Another fix for GCC3 and Boost.Thread.
+	* build-aux/boost.m4 (BOOST_THREADS): Put -pthread in
+	BOOST_CPPFLAGS (required for GCC3).
+
+2007-11-02  Benoit Sigoure  <tsuna@lrde.epita.fr>
+
 	Change the order of the tests.
 	* tests/testsuite.at: Do the tests that require linking first
 	(because they are more likely to fail).
