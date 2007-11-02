@@ -1,5 +1,16 @@
 2007-11-02  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
+	Fix distcheck.
+	* AUTHORS: New.
+	* NEWS: New.
+	* README: Mention the license and how to fetch the latest version.
+	* build-aux/boost.m4: Mention how to fetch the latest version.
+	* configure.ac (AM_INIT_AUTOMAKE): Drop `foreign'.
+	* tests/Makefile.am ($(TESTSUITE)): Adjust dependencies to fix
+	distcheck.
+
+2007-11-02  Benoit Sigoure  <tsuna@lrde.epita.fr>
+
 	Properly find the pthreads flags for use with Boost.Thread.
 	* build-aux/boost.m4 (_BOOST_PTHREAD_FLAG): New internal helper.
 	(BOOST_THREADS): Use it.  Use the pthread flag during the tests for

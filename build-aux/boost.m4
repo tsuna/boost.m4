@@ -16,6 +16,8 @@
 
 # serial 1
 # Original sources can be found at http://repo.or.cz/w/boost.m4.git
+# You can fetch the latest version of the script by doing:
+#   wget 'http://repo.or.cz/w/boost.m4.git?a=blob_plain;f=build-aux/boost.m4;hb=HEAD' -O boost.m4
 
 # ------ #
 # README #

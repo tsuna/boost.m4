@@ -30,7 +30,7 @@ clean-local:
 
 AUTOTEST = $(AUTOM4TE) --language=autotest
 
-$(TESTSUITE): package.m4 $(srcdir)/testsuite.at
+$(TESTSUITE): $(srcdir)/package.m4.in $(srcdir)/testsuite.at
 	$(AUTOTEST) -I '$(srcdir)' $@.at -o $@.tmp
 	mv $@.tmp $@
 
