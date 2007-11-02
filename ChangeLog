@@ -1,3 +1,12 @@
+2007-11-02  Benoit Sigoure  <tsuna@lrde.epita.fr>
+
+	Properly find the pthreads flags for use with Boost.Thread.
+	* build-aux/boost.m4 (_BOOST_PTHREAD_FLAG): New internal helper.
+	(BOOST_THREADS): Use it.  Use the pthread flag during the tests for
+	Boost.Thread.
+	* tests/testsuite.at: Since the test for Boost.Thread is now more
+	costly, do the cross-compilation test with Boost.Filesystem instead.
+
 2007-11-01  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
 	Fix the testsuite to preserve the various arguments of configure.

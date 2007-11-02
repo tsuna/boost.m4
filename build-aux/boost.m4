@@ -336,11 +336,28 @@ AC_DEFUN([BOOST_GRAPH],
 
 # BOOST_THREADS([PREFERED-RT-OPT])
 # --------------------------------
-# Look for Boost.Threads.  For the documentation of PREFERED-RT-OPT, see the
+# Look for Boost.Thread.  For the documentation of PREFERED-RT-OPT, see the
 # documentation of BOOST_FIND_LIB above.
+# FIXME: Provide an alias "BOOST_THREAD".
 AC_DEFUN([BOOST_THREADS],
-[BOOST_FIND_LIB([thread], [$1],
+[dnl Having the pthread flag is required at least on GCC3 where
+dnl boost/thread.hpp would complain if we try to compile without
+dnl -pthread on GNU/Linux.
+AC_REQUIRE([_BOOST_PTHREAD_FLAG])dnl
+boost_threads_save_LIBS=$LIBS
+# Yes, we *need* to put the -pthread thing in CPPFLAGS because with GCC3,
+# boost/thread.hpp will trigger a #error if -pthread isn't used:
+#   boost/config/requires_threads.hpp:47:5: #error "Compiler threading support
+#   is not turned on. Please set the correct command line options for
+#   threading: -pthread (Linux), -pthreads (Sola ris) or -mthreads (Mingw32)"
+boost_threads_save_CPPFLAGS=$LIBS
+LIBS="$LIBS $boost_cv_pthread_flag"
+CPPFLAGS="$CPPFLAGS $boost_cv_pthread_flag"
+BOOST_FIND_LIB([thread], [$1],
                 [boost/thread.hpp], [boost::thread t; boost::mutex m;])
+BOOST_THREAD_LIBS="$BOOST_THREAD_LIBS $boost_cv_pthread_flag"
+LIBS=$boost_threads_save_LIBS
+CPPFLAGS=$boost_threads_save_CPPFLAGS
 ])# BOOST_THREADS
 
 
@@ -359,11 +376,83 @@ AC_DEFUN([BOOST_VARIANT],
 [BOOST_FIND_HEADER([boost/variant/variant_fwd.hpp])
 BOOST_FIND_HEADER([boost/variant.hpp])])
 
+
+# ----------------- #
+# Internal helpers. #
+# ----------------- #
+
+
+# _BOOST_PTHREAD_FLAG()
+# ---------------------
+# Internal helper for BOOST_THREADS.  Based on ACX_PTHREAD:
+# http://autoconf-archive.cryp.to/acx_pthread.html
+AC_DEFUN([_BOOST_PTHREAD_FLAG],
+[AC_REQUIRE([AC_PROG_CXX])dnl
+AC_REQUIRE([AC_CANONICAL_HOST])dnl
+AC_LANG_PUSH([C++])dnl
+AC_CACHE_CHECK([for the flags needed to use pthreads], [boost_cv_pthread_flag],
+[ boost_cv_pthread_flag=
+  # The ordering *is* (sometimes) important.  Some notes on the
+  # individual items follow:
+  # (none): in case threads are in libc; should be tried before -Kthread and
+  #       other compiler flags to prevent continual compiler warnings
+  # -lpthreads: AIX (must check this before -lpthread)
+  # -Kthread: Sequent (threads in libc, but -Kthread needed for pthread.h)
+  # -kthread: FreeBSD kernel threads (preferred to -pthread since SMP-able)
+  # -llthread: LinuxThreads port on FreeBSD (also preferred to -pthread)
+  # -pthread: GNU Linux/GCC (kernel threads), BSD/GCC (userland threads)
+  # -pthreads: Solaris/GCC
+  # -mthreads: MinGW32/GCC, Lynx/GCC
+  # -mt: Sun Workshop C (may only link SunOS threads [-lthread], but it
+  #      doesn't hurt to check since this sometimes defines pthreads too;
+  #      also defines -D_REENTRANT)
+  #      ... -mt is also the pthreads flag for HP/aCC
+  # -lpthread: GNU Linux, etc.
+  # --thread-safe: KAI C++
+  case $host_os in #(
+    *solaris*)
+      # On Solaris (at least, for some versions), libc contains stubbed
+      # (non-functional) versions of the pthreads routines, so link-based
+      # tests will erroneously succeed.  (We need to link with -pthreads/-mt/
+      # -lpthread.)  (The stubs are missing pthread_cleanup_push, or rather
+      # a function called by this macro, so we could check for that, but
+      # who knows whether they'll stub that too in a future libc.)  So,
+      # we'll just look for -pthreads and -lpthread first:
+      boost_pthread_flags="-pthreads -lpthread -mt -pthread";; #(
+    *)
+      boost_pthread_flags="-lpthreads -Kthread -kthread -llthread -pthread \
+                           -pthreads -mthreads -lpthread --thread-safe -mt";;
+  esac
+  # Generate the test file.
+  AC_LANG_CONFTEST([AC_LANG_PROGRAM([#include <pthread.h>],
+    [pthread_t th; pthread_join(th, 0);
+    pthread_attr_init(0); pthread_cleanup_push(0, 0);
+    pthread_create(0,0,0,0); pthread_cleanup_pop(0);])])
+  for boost_pthread_flag in '' $boost_pthread_flags; do
+    boost_pthread_ok=false
+dnl Re-use the test file already generated.
+    boost_pthreads__save_LIBS=$LIBS
+    LIBS="$LIBS $boost_pthread_flag"
+    AC_LINK_IFELSE([],
+      [if grep ".*$boost_pthread_flag" conftest.err; then
+         echo "This flag seems to have triggered warnings" >&AS_MESSAGE_LOG_FD
+       else
+         boost_pthread_ok=:; boost_cv_pthread_flag=$boost_pthread_flag
+       fi])
+    LIBS=$boost_pthreads__save_LIBS
+    $boost_pthread_ok && break
+  done
+])
+AC_LANG_POP([C++])dnl
+])# _BOOST_PTHREAD_FLAG
+
+
 # _BOOST_gcc_test(MAJOR, MINOR)
 # -----------------------------
 # Internal helper for _BOOST_FIND_COMPILER_TAG.
 m4_define([_BOOST_gcc_test],
 ["defined __GNUC__ && __GNUC__ == $1 && __GNUC_MINOR__ == $2 && !defined __ICC @ gcc$1$2"])dnl
+
 
 # _BOOST_FIND_COMPILER_TAG()
 # --------------------------
