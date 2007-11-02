@@ -1,5 +1,13 @@
 2007-11-02  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
+	Add tests for SmartPtr, StringAlgo, Tribool and Tuple.
+	* README: Mention the new libraries.
+	* build-aux/boost.m4 (BOOST_SMART_PTR, BOOST_STRING_ALGO)
+	(BOOST_TRIBOOL, BOOST_TUPLE): New.
+	* tests/testsuite.at: Test the new macros.
+
+2007-11-02  Benoit Sigoure  <tsuna@lrde.epita.fr>
+
 	Fix distcheck.
 	* AUTHORS: New.
 	* NEWS: New.

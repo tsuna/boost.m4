@@ -84,6 +84,10 @@ implemented:
     - Foreach
     - Format
     - Utility
+    - SmartPtr
+    - StringAlgo
+    - Tribool
+    - Tuple
     - Variant
 Thus you can invoke BOOST_FOREACH (for instance).  It will check that
 <boost/foreach.hpp> works and define the preprocessor symbol

@@ -363,6 +363,39 @@ CPPFLAGS=$boost_threads_save_CPPFLAGS
 ])# BOOST_THREADS
 
 
+# BOOST_SMART_PTR()
+# -----------------
+# Look for Boost.SmartPtr
+AC_DEFUN([BOOST_SMART_PTR],
+[BOOST_FIND_HEADER([boost/scoped_ptr.hpp])
+BOOST_FIND_HEADER([boost/shared_ptr.hpp])
+])
+
+
+# BOOST_STRING_ALGO()
+# -------------------
+# Look for Boost.StringAlgo
+AC_DEFUN([BOOST_STRING_ALGO],
+[BOOST_FIND_HEADER([boost/algorithm/string.hpp])
+])
+
+
+# BOOST_TRIBOOL()
+# -----------------
+# Look for Boost.Tribool
+AC_DEFUN([BOOST_TRIBOOL],
+[BOOST_FIND_HEADER([boost/logic/tribool_fwd.hpp])
+BOOST_FIND_HEADER([boost/logic/tribool.hpp])
+])
+
+
+# BOOST_TUPLE()
+# -------------
+# Look for Boost.Tuple
+AC_DEFUN([BOOST_TUPLE],
+[BOOST_FIND_HEADER([boost/tuple/tuple.hpp])])
+
+
 # BOOST_UTILITY()
 # ---------------
 # Look for Boost.Utility (noncopyable, result_of, base-from-member idiom,
