@@ -28,6 +28,7 @@
 # find the Boost headers of a given (optional) minimum version and it will
 # define BOOST_CPPFLAGS accordingly.  It will add an option --with-boost to
 # your configure so that users can specify non standard locations.
+# For more README and documentation, go to http://repo.or.cz/w/boost.m4.git
 
 m4_pattern_forbid([^_?BOOST_])
 
@@ -243,19 +244,23 @@ for boost_rtopt_ in $boost_rtopt '' -d; do
     esac
     boost_save_LIBS=$LIBS
     LIBS="-l$boost_lib $LIBS"
-    for boost_ldpath in "$with_boost/lib" '' \
+    # If with_boost is empty, we'll search in /lib first, which is not quite
+    # right so instead we'll try to a location based on where the headers are.
+    boost_tmp_lib=$with_boost
+    test x"$with_boost" = x && boost_tmp_lib=${boost_cv_inc_path%/include}
+    for boost_ldpath in "$boost_tmp_lib/lib" '' \
              /opt/local/lib /usr/local/lib /opt/lib /usr/lib \
              "$with_boost" C:/Boost/lib /lib /usr/lib64 /lib64
     do
       test -e "$boost_ldpath" || continue
       boost_save_LDFLAGS=$LDFLAGS
-      test x"$boost_ldpath" != x && LDFLAGS="$LDFLAGS -L$boost_ldpath"
+      test x"$boost_ldpath" != x && LDFLAGS="$LDFLAGS -L$boost_ldpath -R$boost_ldpath"
 dnl First argument of AC_LINK_IFELSE left empty because the test file is
 dnl generated only once above (before we start the for loops).
       AC_LINK_IFELSE([],
                      [Boost_lib=yes], [Boost_lib=no])
       if test x"$Boost_lib" = xyes; then
-        Boost_lib_LDFLAGS="-L$boost_ldpath"
+        Boost_lib_LDFLAGS="-L$boost_ldpath -R$boost_ldpath"
         Boost_lib_LIBS="-l$boost_lib"
         break 6
       else

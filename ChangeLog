@@ -1,3 +1,18 @@
+2007-11-03  Benoit Sigoure  <tsuna@lrde.epita.fr>
+
+	Use Libtool and -R to encode run paths.
+	* README: Mention the dependencies more clearly near the beginning.
+	Add a step to use Libtool if it's not already used.
+	* build-aux/boost.m4 (BOOST_FIND_LIB): Add -R flags in the LDFLAGS
+	and fix a bug when --with-boost isn't used which leads to
+	$with_boost being empty which leads that /lib is checked first.
+	* configure.ac: Invoke AC_PROG_LIBTOOL.
+	* tests/testsuite.at (AT_CONFIGURE_AC): Import the content of
+	aclocal.m4 without the m4_include's in order to use AC_PROG_LIBTOOL
+	without getting the hassle of libtoolize.
+	(AT_CHECK_MACRO): Do not pass -W obsolete to autoconf to avoid
+	spurious warnings due to Libtool.
+
 2007-11-02  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
 	Another fix for GCC3 and Boost.Thread.

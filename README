@@ -7,10 +7,13 @@
   |                                                 |
   `-------------------------------------------------'
 
-This package provides a set of M4 macros to use with Autoconf.  The purpose
-of these macros is to be able to easily find and test the various Boost
-libraries of a given version for a given compiler.  This package is released
-under GPLv3+.
+This package provides a set of M4 macros to use with GNU Autoconf.  The
+purpose of these macros is to be able to easily find and test the various
+Boost libraries of a given version for a given compiler.  This package is
+released under GPLv3+.
+This macro requires that you use GNU Libtool and assumes that you already
+use GNU Automake.  If you don't already use Libtool, the step 3 below
+explains how to set it up.
 
 HOWTO
 -----
@@ -24,9 +27,17 @@ HOWTO
    where `<dir>' is the (relative) path to the directory where you copied
    boost.m4 (set it to `.' if you put boost.m4 in the same, top-level
    directory).
-3. Add a call to BOOST_REQUIRE to your configure.ac as well as other calls to
-   the various BOOST_* macros that check for the libraries you need.
-4. Adjust your Makefile.am where you build targets that depend on Boost so
+3. If you don't use GNU Libtool already, then time has come to do the switch.
+   Add AC_PROG_LIBTOOL to your configure.ac then, in all the Makefile.am of
+   your project, change *_LIBRARIES to *_LTLIBRARIES (notice the extra `LT')
+   for each of your library that depends on Boost.  This way, Automake will
+   delegate the build of your libraries to Libtool which will do the necessary
+   magic so that you won't have to deal with LD_LIBRARY_PATH issues and so on.
+   For programs however, you don't have anything special to do, Libtool will
+   take care of them.
+4. Then, add a call to BOOST_REQUIRE to your configure.ac as well as other
+   calls to the various BOOST_* macros that check for the libraries you need.
+5. Adjust your Makefile.am where you build targets that depend on Boost so
    that they use $(BOOST_CPPFLAGS), $(BOOST_*_LDFLAGS) and $(BOOST_*_LIBS)
    where appropriate (where `*' is the capitalized name of one of the
    libraries you checked for, e.g.: $(BOOST_THREADS_LDFLAGS)). E.g.:

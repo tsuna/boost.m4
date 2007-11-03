@@ -16,9 +16,11 @@
 AC_INIT([boost-m4-test], [0.1], [tsuna@lrde.epita.fr])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_HEADERS([config.h])
-AM_INIT_AUTOMAKE([])
+AM_INIT_AUTOMAKE
 
 AC_CANONICAL_HOST
+
+AC_PROG_LIBTOOL
 
 AC_PROG_GREP
 AC_PROG_EGREP
