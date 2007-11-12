@@ -1,5 +1,13 @@
 2007-11-12  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
+	Add keywords to the testsuite.
+	* tests/testsuite.at (AT_CHECK_MACRO, AT_CHECK_MACRO_CROSS): Add an
+	argument in 2nd position (minor backward imcompatible change) to
+	specify keywords for the tests.
+	Use keywords for all tests (core/lib/header with or without cross).
+
+2007-11-12  Benoit Sigoure  <tsuna@lrde.epita.fr>
+
 	Add tests for Boost.Program_options.
 	* README: Mention the new library.
 	* build-aux/boost.m4 (BOOST_PROGRAM_OPTIONS): New macro.

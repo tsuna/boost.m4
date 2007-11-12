@@ -176,9 +176,9 @@ AT_CMP([at_config_vars-$1], [at_config_vars-$2])[]dnl
 ])# AT_CONFIG_CMP
 
 
-# AT_CHECK_MACRO(MACRO, [MACRO-USE], [ADDITIONAL-CMDS],
+# AT_CHECK_MACRO(MACRO, [KEYWORDS], [MACRO-USE], [ADDITIONAL-CMDS],
 #                [AUTOCONF-FLAGS = -W obsolete])
-# -----------------------------------------------------
+# -----------------------------------------------------------------
 # Create a minimalist configure.ac running the macro named
 # NAME-OF-THE-MACRO, check that autoconf runs on that script,
 # and that the shell runs correctly the configure.
@@ -187,16 +187,18 @@ AT_CMP([at_config_vars-$1], [at_config_vars-$2])[]dnl
 # the environment after each run to detect inconsistencies.
 #
 # New macros are not expected to depend upon obsolete macros.
+#
+# KEYWORDS is a space-separated list of keywords for autotest.
 m4_define([AT_CHECK_MACRO],
 [AT_SETUP([$1])
-
-AT_CONFIGURE_AC([m4_default([$2], [$1])])
+m4_if([$2], [], [], [AT_KEYWORDS([$2])])
+AT_CONFIGURE_AC([m4_default([$3], [$1])])
 
 dnl FIXME: We should use:
 dnl   AT_CHECK_AUTOCONF([m4_default([$4], [-W obsolete])])
 dnl But because Libtool uses obsolete Autoconf macros, it generates lots of
 dnl spurious warnings.
-AT_CHECK_AUTOCONF([m4_default([$4], [])])
+AT_CHECK_AUTOCONF([m4_default([$5], [])])
 
 for at_run in r1 r2
 do
@@ -208,26 +210,26 @@ done
 
 AT_CONFIG_CMP([state-env.r1], [state-env.r2])
 
-$3
+$4
 
 AT_CLEANUP[]dnl
 ])# AT_CHECK_MACRO
 
 
-# AT_CHECK_MACRO_CROSS(MACRO, [MACRO-USE], [ADDITIONAL-CMDS],
+# AT_CHECK_MACRO_CROSS(MACRO, [KEYWORDS], [MACRO-USE], [ADDITIONAL-CMDS],
 #                      [AUTOCONF-FLAGS = -W obsolete])
-# -----------------------------------------------------------
+# -----------------------------------------------------------------------
 # Like the previous one, but creates two checks: for native
 # compile and for cross-compile.
 m4_define([AT_CHECK_MACRO_CROSS],
 [AT_CHECK_MACRO($@)
-AT_CHECK_MACRO([$1 (cross compile)],
+AT_CHECK_MACRO([$1 (cross compile)], [$2],
   [AT_KEYWORDS([cross])
   # Exercise the code used when cross-compiling.
   cross_compiling=yes
   ac_tool_warned=yes
-  m4_default([$2], [$1])],
-  [$3], [$4])
+  m4_default([$3], [$1])],
+  [$4], [$5])
 ])
 
 ## ----------------------- ##
@@ -242,30 +244,33 @@ warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.])
 
 AT_BANNER([Boost headers])
 
-AT_CHECK_MACRO([BOOST_REQUIRE])
-AT_CHECK_MACRO([BOOST_REQUIRE 0.0], [BOOST_REQUIRE([0.0])])
-AT_CHECK_MACRO_CROSS([BOOST_REQUIRE 1.0], [BOOST_REQUIRE([1.0])])
-AT_CHECK_MACRO([BOOST_REQUIRE 1.1.1], [BOOST_REQUIRE([1.1.1])])
+AT_CHECK_MACRO([BOOST_REQUIRE], [core])
+AT_CHECK_MACRO([BOOST_REQUIRE 0.0], [core], [BOOST_REQUIRE([0.0])])
+AT_CHECK_MACRO_CROSS([BOOST_REQUIRE 1.0], [core], [BOOST_REQUIRE([1.0])])
+AT_CHECK_MACRO([BOOST_REQUIRE 1.1.1], [core], [BOOST_REQUIRE([1.1.1])])
 
-AT_CHECK_MACRO([BOOST_REQUIRE $var 0.0], [var=0.0; BOOST_REQUIRE([$var])])
-AT_CHECK_MACRO_CROSS([BOOST_REQUIRE $var 1.0], [var=1.0; BOOST_REQUIRE([$var])])
-AT_CHECK_MACRO([BOOST_REQUIRE $var 1.1.1], [var=1.1.1; BOOST_REQUIRE([$var])])
+AT_CHECK_MACRO([BOOST_REQUIRE $var 0.0], [core],
+               [var=0.0; BOOST_REQUIRE([$var])])
+AT_CHECK_MACRO_CROSS([BOOST_REQUIRE $var 1.0], [core],
+                     [var=1.0; BOOST_REQUIRE([$var])])
+AT_CHECK_MACRO([BOOST_REQUIRE $var 1.1.1], [core],
+               [var=1.1.1; BOOST_REQUIRE([$var])])
 
 AT_BANNER([Boost libraries])
 
-AT_CHECK_MACRO_CROSS([BOOST_FILESYSTEM])
-AT_CHECK_MACRO([BOOST_GRAPH])
-AT_CHECK_MACRO([BOOST_PROGRAM_OPTIONS])
-AT_CHECK_MACRO([BOOST_THREADS])
+AT_CHECK_MACRO_CROSS([BOOST_FILESYSTEM], [lib])
+AT_CHECK_MACRO([BOOST_GRAPH], [lib])
+AT_CHECK_MACRO([BOOST_PROGRAM_OPTIONS], [lib])
+AT_CHECK_MACRO([BOOST_THREADS], [lib])
 
 AT_BANNER([Boost header-only libraries])
 
-AT_CHECK_MACRO([BOOST_CONVERSION])
-AT_CHECK_MACRO([BOOST_FOREACH])
-AT_CHECK_MACRO([BOOST_FORMAT])
-AT_CHECK_MACRO([BOOST_UTILITY])
-AT_CHECK_MACRO([BOOST_SMART_PTR])
-AT_CHECK_MACRO([BOOST_STRING_ALGO])
-AT_CHECK_MACRO([BOOST_TRIBOOL])
-AT_CHECK_MACRO([BOOST_TUPLE])
-AT_CHECK_MACRO([BOOST_VARIANT])
+AT_CHECK_MACRO([BOOST_CONVERSION], [header])
+AT_CHECK_MACRO([BOOST_FOREACH], [header])
+AT_CHECK_MACRO([BOOST_FORMAT], [header])
+AT_CHECK_MACRO([BOOST_UTILITY], [header])
+AT_CHECK_MACRO([BOOST_SMART_PTR], [header])
+AT_CHECK_MACRO([BOOST_STRING_ALGO], [header])
+AT_CHECK_MACRO([BOOST_TRIBOOL], [header])
+AT_CHECK_MACRO([BOOST_TUPLE], [header])
+AT_CHECK_MACRO([BOOST_VARIANT], [header])
