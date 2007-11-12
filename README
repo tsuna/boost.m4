@@ -120,6 +120,7 @@ asked for isn't available.
 The following libraries are supported:
   - Filesystem
   - Graph
+  - Program_options
   - Threads
 Thus you can invoke BOOST_GRAPH (for instance) or BOOST_THREADS([mt-d]).
 The optional argument is made of one or more of the following letters:

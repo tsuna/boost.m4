@@ -341,6 +341,17 @@ AC_DEFUN([BOOST_GRAPH],
 ])# BOOST_GRAPH
 
 
+# BOOST_PROGRAM_OPTIONS([PREFERED-RT-OPT])
+# ----------------------------------------
+# Look for Boost.Program_options.  For the documentation of PREFERED-RT-OPT, see
+# the documentation of BOOST_FIND_LIB above.
+AC_DEFUN([BOOST_PROGRAM_OPTIONS],
+[BOOST_FIND_LIB([program_options], [$1],
+                [boost/program_options.hpp],
+                [boost::program_options::options_description d("test");])
+])# BOOST_PROGRAM_OPTIONS
+
+
 # BOOST_THREADS([PREFERED-RT-OPT])
 # --------------------------------
 # Look for Boost.Thread.  For the documentation of PREFERED-RT-OPT, see the

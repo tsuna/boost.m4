@@ -1,3 +1,10 @@
+2007-11-12  Benoit Sigoure  <tsuna@lrde.epita.fr>
+
+	Add tests for Boost.Program_options.
+	* README: Mention the new library.
+	* build-aux/boost.m4 (BOOST_PROGRAM_OPTIONS): New macro.
+	* tests/testsuite.at: Add a test for the new macro.
+
 2007-11-03  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
 	Use Libtool and -R to encode run paths.
