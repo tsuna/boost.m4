@@ -127,7 +127,7 @@ m4_define([AT_CHECK_AUTOCONF],
 m4_define([AT_CHECK_CONFIGURE],
 [AT_CAPTURE_FILE([config.log])[]dnl
  AT_CHECK([top_srcdir=$abs_top_srcdir \
-           ./configure --host=$host --build=$build \
+           ./configure --host=$host_alias --build=$build_alias \
            $CONFIGURE_FLAGS "CXX=$CXX" "LD=$LD" $1],
 	  [$2],
 	  m4_default([$3], [ignore]), [$4])])

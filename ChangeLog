@@ -1,8 +1,16 @@
+2007-11-13  Benoit Sigoure  <tsuna@lrde.epita.fr>
+
+	Preserve the original values of --host / --build.
+	This fixes `make check' in cross-compilation environments.
+	* tests/atlocal.in ($build, $host): Replace with ...
+	($build_alias, $host_alias): ... these.  New.
+	* tests/testsuite.at (AT_CHECK_AUTOCONF): Use them here.
+
 2007-11-12  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
 	Add keywords to the testsuite.
 	* tests/testsuite.at (AT_CHECK_MACRO, AT_CHECK_MACRO_CROSS): Add an
-	argument in 2nd position (minor backward imcompatible change) to
+	argument in 2nd position (minor backward incompatible change) to
 	specify keywords for the tests.
 	Use keywords for all tests (core/lib/header with or without cross).
 
