@@ -363,13 +363,13 @@ dnl boost/thread.hpp would complain if we try to compile without
 dnl -pthread on GNU/Linux.
 AC_REQUIRE([_BOOST_PTHREAD_FLAG])dnl
 boost_threads_save_LIBS=$LIBS
+boost_threads_save_CPPFLAGS=$CPPFLAGS
+LIBS="$LIBS $boost_cv_pthread_flag"
 # Yes, we *need* to put the -pthread thing in CPPFLAGS because with GCC3,
 # boost/thread.hpp will trigger a #error if -pthread isn't used:
 #   boost/config/requires_threads.hpp:47:5: #error "Compiler threading support
 #   is not turned on. Please set the correct command line options for
 #   threading: -pthread (Linux), -pthreads (Sola ris) or -mthreads (Mingw32)"
-boost_threads_save_CPPFLAGS=$LIBS
-LIBS="$LIBS $boost_cv_pthread_flag"
 CPPFLAGS="$CPPFLAGS $boost_cv_pthread_flag"
 BOOST_FIND_LIB([thread], [$1],
                 [boost/thread.hpp], [boost::thread t; boost::mutex m;])

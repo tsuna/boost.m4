@@ -1,3 +1,10 @@
+2007-11-17  Benoit Sigoure  <tsuna@lrde.epita.fr>
+
+	Fix a typo in BOOST_THREADS.
+	* build-aux/boost.m4 (BOOST_THREADS): Properly set
+	`boost_threads_save_CPPFLAGS' to `CPPFLAGS' instead of `LIBS'!
+	Bug reported by David Herring.
+
 2007-11-13  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
 	Preserve the original values of --host / --build.
