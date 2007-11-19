@@ -1,5 +1,11 @@
 2007-11-20  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
+	Fix the test of Boost.Graph.
+	* build-aux/boost.m4 (BOOST_GRAPH): Fix the C++ code used to test
+	the library.
+
+2007-11-20  Benoit Sigoure  <tsuna@lrde.epita.fr>
+
 	Do not pollute the user-reserved variables.
 	* build-aux/boost.m4 (BOOST_FIND_LIB): Fix a bug: when a library was
 	found, the LDFLAGS and LIBS weren't properly reset and the macro was

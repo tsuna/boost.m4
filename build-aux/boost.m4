@@ -338,7 +338,7 @@ AC_DEFUN([BOOST_FORMAT],
 # documentation of BOOST_FIND_LIB above.
 AC_DEFUN([BOOST_GRAPH],
 [BOOST_FIND_LIB([graph], [$1],
-                [boost/graph/adjacency_list.hpp], [boost::adjacency_list g;])
+                [boost/graph/adjacency_list.hpp], [boost::adjacency_list<> g;])
 ])# BOOST_GRAPH
 
 
