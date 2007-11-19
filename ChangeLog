@@ -1,5 +1,24 @@
 2007-11-20  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
+	Aggressively optimize the checks against Boost libraries.
+	Checking for Boost libraries that require linking was very slow
+	because it took several iteration to discover the proper link flags
+	to use to properly compile+link a C++ test file.  The test file was
+	thus compiled over and over again until the right set of flag is
+	found.  Compilation is time-consuming, especially with Boost, so the
+	trick is to compile the file once and then try to link it.
+	Unfortunately, Autoconf doesn't seem to allow this and always wants
+	to delete the intermediate object file.  This file thus bypasses one
+	of the Autoconf internal macro to retain the object file.
+	On a test case which checks for 2 libraries, the configure time is
+	reduced by a factor of 5 on my laptop (~100s -> ~20s).
+	* build-aux/boost.m4 (BOOST_FIND_LIB): Compile the test file once
+	and then try to link it.
+	(_BOOST_AC_LINK_IFELSE): Fork of the Autoconf macro _AC_LINK_IFELSE.
+	Optimization suggested by David Herring.
+
+2007-11-20  Benoit Sigoure  <tsuna@lrde.epita.fr>
+
 	Optimize the detection of preference for MT flavors.
 	* build-aux/boost.m4 (BOOST_FIND_LIB): Move a compilation test...
 	(_BOOST_GUESS_WHETHER_TO_USE_MT): Here.  So that the test is only

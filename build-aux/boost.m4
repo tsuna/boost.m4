@@ -214,8 +214,29 @@ AC_CACHE_CHECK([for the Boost $1 library], [Boost_lib],
     *[[a-z0-9A-Z]]*) boost_rtopt="-$boost_rtopt";;
   esac
   $boost_guess_use_mt && boost_mt=-mt
+  boost_save_ac_objext=$ac_objext
   # Generate the test file.
   AC_LANG_CONFTEST([AC_LANG_PROGRAM([#include <$3>], [$4])])
+dnl Optimization hacks: compiling C++ is slow, especially with Boost.  What
+dnl we're trying to do here is guess the right combination of link flags
+dnl (LIBS / LDFLAGS) to use a given library.  This can take several
+dnl iteration before it succeeds and is thus *very* slow.  So what we do
+dnl instead is that we compile the code first (and thus get an object file,
+dnl typically conftest.o).  Then we try various combinations of link flags
+dnl until we succeed to link conftest.o in an executable.  The problem is
+dnl that the various TRY_LINK / COMPILE_IFELSE macros of Autoconf always
+dnl remove all the temporary files including conftest.o.  So the trick here
+dnl is to temporarily change the value of ac_objext so that conftest.o is
+dnl preserved accross tests.  This is obviously fragile and I will burn in
+dnl hell for not respecting Autoconf's documented interfaces, but in the
+dnl mean time, it optimizes the macro by several order of magnitude.
+dnl Another small optimization: the first argument of AC_COMPILE_IFELSE left
+dnl empty because the test file is dnl generated only once above (before we
+dnl start the for loops).
+  AC_COMPILE_IFELSE([],
+    [ac_objext=do_not_rm_me_plz],
+    [AC_MSG_ERROR([Cannot compile a test that uses Boost $1])])
+  ac_objext=$boost_save_ac_objext
   boost_failed_libs=
 # Don't bother to ident the 6 nested for loops, only the 2 insidemost ones
 # matter.
@@ -249,8 +270,9 @@ for boost_rtopt_ in $boost_rtopt '' -d; do
       test x"$boost_ldpath" != x && LDFLAGS="$LDFLAGS -L$boost_ldpath"
 dnl First argument of AC_LINK_IFELSE left empty because the test file is
 dnl generated only once above (before we start the for loops).
-      AC_LINK_IFELSE([],
-                     [Boost_lib=yes], [Boost_lib=no])
+      _BOOST_AC_LINK_IFELSE([],
+                            [Boost_lib=yes], [Boost_lib=no])
+      ac_objext=$boost_save_ac_objext
       LDFLAGS=$boost_save_LDFLAGS
       if test x"$Boost_lib" = xyes; then
         Boost_lib_LDFLAGS="-L$boost_ldpath -R$boost_ldpath"
@@ -267,6 +289,7 @@ done
 done
 done
 done
+rm -f conftest.$ac_objext
 ])
 AC_SUBST(AS_TR_CPP([BOOST_$1_LDFLAGS]), [$Boost_lib_LDFLAGS])
 AC_SUBST(AS_TR_CPP([BOOST_$1_LIBS]), [$Boost_lib_LIBS])
@@ -581,3 +604,39 @@ AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
 #endif
 ]])], [boost_guess_use_mt=:], [boost_guess_use_mt=false])
 ])
+
+# _BOOST_AC_LINK_IFELSE(PROGRAM, [ACTION-IF-TRUE], [ACTION-IF-FALSE])
+# -------------------------------------------------------------------
+# Fork of _AC_LINK_IFELSE that preserves conftest.o across calls.  Fragile,
+# will break when Autoconf changes its internals.  Requires that you manually
+# rm -f conftest.$ac_objext in between to really different tests, otherwise
+# you will try to link a conftest.o left behind by a previous test.
+# Used to aggressively optimize BOOST_FIND_LIB (see the big comment in this
+# macro)
+m4_define([_BOOST_AC_LINK_IFELSE],
+[m4_ifvaln([$1], [AC_LANG_CONFTEST([$1])])dnl
+rm -f conftest$ac_exeext
+boost_ac_ext_save=$ac_ext
+boost_use_source=:
+# If we already have a .o, re-use it.  We change $ac_ext so that $ac_link
+# tries to link the existing object file instead of compiling from source.
+test -f conftest.$ac_objext && ac_ext=$ac_objext && boost_use_source=false &&
+  _AS_ECHO_LOG([re-using the existing conftest.$ac_objext])
+AS_IF([_AC_DO_STDERR($ac_link) && {
+	 test -z "$ac_[]_AC_LANG_ABBREV[]_werror_flag" ||
+	 test ! -s conftest.err
+       } && test -s conftest$ac_exeext && {
+	 test "$cross_compiling" = yes ||
+	 AS_TEST_X([conftest$ac_exeext])
+       }],
+      [$2],
+      [if $boost_use_source; then
+         _AC_MSG_LOG_CONFTEST
+       fi
+       $3])
+dnl Delete also the IPA/IPO (Inter Procedural Analysis/Optimization)
+dnl information created by the PGI compiler (conftest_ipa8_conftest.oo),
+dnl as it would interfere with the next link command.
+rm -f core conftest.err conftest_ipa8_conftest.oo \
+      conftest$ac_exeext m4_ifval([$1], [conftest.$ac_ext])[]dnl
+])# _BOOST_AC_LINK_IFELSE
