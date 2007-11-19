@@ -1,5 +1,12 @@
 2007-11-20  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
+	Optimize the detection of preference for MT flavors.
+	* build-aux/boost.m4 (BOOST_FIND_LIB): Move a compilation test...
+	(_BOOST_GUESS_WHETHER_TO_USE_MT): Here.  So that the test is only
+	executed once per configure script.
+
+2007-11-20  Benoit Sigoure  <tsuna@lrde.epita.fr>
+
 	Fix the test of Boost.Graph.
 	* build-aux/boost.m4 (BOOST_GRAPH): Fix the C++ code used to test
 	the library.

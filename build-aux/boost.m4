@@ -187,6 +187,7 @@ AC_LANG_POP([C++])dnl
 AC_DEFUN([BOOST_FIND_LIB],
 [AC_REQUIRE([_BOOST_FIND_COMPILER_TAG])dnl
 AC_REQUIRE([BOOST_REQUIRE])dnl
+AC_REQUIRE([_BOOST_GUESS_WHETHER_TO_USE_MT])dnl
 AC_LANG_PUSH([C++])dnl
 AS_VAR_PUSHDEF([Boost_lib], [boost_cv_lib_$1])dnl
 AS_VAR_PUSHDEF([Boost_lib_LDFLAGS], [boost_cv_lib_$1_LDFLAGS])dnl
@@ -212,16 +213,7 @@ AC_CACHE_CHECK([for the Boost $1 library], [Boost_lib],
   case $boost_rtopt in #(
     *[[a-z0-9A-Z]]*) boost_rtopt="-$boost_rtopt";;
   esac
-  # Check whether we do better use `mt' even though we weren't ask to.
-  if test x"$boost_mt" = x; then
-    AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
-#if defined _REENTRANT || defined _MT || defined __MT__
-/* use -mt */
-#else
-# error MT not needed
-#endif
-]])], [boost_mt=-mt])
-  fi
+  $boost_guess_use_mt && boost_mt=-mt
   # Generate the test file.
   AC_LANG_CONFTEST([AC_LANG_PROGRAM([#include <$3>], [$4])])
   boost_failed_libs=
@@ -573,3 +565,19 @@ AC_LANG_POP([C++])dnl
     boost_cv_lib_tag=
   fi
 ])# _BOOST_FIND_COMPILER_TAG
+
+
+# _BOOST_GUESS_WHETHER_TO_USE_MT()
+# --------------------------------
+# Compile a small test to try to guess whether we should favor MT (Multi
+# Thread) flavors of Boost.  Sets boost_guess_use_mt accordingly.
+AC_DEFUN([_BOOST_GUESS_WHETHER_TO_USE_MT],
+[# Check whether we do better use `mt' even though we weren't ask to.
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
+#if defined _REENTRANT || defined _MT || defined __MT__
+/* use -mt */
+#else
+# error MT not needed
+#endif
+]])], [boost_guess_use_mt=:], [boost_guess_use_mt=false])
+])
