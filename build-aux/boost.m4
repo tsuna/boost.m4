@@ -254,19 +254,20 @@ for boost_rtopt_ in $boost_rtopt '' -d; do
     do
       test -e "$boost_ldpath" || continue
       boost_save_LDFLAGS=$LDFLAGS
-      test x"$boost_ldpath" != x && LDFLAGS="$LDFLAGS -L$boost_ldpath -R$boost_ldpath"
+      test x"$boost_ldpath" != x && LDFLAGS="$LDFLAGS -L$boost_ldpath"
 dnl First argument of AC_LINK_IFELSE left empty because the test file is
 dnl generated only once above (before we start the for loops).
       AC_LINK_IFELSE([],
                      [Boost_lib=yes], [Boost_lib=no])
+      LDFLAGS=$boost_save_LDFLAGS
       if test x"$Boost_lib" = xyes; then
         Boost_lib_LDFLAGS="-L$boost_ldpath -R$boost_ldpath"
         Boost_lib_LIBS="-l$boost_lib"
+        LIBS=$boost_save_LIBS
         break 6
       else
         boost_failed_libs="$boost_failed_libs@$boost_lib@"
       fi
-      LDFLAGS=$boost_save_LDFLAGS
     done
     LIBS=$boost_save_LIBS
   done

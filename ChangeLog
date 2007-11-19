@@ -1,3 +1,13 @@
+2007-11-20  Benoit Sigoure  <tsuna@lrde.epita.fr>
+
+	Do not pollute the user-reserved variables.
+	* build-aux/boost.m4 (BOOST_FIND_LIB): Fix a bug: when a library was
+	found, the LDFLAGS and LIBS weren't properly reset and the macro was
+	thus polluting user-reserved variables.  This needs to be tested in
+	the testsuite.
+	Also do not pass -R to the compiler during the tests, this flag is
+	only usable safely with libtool.
+
 2007-11-17  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
 	Fix a typo in BOOST_THREADS.
