@@ -390,34 +390,6 @@ AC_DEFUN([BOOST_REGEX],
 ])# BOOST_REGEX
 
 
-# BOOST_THREADS([PREFERED-RT-OPT])
-# --------------------------------
-# Look for Boost.Thread.  For the documentation of PREFERED-RT-OPT, see the
-# documentation of BOOST_FIND_LIB above.
-# FIXME: Provide an alias "BOOST_THREAD".
-AC_DEFUN([BOOST_THREADS],
-[dnl Having the pthread flag is required at least on GCC3 where
-dnl boost/thread.hpp would complain if we try to compile without
-dnl -pthread on GNU/Linux.
-AC_REQUIRE([_BOOST_PTHREAD_FLAG])dnl
-boost_threads_save_LIBS=$LIBS
-boost_threads_save_CPPFLAGS=$CPPFLAGS
-LIBS="$LIBS $boost_cv_pthread_flag"
-# Yes, we *need* to put the -pthread thing in CPPFLAGS because with GCC3,
-# boost/thread.hpp will trigger a #error if -pthread isn't used:
-#   boost/config/requires_threads.hpp:47:5: #error "Compiler threading support
-#   is not turned on. Please set the correct command line options for
-#   threading: -pthread (Linux), -pthreads (Sola ris) or -mthreads (Mingw32)"
-CPPFLAGS="$CPPFLAGS $boost_cv_pthread_flag"
-BOOST_FIND_LIB([thread], [$1],
-                [boost/thread.hpp], [boost::thread t; boost::mutex m;])
-BOOST_THREAD_LIBS="$BOOST_THREAD_LIBS $boost_cv_pthread_flag"
-BOOST_CPPFLAGS="$BOOST_CPPFLAGS $boost_cv_pthread_flag"
-LIBS=$boost_threads_save_LIBS
-CPPFLAGS=$boost_threads_save_CPPFLAGS
-])# BOOST_THREADS
-
-
 # BOOST_SIGNALS([PREFERED-RT-OPT])
 # -----------------------------------
 # Look for Boost.Signals.  For the documentation of PREFERED-RT-OPT, see the
@@ -464,6 +436,34 @@ AC_DEFUN([BOOST_TRIBOOL],
 [BOOST_FIND_HEADER([boost/logic/tribool_fwd.hpp])
 BOOST_FIND_HEADER([boost/logic/tribool.hpp])
 ])
+
+
+# BOOST_THREADS([PREFERED-RT-OPT])
+# --------------------------------
+# Look for Boost.Thread.  For the documentation of PREFERED-RT-OPT, see the
+# documentation of BOOST_FIND_LIB above.
+# FIXME: Provide an alias "BOOST_THREAD".
+AC_DEFUN([BOOST_THREADS],
+[dnl Having the pthread flag is required at least on GCC3 where
+dnl boost/thread.hpp would complain if we try to compile without
+dnl -pthread on GNU/Linux.
+AC_REQUIRE([_BOOST_PTHREAD_FLAG])dnl
+boost_threads_save_LIBS=$LIBS
+boost_threads_save_CPPFLAGS=$CPPFLAGS
+LIBS="$LIBS $boost_cv_pthread_flag"
+# Yes, we *need* to put the -pthread thing in CPPFLAGS because with GCC3,
+# boost/thread.hpp will trigger a #error if -pthread isn't used:
+#   boost/config/requires_threads.hpp:47:5: #error "Compiler threading support
+#   is not turned on. Please set the correct command line options for
+#   threading: -pthread (Linux), -pthreads (Sola ris) or -mthreads (Mingw32)"
+CPPFLAGS="$CPPFLAGS $boost_cv_pthread_flag"
+BOOST_FIND_LIB([thread], [$1],
+                [boost/thread.hpp], [boost::thread t; boost::mutex m;])
+BOOST_THREAD_LIBS="$BOOST_THREAD_LIBS $boost_cv_pthread_flag"
+BOOST_CPPFLAGS="$BOOST_CPPFLAGS $boost_cv_pthread_flag"
+LIBS=$boost_threads_save_LIBS
+CPPFLAGS=$boost_threads_save_CPPFLAGS
+])# BOOST_THREADS
 
 
 # BOOST_TUPLE()

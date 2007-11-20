@@ -1,5 +1,11 @@
 2007-11-20  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
+	Re-order the macros.
+	* build-aux/boost.m4: Sort the macros alphabetically (yes, `T' is
+	after `S' :D).
+
+2007-11-20  Benoit Sigoure  <tsuna@lrde.epita.fr>
+
 	Add support for Date_Time, Regex, Signals and Test.
 	* README: Mention the new libraries.
 	* build-aux/boost.m4 (BOOST_DATE_TIME, BOOST_REGEX, BOOST_SIGNALS)
