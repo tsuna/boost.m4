@@ -319,6 +319,17 @@ BOOST_FIND_HEADER([boost/lexical_cast.hpp])
 ])# BOOST_CONVERSION
 
 
+# BOOST_DATE_TIME([PREFERED-RT-OPT])
+# -----------------------------------
+# Look for Boost.Date_Time.  For the documentation of PREFERED-RT-OPT, see the
+# documentation of BOOST_FIND_LIB above.
+AC_DEFUN([BOOST_DATE_TIME],
+[BOOST_FIND_LIB([date_time], [$1],
+                [boost/date_time/posix_time/posix_time.hpp],
+                [boost::posix_time::ptime t;])
+])# BOOST_DATE_TIME
+
+
 # BOOST_FILESYSTEM([PREFERED-RT-OPT])
 # -----------------------------------
 # Look for Boost.Filesystem.  For the documentation of PREFERED-RT-OPT, see the
@@ -368,6 +379,17 @@ AC_DEFUN([BOOST_PROGRAM_OPTIONS],
 ])# BOOST_PROGRAM_OPTIONS
 
 
+# BOOST_REGEX([PREFERED-RT-OPT])
+# -----------------------------------
+# Look for Boost.Regex.  For the documentation of PREFERED-RT-OPT, see the
+# documentation of BOOST_FIND_LIB above.
+AC_DEFUN([BOOST_REGEX],
+[BOOST_FIND_LIB([regex], [$1],
+                [boost/regex.hpp],
+                [boost::regex exp("*"); boost::regex_match("foo", exp);])
+])# BOOST_REGEX
+
+
 # BOOST_THREADS([PREFERED-RT-OPT])
 # --------------------------------
 # Look for Boost.Thread.  For the documentation of PREFERED-RT-OPT, see the
@@ -396,6 +418,17 @@ CPPFLAGS=$boost_threads_save_CPPFLAGS
 ])# BOOST_THREADS
 
 
+# BOOST_SIGNALS([PREFERED-RT-OPT])
+# -----------------------------------
+# Look for Boost.Signals.  For the documentation of PREFERED-RT-OPT, see the
+# documentation of BOOST_FIND_LIB above.
+AC_DEFUN([BOOST_SIGNALS],
+[BOOST_FIND_LIB([signals], [$1],
+                [boost/signal.hpp],
+                [boost::signal<void ()> s;])
+])# BOOST_SIGNALS
+
+
 # BOOST_SMART_PTR()
 # -----------------
 # Look for Boost.SmartPtr
@@ -411,6 +444,17 @@ BOOST_FIND_HEADER([boost/shared_ptr.hpp])
 AC_DEFUN([BOOST_STRING_ALGO],
 [BOOST_FIND_HEADER([boost/algorithm/string.hpp])
 ])
+
+
+# BOOST_TEST([PREFERED-RT-OPT])
+# -----------------------------------
+# Look for Boost.Test.  For the documentation of PREFERED-RT-OPT, see the
+# documentation of BOOST_FIND_LIB above.
+AC_DEFUN([BOOST_TEST],
+[m4_pattern_allow([^BOOST_CHECK$])dnl
+BOOST_FIND_LIB([unit_test_framework], [$1],
+               [boost/test/unit_test.hpp], [BOOST_CHECK(2==2);])
+])# BOOST_TEST
 
 
 # BOOST_TRIBOOL()

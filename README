@@ -118,9 +118,13 @@ runtime or not, etc.  The macro will try to find a library that match your
 requirements but may fall back to another flavor of the library if the one you
 asked for isn't available.
 The following libraries are supported:
+  - Date_Time
   - Filesystem
   - Graph
   - Program_options
+  - Regex
+  - Signals
+  - Test
   - Threads
 Thus you can invoke BOOST_GRAPH (for instance) or BOOST_THREADS([mt-d]).
 The optional argument is made of one or more of the following letters:
