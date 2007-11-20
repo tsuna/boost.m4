@@ -314,6 +314,13 @@ AC_LANG_POP([C++])dnl
 # version of each library (among other things).
 
 
+# BOOST_BIND()
+# ------------------
+# Look for Boost.Bind
+AC_DEFUN([BOOST_BIND],
+[BOOST_FIND_HEADER([boost/bind.hpp])])
+
+
 # BOOST_CONVERSION()
 # ------------------
 # Look for Boost.Conversion (cast / lexical_cast)
@@ -362,6 +369,13 @@ AC_DEFUN([BOOST_FORMAT],
 [BOOST_FIND_HEADER([boost/format.hpp])])
 
 
+# BOOST_FUNCTION()
+# ------------------
+# Look for Boost.Function
+AC_DEFUN([BOOST_FUNCTION],
+[BOOST_FIND_HEADER([boost/function.hpp])])
+
+
 # BOOST_GRAPH([PREFERRED-RT-OPT])
 # ------------------------------
 # Look for Boost.Graphs.  For the documentation of PREFERRED-RT-OPT, see the
@@ -381,6 +395,13 @@ AC_DEFUN([BOOST_PROGRAM_OPTIONS],
                 [boost/program_options.hpp],
                 [boost::program_options::options_description d("test");])
 ])# BOOST_PROGRAM_OPTIONS
+
+
+# BOOST_REF()
+# ------------------
+# Look for Boost.Ref
+AC_DEFUN([BOOST_REF],
+[BOOST_FIND_HEADER([boost/ref.hpp])])
 
 
 # BOOST_REGEX([PREFERRED-RT-OPT])
