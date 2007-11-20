@@ -90,6 +90,10 @@ AC_LANG_PUSH([C++])dnl
              "$with_boost" C:/Boost/include
     do
       test -e "$boost_inc" || continue
+      # Ensure that version.hpp exists: we're going to read it.  Moreover,
+      # Boost could be reachable thanks to the default include path so we can
+      # mistakenly accept a wrong include path without this check.
+      test -e "$boost_inc/boost/version.hpp" || continue
       boost_save_CPPFLAGS=$CPPFLAGS
       test x"$boost_inc" != x && CPPFLAGS="$CPPFLAGS -I$boost_inc"
 m4_pattern_allow([^BOOST_VERSION$])dnl
