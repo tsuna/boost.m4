@@ -1,5 +1,10 @@
 2007-11-20  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
+	Fix typos.
+	* build-aux/boost.m4: Correct various tyops everywhere.
+
+2007-11-20  Benoit Sigoure  <tsuna@lrde.epita.fr>
+
 	Check that version.hpp exists before trying an include path.
 	* build-aux/boost.m4 (BOOST_REQUIRE): Here.  This ensures that we
 	don't get the include path wrong *but* the test succeeds because

@@ -38,7 +38,7 @@ m4_pattern_forbid([^_?BOOST_])
 # "X.Y" where X and Y are integers or a variable "$var".
 # Defines the value BOOST_CPPFLAGS.  This macro only checks for headers with
 # the required version, it does not check for any of the Boost libraries.
-# FIXME: Add a 2nd optionnal argument so that it's not fatal if Boost isn't found
+# FIXME: Add a 2nd optional argument so that it's not fatal if Boost isn't found
 # and add an AC_DEFINE to tell whether HAVE_BOOST.
 AC_DEFUN([BOOST_REQUIRE],
 [dnl First find out what kind of argument we have.
@@ -170,7 +170,7 @@ AC_LANG_POP([C++])dnl
 ])# BOOST_FIND_HEADER
 
 
-# BOOST_FIND_LIB([LIB-NAME], [PREFERED-RT-OPT], [HEADER-NAME], [CXX-TEST])
+# BOOST_FIND_LIB([LIB-NAME], [PREFERRED-RT-OPT], [HEADER-NAME], [CXX-TEST])
 # ------------------------------------------------------------------------
 # Look for the Boost library LIB-NAME (e.g., LIB-NAME = `thread', for
 # libboost_thread).  Check that HEADER-NAME works and check that
@@ -179,13 +179,13 @@ AC_LANG_POP([C++])dnl
 # Invokes BOOST_FIND_HEADER([HEADER-NAME]) (see above).
 #
 # Boost libraries typically come compiled with several flavors (with different
-# runtime options) so PREFERED-RT-OPT is the prefered suffix.  A suffix is one
+# runtime options) so PREFERRED-RT-OPT is the preferred suffix.  A suffix is one
 # or more of the following letters: sgdpn (in that order).  s = static
 # runtime, d = debug build, g = debug/diagnostic runtime, p = STLPort build,
 # n = (unsure) STLPort build without iostreams from STLPort (it looks like `n'
-# must always be used along with `p').  Additionally, PREFERED-RT-OPT can
+# must always be used along with `p').  Additionally, PREFERRED-RT-OPT can
 # start with `mt-' to indicate that there is a preference for multi-thread
-# builds.  Some sample values for PREFERED-RT-OPT: (nothing), mt, d, mt-d, gdp
+# builds.  Some sample values for PREFERRED-RT-OPT: (nothing), mt, d, mt-d, gdp
 # ...  If you want to make sure you have a specific version of Boost
 # (eg, >= 1.33) you *must* invoke BOOST_REQUIRE before this macro.
 AC_DEFUN([BOOST_FIND_LIB],
@@ -200,7 +200,7 @@ BOOST_FIND_HEADER([$3])
 boost_save_CPPFLAGS=$CPPFLAGS
 CPPFLAGS="$CPPFLAGS $BOOST_CPPFLAGS"
 # Now let's try to find the library.  The algorithm is as follows: first look
-# for a given library name according to the user's PREFERED-RT-OPT.  For each
+# for a given library name according to the user's PREFERRED-RT-OPT.  For each
 # library name, we prefer to use the ones that carry the tag (toolset name).
 # Each library is searched through the various standard paths were Boost is
 # usually installed.  If we can't find the standard variants, we try to
@@ -213,7 +213,7 @@ AC_CACHE_CHECK([for the Boost $1 library], [Boost_lib],
     mt* | mt-*) boost_mt=-mt; boost_rtopt=`expr "X$2" : 'Xmt-*\(.*\)'`;; #(
     *) boost_mt=; boost_rtopt=$2;;
   esac
-  # If the PREFERED-RT-OPT are not empty, prepend a `-'.
+  # If the PREFERRED-RT-OPT are not empty, prepend a `-'.
   case $boost_rtopt in #(
     *[[a-z0-9A-Z]]*) boost_rtopt="-$boost_rtopt";;
   esac
@@ -242,7 +242,7 @@ dnl start the for loops).
     [AC_MSG_ERROR([Cannot compile a test that uses Boost $1])])
   ac_objext=$boost_save_ac_objext
   boost_failed_libs=
-# Don't bother to ident the 6 nested for loops, only the 2 insidemost ones
+# Don't bother to ident the 6 nested for loops, only the 2 inside-most ones
 # matter.
 for boost_tag_ in -$boost_cv_lib_tag ''; do
 for boost_ver_ in -$boost_cv_lib_version ''; do
@@ -323,9 +323,9 @@ BOOST_FIND_HEADER([boost/lexical_cast.hpp])
 ])# BOOST_CONVERSION
 
 
-# BOOST_DATE_TIME([PREFERED-RT-OPT])
+# BOOST_DATE_TIME([PREFERRED-RT-OPT])
 # -----------------------------------
-# Look for Boost.Date_Time.  For the documentation of PREFERED-RT-OPT, see the
+# Look for Boost.Date_Time.  For the documentation of PREFERRED-RT-OPT, see the
 # documentation of BOOST_FIND_LIB above.
 AC_DEFUN([BOOST_DATE_TIME],
 [BOOST_FIND_LIB([date_time], [$1],
@@ -334,9 +334,9 @@ AC_DEFUN([BOOST_DATE_TIME],
 ])# BOOST_DATE_TIME
 
 
-# BOOST_FILESYSTEM([PREFERED-RT-OPT])
+# BOOST_FILESYSTEM([PREFERRED-RT-OPT])
 # -----------------------------------
-# Look for Boost.Filesystem.  For the documentation of PREFERED-RT-OPT, see the
+# Look for Boost.Filesystem.  For the documentation of PREFERRED-RT-OPT, see the
 # documentation of BOOST_FIND_LIB above.
 AC_DEFUN([BOOST_FILESYSTEM],
 [BOOST_FIND_LIB([filesystem], [$1],
@@ -362,9 +362,9 @@ AC_DEFUN([BOOST_FORMAT],
 [BOOST_FIND_HEADER([boost/format.hpp])])
 
 
-# BOOST_GRAPH([PREFERED-RT-OPT])
+# BOOST_GRAPH([PREFERRED-RT-OPT])
 # ------------------------------
-# Look for Boost.Graphs.  For the documentation of PREFERED-RT-OPT, see the
+# Look for Boost.Graphs.  For the documentation of PREFERRED-RT-OPT, see the
 # documentation of BOOST_FIND_LIB above.
 AC_DEFUN([BOOST_GRAPH],
 [BOOST_FIND_LIB([graph], [$1],
@@ -372,9 +372,9 @@ AC_DEFUN([BOOST_GRAPH],
 ])# BOOST_GRAPH
 
 
-# BOOST_PROGRAM_OPTIONS([PREFERED-RT-OPT])
+# BOOST_PROGRAM_OPTIONS([PREFERRED-RT-OPT])
 # ----------------------------------------
-# Look for Boost.Program_options.  For the documentation of PREFERED-RT-OPT, see
+# Look for Boost.Program_options.  For the documentation of PREFERRED-RT-OPT, see
 # the documentation of BOOST_FIND_LIB above.
 AC_DEFUN([BOOST_PROGRAM_OPTIONS],
 [BOOST_FIND_LIB([program_options], [$1],
@@ -383,9 +383,9 @@ AC_DEFUN([BOOST_PROGRAM_OPTIONS],
 ])# BOOST_PROGRAM_OPTIONS
 
 
-# BOOST_REGEX([PREFERED-RT-OPT])
+# BOOST_REGEX([PREFERRED-RT-OPT])
 # -----------------------------------
-# Look for Boost.Regex.  For the documentation of PREFERED-RT-OPT, see the
+# Look for Boost.Regex.  For the documentation of PREFERRED-RT-OPT, see the
 # documentation of BOOST_FIND_LIB above.
 AC_DEFUN([BOOST_REGEX],
 [BOOST_FIND_LIB([regex], [$1],
@@ -394,9 +394,9 @@ AC_DEFUN([BOOST_REGEX],
 ])# BOOST_REGEX
 
 
-# BOOST_SIGNALS([PREFERED-RT-OPT])
+# BOOST_SIGNALS([PREFERRED-RT-OPT])
 # -----------------------------------
-# Look for Boost.Signals.  For the documentation of PREFERED-RT-OPT, see the
+# Look for Boost.Signals.  For the documentation of PREFERRED-RT-OPT, see the
 # documentation of BOOST_FIND_LIB above.
 AC_DEFUN([BOOST_SIGNALS],
 [BOOST_FIND_LIB([signals], [$1],
@@ -422,9 +422,9 @@ AC_DEFUN([BOOST_STRING_ALGO],
 ])
 
 
-# BOOST_TEST([PREFERED-RT-OPT])
+# BOOST_TEST([PREFERRED-RT-OPT])
 # -----------------------------------
-# Look for Boost.Test.  For the documentation of PREFERED-RT-OPT, see the
+# Look for Boost.Test.  For the documentation of PREFERRED-RT-OPT, see the
 # documentation of BOOST_FIND_LIB above.
 AC_DEFUN([BOOST_TEST],
 [m4_pattern_allow([^BOOST_CHECK$])dnl
@@ -442,9 +442,9 @@ BOOST_FIND_HEADER([boost/logic/tribool.hpp])
 ])
 
 
-# BOOST_THREADS([PREFERED-RT-OPT])
+# BOOST_THREADS([PREFERRED-RT-OPT])
 # --------------------------------
-# Look for Boost.Thread.  For the documentation of PREFERED-RT-OPT, see the
+# Look for Boost.Thread.  For the documentation of PREFERRED-RT-OPT, see the
 # documentation of BOOST_FIND_LIB above.
 # FIXME: Provide an alias "BOOST_THREAD".
 AC_DEFUN([BOOST_THREADS],
@@ -459,7 +459,7 @@ LIBS="$LIBS $boost_cv_pthread_flag"
 # boost/thread.hpp will trigger a #error if -pthread isn't used:
 #   boost/config/requires_threads.hpp:47:5: #error "Compiler threading support
 #   is not turned on. Please set the correct command line options for
-#   threading: -pthread (Linux), -pthreads (Sola ris) or -mthreads (Mingw32)"
+#   threading: -pthread (Linux), -pthreads (Solaris) or -mthreads (Mingw32)"
 CPPFLAGS="$CPPFLAGS $boost_cv_pthread_flag"
 BOOST_FIND_LIB([thread], [$1],
                 [boost/thread.hpp], [boost::thread t; boost::mutex m;])
