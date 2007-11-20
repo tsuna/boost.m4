@@ -1,5 +1,14 @@
 2007-11-20  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
+	Fix the version check.
+	The version check was completely wrong (!) and would always succeed.
+	* build-aux/boost.m4 (BOOST_REQUIRE): Properly compute the various
+	parts of the version (major, minor, sub-minor) from the
+	BOOST_VERSION macro defined in version.hpp.
+	Bug reported by Staffan Gimåker.
+
+2007-11-20  Benoit Sigoure  <tsuna@lrde.epita.fr>
+
 	Fix typos.
 	* build-aux/boost.m4: Correct various tyops everywhere.
 

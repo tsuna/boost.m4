@@ -84,7 +84,7 @@ AC_LANG_PUSH([C++])dnl
     test x"$boost_version_subminor" != x \
       && boost_subminor_chk="|| (B_V_MAJ == $boost_version_major \
 && B_V_MIN == $boost_version_minor \
-&& B_V_SUB % 100 < $boost_version_subminor)"
+&& B_V_SUB < $boost_version_subminor)"
     for boost_inc in "$with_boost/include" '' \
              /opt/local/include /usr/local/include /opt/include /usr/include \
              "$with_boost" C:/Boost/include
@@ -101,12 +101,12 @@ m4_pattern_allow([^BOOST_VERSION$])dnl
 #ifndef BOOST_VERSION
 # error BOOST_VERSION is not defined
 #endif
-#define B_V_MAJ (BOOST_VERSION / 10000)
+#define B_V_MAJ (BOOST_VERSION / 100000)
 #define B_V_MIN (BOOST_VERSION / 100 % 1000)
 #define B_V_SUB (BOOST_VERSION % 100)
 #if (B_V_MAJ < $boost_version_major) \
    || (B_V_MAJ == $boost_version_major \
-       && B_V_MIN / 100 % 1000 < $boost_version_minor) $boost_subminor_chk
+       && B_V_MIN < $boost_version_minor) $boost_subminor_chk
 # error Boost headers version < $1
 #endif
 ]])], [boost_cv_inc_path=yes], [boost_cv_version=no])
