@@ -514,6 +514,16 @@ AC_DEFUN([BOOST_VARIANT],
 BOOST_FIND_HEADER([boost/variant.hpp])])
 
 
+# BOOST_WAVE([PREFERRED-RT-OPT])
+# ------------------------------
+# Look for Boost.Wave.  For the documentation of PREFERRED-RT-OPT, see the
+# documentation of BOOST_FIND_LIB above.
+AC_DEFUN([BOOST_WAVE],
+[BOOST_FIND_LIB([wave], [$1],
+                [boost/wave.hpp],
+                [boost::wave::token_id id; get_token_name(id);])])
+
+
 # ----------------- #
 # Internal helpers. #
 # ----------------- #
