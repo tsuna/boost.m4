@@ -171,7 +171,7 @@ AC_LANG_POP([C++])dnl
 
 
 # BOOST_FIND_LIB([LIB-NAME], [PREFERRED-RT-OPT], [HEADER-NAME], [CXX-TEST])
-# ------------------------------------------------------------------------
+# -------------------------------------------------------------------------
 # Look for the Boost library LIB-NAME (e.g., LIB-NAME = `thread', for
 # libboost_thread).  Check that HEADER-NAME works and check that
 # libboost_LIB-NAME can link with the code CXX-TEST.
@@ -315,7 +315,7 @@ AC_LANG_POP([C++])dnl
 
 
 # BOOST_BIND()
-# ------------------
+# ------------
 # Look for Boost.Bind
 AC_DEFUN([BOOST_BIND],
 [BOOST_FIND_HEADER([boost/bind.hpp])])
@@ -342,7 +342,7 @@ AC_DEFUN([BOOST_DATE_TIME],
 
 
 # BOOST_FILESYSTEM([PREFERRED-RT-OPT])
-# -----------------------------------
+# ------------------------------------
 # Look for Boost.Filesystem.  For the documentation of PREFERRED-RT-OPT, see the
 # documentation of BOOST_FIND_LIB above.
 AC_DEFUN([BOOST_FILESYSTEM],
@@ -359,7 +359,7 @@ AC_DEFUN([BOOST_FOREACH],
 
 
 # BOOST_FORMAT()
-# ------------------
+# --------------
 # Look for Boost.Format
 # Note: we can't check for boost/format/format_fwd.hpp because the header isn't
 # standalone.  It can't be compiled because it triggers the following error:
@@ -370,14 +370,14 @@ AC_DEFUN([BOOST_FORMAT],
 
 
 # BOOST_FUNCTION()
-# ------------------
+# ----------------
 # Look for Boost.Function
 AC_DEFUN([BOOST_FUNCTION],
 [BOOST_FIND_HEADER([boost/function.hpp])])
 
 
 # BOOST_GRAPH([PREFERRED-RT-OPT])
-# ------------------------------
+# -------------------------------
 # Look for Boost.Graphs.  For the documentation of PREFERRED-RT-OPT, see the
 # documentation of BOOST_FIND_LIB above.
 AC_DEFUN([BOOST_GRAPH],
@@ -387,7 +387,7 @@ AC_DEFUN([BOOST_GRAPH],
 
 
 # BOOST_PROGRAM_OPTIONS([PREFERRED-RT-OPT])
-# ----------------------------------------
+# -----------------------------------------
 # Look for Boost.Program_options.  For the documentation of PREFERRED-RT-OPT, see
 # the documentation of BOOST_FIND_LIB above.
 AC_DEFUN([BOOST_PROGRAM_OPTIONS],
@@ -398,14 +398,14 @@ AC_DEFUN([BOOST_PROGRAM_OPTIONS],
 
 
 # BOOST_REF()
-# ------------------
+# -----------
 # Look for Boost.Ref
 AC_DEFUN([BOOST_REF],
 [BOOST_FIND_HEADER([boost/ref.hpp])])
 
 
 # BOOST_REGEX([PREFERRED-RT-OPT])
-# -----------------------------------
+# -------------------------------
 # Look for Boost.Regex.  For the documentation of PREFERRED-RT-OPT, see the
 # documentation of BOOST_FIND_LIB above.
 AC_DEFUN([BOOST_REGEX],
@@ -416,7 +416,7 @@ AC_DEFUN([BOOST_REGEX],
 
 
 # BOOST_SIGNALS([PREFERRED-RT-OPT])
-# -----------------------------------
+# ---------------------------------
 # Look for Boost.Signals.  For the documentation of PREFERRED-RT-OPT, see the
 # documentation of BOOST_FIND_LIB above.
 AC_DEFUN([BOOST_SIGNALS],
@@ -444,7 +444,7 @@ AC_DEFUN([BOOST_STRING_ALGO],
 
 
 # BOOST_TEST([PREFERRED-RT-OPT])
-# -----------------------------------
+# ------------------------------
 # Look for Boost.Test.  For the documentation of PREFERRED-RT-OPT, see the
 # documentation of BOOST_FIND_LIB above.
 AC_DEFUN([BOOST_TEST],
@@ -455,7 +455,7 @@ BOOST_FIND_LIB([unit_test_framework], [$1],
 
 
 # BOOST_TRIBOOL()
-# -----------------
+# ---------------
 # Look for Boost.Tribool
 AC_DEFUN([BOOST_TRIBOOL],
 [BOOST_FIND_HEADER([boost/logic/tribool_fwd.hpp])
@@ -464,7 +464,7 @@ BOOST_FIND_HEADER([boost/logic/tribool.hpp])
 
 
 # BOOST_THREADS([PREFERRED-RT-OPT])
-# --------------------------------
+# ---------------------------------
 # Look for Boost.Thread.  For the documentation of PREFERRED-RT-OPT, see the
 # documentation of BOOST_FIND_LIB above.
 # FIXME: Provide an alias "BOOST_THREAD".
