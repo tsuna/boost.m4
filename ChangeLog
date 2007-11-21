@@ -1,3 +1,9 @@
+2007-11-21  Benoit Sigoure  <tsuna@lrde.epita.fr>
+
+	Comment fixes.
+	* build-aux/boost.m4: Fix a couple of typos.
+	Reported by Akim Demaille.
+
 2007-11-20  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
 	Adjust comments.

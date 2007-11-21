@@ -224,7 +224,7 @@ AC_CACHE_CHECK([for the Boost $1 library], [Boost_lib],
 dnl Optimization hacks: compiling C++ is slow, especially with Boost.  What
 dnl we're trying to do here is guess the right combination of link flags
 dnl (LIBS / LDFLAGS) to use a given library.  This can take several
-dnl iteration before it succeeds and is thus *very* slow.  So what we do
+dnl iterations before it succeeds and is thus *very* slow.  So what we do
 dnl instead is that we compile the code first (and thus get an object file,
 dnl typically conftest.o).  Then we try various combinations of link flags
 dnl until we succeed to link conftest.o in an executable.  The problem is
@@ -233,16 +233,16 @@ dnl remove all the temporary files including conftest.o.  So the trick here
 dnl is to temporarily change the value of ac_objext so that conftest.o is
 dnl preserved accross tests.  This is obviously fragile and I will burn in
 dnl hell for not respecting Autoconf's documented interfaces, but in the
-dnl mean time, it optimizes the macro by several order of magnitude.
+dnl mean time, it optimizes the macro by a factor of 5 to 30.
 dnl Another small optimization: the first argument of AC_COMPILE_IFELSE left
-dnl empty because the test file is dnl generated only once above (before we
+dnl empty because the test file is generated only once above (before we
 dnl start the for loops).
   AC_COMPILE_IFELSE([],
     [ac_objext=do_not_rm_me_plz],
     [AC_MSG_ERROR([Cannot compile a test that uses Boost $1])])
   ac_objext=$boost_save_ac_objext
   boost_failed_libs=
-# Don't bother to ident the 6 nested for loops, only the 2 inside-most ones
+# Don't bother to ident the 6 nested for loops, only the 2 innermost ones
 # matter.
 for boost_tag_ in -$boost_cv_lib_tag ''; do
 for boost_ver_ in -$boost_cv_lib_version ''; do
