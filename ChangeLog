@@ -1,5 +1,10 @@
 2007-11-24  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
+	Add a THANKS file.
+	* THANKS: New.
+
+2007-11-24  Benoit Sigoure  <tsuna@lrde.epita.fr>
+
 	Improve the portability of BOOST_FILESYSTEM.
 	* build-aux/boost.m4: Do not check for boost/filesystem.hpp as it
 	was introduced in 1.34.  Check for boost/filesystem/path.hpp
