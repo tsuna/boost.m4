@@ -387,6 +387,13 @@ AC_DEFUN([BOOST_GRAPH],
 ])# BOOST_GRAPH
 
 
+# BOOST_HASH()
+# ------------
+# Look for Boost.Functional/Hash
+AC_DEFUN([BOOST_HASH],
+[BOOST_FIND_HEADER([boost/functional/hash.hpp])])
+
+
 # BOOST_PROGRAM_OPTIONS([PREFERRED-RT-OPT])
 # -----------------------------------------
 # Look for Boost.Program_options.  For the documentation of PREFERRED-RT-OPT, see

@@ -96,6 +96,7 @@ implemented:
     - Foreach
     - Format
     - Function
+    - Hash (aka Functional/Hash)
     - Utility
     - Ref
     - SmartPtr

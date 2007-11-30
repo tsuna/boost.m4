@@ -1,3 +1,10 @@
+2007-11-30  Benoit Sigoure  <tsuna@lrde.epita.fr>
+
+	Add support for Boost.Functional/Hash.
+	* README: Mention the new library.
+	* build-aux/boost.m4 (BOOST_HASH): New.
+	* tests/testsuite.at: Test the new macro.
+
 2007-11-24  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
 	Add a THANKS file.
