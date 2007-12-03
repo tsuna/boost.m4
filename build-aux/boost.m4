@@ -714,7 +714,8 @@ AS_IF([_AC_DO_STDERR($ac_link) && {
 	 test ! -s conftest.err
        } && test -s conftest$ac_exeext && {
 	 test "$cross_compiling" = yes ||
-	 AS_TEST_X([conftest$ac_exeext])
+	 $as_executable_p conftest$ac_exeext
+dnl FIXME: use AS_TEST_X instead when 2.61 is widespread enough.
        }],
       [$2],
       [if $boost_use_source; then
