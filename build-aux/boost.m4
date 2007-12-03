@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# serial 2
+# serial 3
 # Original sources can be found at http://repo.or.cz/w/boost.m4.git
 # You can fetch the latest version of the script by doing:
 #   wget 'http://repo.or.cz/w/boost.m4.git?a=blob_plain;f=build-aux/boost.m4;hb=HEAD' -O boost.m4
@@ -29,6 +29,8 @@
 # define BOOST_CPPFLAGS accordingly.  It will add an option --with-boost to
 # your configure so that users can specify non standard locations.
 # For more README and documentation, go to http://repo.or.cz/w/boost.m4.git
+# Note: these macro assume that you use Libtool.  If you don't, don't worry,
+# simply read the README, it will show you what to do step by step.
 
 m4_pattern_forbid([^_?BOOST_])
 

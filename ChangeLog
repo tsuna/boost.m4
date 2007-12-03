@@ -1,5 +1,11 @@
 2007-12-03  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
+	Mention the Libtool dependency in the M4 file.
+	* build-aux/boost.m4: Here.
+	Also update the serial...
+
+2007-12-03  Benoit Sigoure  <tsuna@lrde.epita.fr>
+
 	Support Boost.IOStreams.
 	* README: Mention the new library.
 	* build-aux/boost.m4 (BOOST_IOSTREAMS): New.
