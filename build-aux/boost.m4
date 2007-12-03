@@ -388,6 +388,17 @@ AC_DEFUN([BOOST_GRAPH],
 ])# BOOST_GRAPH
 
 
+# BOOST_IOSTREAMS([PREFERRED-RT-OPT])
+# -------------------------------
+# Look for Boost.IOStreams.  For the documentation of PREFERRED-RT-OPT, see the
+# documentation of BOOST_FIND_LIB above.
+AC_DEFUN([BOOST_IOSTREAMS],
+[BOOST_FIND_LIB([iostreams], [$1],
+                [boost/iostreams/device/file_descriptor.hpp],
+                [boost::iostreams::file_descriptor fd(0); fd.close();])
+])# BOOST_IOSTREAMS
+
+
 # BOOST_HASH()
 # ------------
 # Look for Boost.Functional/Hash

@@ -125,6 +125,7 @@ The following libraries are supported:
   - Date_Time
   - Filesystem
   - Graph
+  - IOStreams
   - Program_options
   - Regex
   - Signals

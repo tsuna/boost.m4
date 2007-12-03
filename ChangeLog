@@ -1,5 +1,13 @@
 2007-12-03  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
+	Support Boost.IOStreams.
+	* README: Mention the new library.
+	* build-aux/boost.m4 (BOOST_IOSTREAMS): New.
+	Contribution of Jens Seidel.
+	* tests/testsuite.at: Test the new macro.
+
+2007-12-03  Benoit Sigoure  <tsuna@lrde.epita.fr>
+
 	Update the documentation.
 	* README: Fix a typo.  Mention an inconsistency with BOOST_TEST.
 	* build-aux/boost.m4 (BOOST_REQUIRE): Mention explicitely that
