@@ -1,5 +1,13 @@
 2007-12-03  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
+	Update the documentation.
+	* README: Fix a typo.  Mention an inconsistency with BOOST_TEST.
+	* build-aux/boost.m4 (BOOST_REQUIRE): Mention explicitely that
+	VERSION can be of the form "X.Y.Z".
+	Report by Jens Seidel.
+
+2007-12-03  Benoit Sigoure  <tsuna@lrde.epita.fr>
+
 	Do not depend on Autoconf 2.61.
 	AS_TEST_X was introduced in 2.61.  Alas, 2.60 is still common out
 	there, so let's use $as_executable_p instead.

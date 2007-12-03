@@ -35,7 +35,8 @@ m4_pattern_forbid([^_?BOOST_])
 # BOOST_REQUIRE([VERSION])
 # ------------------------
 # Look for Boost.  If version is given, it must either be a literal of the form
-# "X.Y" where X and Y are integers or a variable "$var".
+# "X.Y.Z" where X, Y and Z are integers (the ".Z" part being optional) or a
+# variable "$var".
 # Defines the value BOOST_CPPFLAGS.  This macro only checks for headers with
 # the required version, it does not check for any of the Boost libraries.
 # FIXME: Add a 2nd optional argument so that it's not fatal if Boost isn't found

@@ -118,7 +118,7 @@ library (shared or not), the macro to invoke is BOOST_<LIB-NAME> (surprise!)
 but this time the macro can take an optional argument to specify the runtime
 options you'd like to have.  Most of the time, Boost libraries are compiled
 in several flavors, such as with or without debug, with a multi-thread
-runtime or not, etc.  The macro will try to find a library that match your
+runtime or not, etc.  The macro will try to find a library that matches your
 requirements but may fall back to another flavor of the library if the one you
 asked for isn't available.
 The following libraries are supported:
@@ -128,7 +128,7 @@ The following libraries are supported:
   - Program_options
   - Regex
   - Signals
-  - Test
+  - Test (aka Unit Test Framework)
   - Threads
   - Wave
 Thus you can invoke BOOST_GRAPH (for instance) or BOOST_THREADS([mt-d]).
@@ -147,6 +147,10 @@ for multi-thread builds.
 If the check is successful, at least one header has been checked and the
 corresponding preprocessor symbol HAVE_BOOST_*_HPP is defined, along with the
 compilation flags BOOST_<LIB-NAME>_LDFLAGS and BOOST_<LIB-NAME>_LIBS.
+
+Small pitfall: BOOST_TEST generates BOOST_UNIT_TEST_FRAMEWORK_LDFLAGS and
+BOOST_UNIT_TEST_FRAMEWORK_LIBS, not BOOST_TEST_LFDLAGS and BOOST_TEST_LIBS.
+Sorry for the inconsistency.
 
   Writing your own checks / supporting more Boost libraries
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
