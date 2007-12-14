@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# serial 3
+# serial 4
 # Original sources can be found at http://repo.or.cz/w/boost.m4.git
 # You can fetch the latest version of the script by doing:
 #   wget 'http://repo.or.cz/w/boost.m4.git?a=blob_plain;f=build-aux/boost.m4;hb=HEAD' -O boost.m4
@@ -29,7 +29,7 @@
 # define BOOST_CPPFLAGS accordingly.  It will add an option --with-boost to
 # your configure so that users can specify non standard locations.
 # For more README and documentation, go to http://repo.or.cz/w/boost.m4.git
-# Note: these macro assume that you use Libtool.  If you don't, don't worry,
+# Note: THESE MACRO ASSUME THAT YOU USE LIBTOOL.  If you don't, don't worry,
 # simply read the README, it will show you what to do step by step.
 
 m4_pattern_forbid([^_?BOOST_])
@@ -262,8 +262,6 @@ for boost_rtopt_ in $boost_rtopt '' -d; do
     case $boost_failed_libs in #(
       *@$boost_lib@*) continue;;
     esac
-    boost_save_LIBS=$LIBS
-    LIBS="-l$boost_lib $LIBS"
     # If with_boost is empty, we'll search in /lib first, which is not quite
     # right so instead we'll try to a location based on where the headers are.
     boost_tmp_lib=$with_boost
@@ -274,6 +272,19 @@ for boost_rtopt_ in $boost_rtopt '' -d; do
     do
       test -e "$boost_ldpath" || continue
       boost_save_LDFLAGS=$LDFLAGS
+      # Are we looking for a static library?
+      case $boost_ldpath:$boost_rtopt_ in #(
+        *?*:*s*) # Yes (Non empty boost_ldpath + s in rt opt)
+          # Look for the abs path the static archive.
+          # $libext is computed by Libtool but let's make sure it's non empty.
+          test -z "$libext" &&
+            AC_MSG_ERROR([the libext variable is empty, did you invoke Libtool?])
+          Boost_lib_LIBS="$boost_ldpath/lib$boost_lib.$libext";; #(
+        *) # No: use -lboost_foo to find the shared library.
+          Boost_lib_LIBS="-l$boost_lib";;
+      esac
+      boost_save_LIBS=$LIBS
+      LIBS="$Boost_lib_LIBS $LIBS"
       test x"$boost_ldpath" != x && LDFLAGS="$LDFLAGS -L$boost_ldpath"
 dnl First argument of AC_LINK_IFELSE left empty because the test file is
 dnl generated only once above (before we start the for loops).
@@ -281,16 +292,14 @@ dnl generated only once above (before we start the for loops).
                             [Boost_lib=yes], [Boost_lib=no])
       ac_objext=$boost_save_ac_objext
       LDFLAGS=$boost_save_LDFLAGS
+      LIBS=$boost_save_LIBS
       if test x"$Boost_lib" = xyes; then
         Boost_lib_LDFLAGS="-L$boost_ldpath -R$boost_ldpath"
-        Boost_lib_LIBS="-l$boost_lib"
-        LIBS=$boost_save_LIBS
         break 6
       else
         boost_failed_libs="$boost_failed_libs@$boost_lib@"
       fi
     done
-    LIBS=$boost_save_LIBS
   done
 done
 done
