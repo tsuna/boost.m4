@@ -298,6 +298,10 @@ done
 done
 rm -f conftest.$ac_objext
 ])
+case $Boost_lib in #(
+  no) AC_MSG_ERROR([Could not find the flags to link with Boost $1])
+    ;;
+esac
 AC_SUBST(AS_TR_CPP([BOOST_$1_LDFLAGS]), [$Boost_lib_LDFLAGS])
 AC_SUBST(AS_TR_CPP([BOOST_$1_LIBS]), [$Boost_lib_LIBS])
 CPPFLAGS=$boost_save_CPPFLAGS
