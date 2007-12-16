@@ -526,6 +526,13 @@ CPPFLAGS=$boost_threads_save_CPPFLAGS
 ])# BOOST_THREADS
 
 
+# BOOST_TOKENIZER()
+# -----------------
+# Look for Boost.Tokenizer
+AC_DEFUN([BOOST_TOKENIZER],
+[BOOST_FIND_HEADER([boost/tokenizer.hpp])])
+
+
 # BOOST_TUPLE()
 # -------------
 # Look for Boost.Tuple

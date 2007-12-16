@@ -1,3 +1,10 @@
+2007-12-16  Benoit Sigoure  <tsuna@lrde.epita.fr>
+
+	Add support for Boost.Tokenizer.
+	* README: Mention the new lib.
+	* build-aux/boost.m4 (BOOST_TOKENIZER): New.
+	* tests/testsuite.at: Test the new macro.
+
 2007-12-03  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
 	Mention the Libtool dependency in the M4 file.

@@ -101,6 +101,7 @@ implemented:
     - Ref
     - SmartPtr
     - StringAlgo
+    - Tokenizer
     - Tribool
     - Tuple
     - Variant

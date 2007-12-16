@@ -16,6 +16,8 @@
 # Most of the macros were shamelessly stolen from autoconf's own testsuite.
 # Version used to steal the macros: dc51583
 
+# If you want to add a test, look near the end of this file.
+
 ## ---------------- ##
 ## Utility macros.  ##
 ## ---------------- ##
@@ -282,6 +284,7 @@ AT_CHECK_MACRO([BOOST_UTILITY], [header])
 AT_CHECK_MACRO([BOOST_REF], [header])
 AT_CHECK_MACRO([BOOST_SMART_PTR], [header])
 AT_CHECK_MACRO([BOOST_STRING_ALGO], [header])
+AT_CHECK_MACRO([BOOST_TOKENIZER], [header])
 AT_CHECK_MACRO([BOOST_TRIBOOL], [header])
 AT_CHECK_MACRO([BOOST_TUPLE], [header])
 AT_CHECK_MACRO([BOOST_VARIANT], [header])
