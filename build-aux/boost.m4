@@ -489,15 +489,6 @@ BOOST_FIND_LIB([unit_test_framework], [$1],
 ])# BOOST_TEST
 
 
-# BOOST_TRIBOOL()
-# ---------------
-# Look for Boost.Tribool
-AC_DEFUN([BOOST_TRIBOOL],
-[BOOST_FIND_HEADER([boost/logic/tribool_fwd.hpp])
-BOOST_FIND_HEADER([boost/logic/tribool.hpp])
-])
-
-
 # BOOST_THREADS([PREFERRED-RT-OPT])
 # ---------------------------------
 # Look for Boost.Thread.  For the documentation of PREFERRED-RT-OPT, see the
@@ -531,6 +522,15 @@ CPPFLAGS=$boost_threads_save_CPPFLAGS
 # Look for Boost.Tokenizer
 AC_DEFUN([BOOST_TOKENIZER],
 [BOOST_FIND_HEADER([boost/tokenizer.hpp])])
+
+
+# BOOST_TRIBOOL()
+# ---------------
+# Look for Boost.Tribool
+AC_DEFUN([BOOST_TRIBOOL],
+[BOOST_FIND_HEADER([boost/logic/tribool_fwd.hpp])
+BOOST_FIND_HEADER([boost/logic/tribool.hpp])
+])
 
 
 # BOOST_TUPLE()

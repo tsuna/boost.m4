@@ -1,5 +1,10 @@
 2007-12-16  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
+	Re-order the macros alphabetically.
+	* build-aux/boost.m4 (BOOST_TRIBOOL): Move to the correct place.
+
+2007-12-16  Benoit Sigoure  <tsuna@lrde.epita.fr>
+
 	Add support for Boost.Tokenizer.
 	* README: Mention the new lib.
 	* build-aux/boost.m4 (BOOST_TOKENIZER): New.
