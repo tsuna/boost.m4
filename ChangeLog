@@ -1,3 +1,9 @@
+2007-12-17  Benoit Sigoure  <tsuna@lrde.epita.fr>
+
+	Move a test outside a huge loop.
+	* build-aux/boost.m4 (BOOST_FIND_LIB): Check that $libext is set (by
+	Libtool) and non-empty earlier.
+
 2007-12-16  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
 	Re-order the macros alphabetically.

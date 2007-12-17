@@ -221,6 +221,10 @@ AC_CACHE_CHECK([for the Boost $1 library], [Boost_lib],
     *[[a-z0-9A-Z]]*) boost_rtopt="-$boost_rtopt";;
   esac
   $boost_guess_use_mt && boost_mt=-mt
+  # Look for the abs path the static archive.
+  # $libext is computed by Libtool but let's make sure it's non empty.
+  test -z "$libext" &&
+    AC_MSG_ERROR([the libext variable is empty, did you invoke Libtool?])
   boost_save_ac_objext=$ac_objext
   # Generate the test file.
   AC_LANG_CONFTEST([AC_LANG_PROGRAM([#include <$3>], [$4])])
@@ -275,10 +279,6 @@ for boost_rtopt_ in $boost_rtopt '' -d; do
       # Are we looking for a static library?
       case $boost_ldpath:$boost_rtopt_ in #(
         *?*:*s*) # Yes (Non empty boost_ldpath + s in rt opt)
-          # Look for the abs path the static archive.
-          # $libext is computed by Libtool but let's make sure it's non empty.
-          test -z "$libext" &&
-            AC_MSG_ERROR([the libext variable is empty, did you invoke Libtool?])
           Boost_lib_LIBS="$boost_ldpath/lib$boost_lib.$libext";; #(
         *) # No: use -lboost_foo to find the shared library.
           Boost_lib_LIBS="-l$boost_lib";;
