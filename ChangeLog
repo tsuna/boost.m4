@@ -1,5 +1,11 @@
 2007-12-17  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
+	Do not try to link with non existent static archives.
+	* build-aux/boost.m4 (BOOST_FIND_LIB): Here.
+	Suggested by David Herring.
+
+2007-12-17  Benoit Sigoure  <tsuna@lrde.epita.fr>
+
 	Move a test outside a huge loop.
 	* build-aux/boost.m4 (BOOST_FIND_LIB): Check that $libext is set (by
 	Libtool) and non-empty earlier.

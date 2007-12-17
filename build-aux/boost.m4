@@ -279,7 +279,8 @@ for boost_rtopt_ in $boost_rtopt '' -d; do
       # Are we looking for a static library?
       case $boost_ldpath:$boost_rtopt_ in #(
         *?*:*s*) # Yes (Non empty boost_ldpath + s in rt opt)
-          Boost_lib_LIBS="$boost_ldpath/lib$boost_lib.$libext";; #(
+          Boost_lib_LIBS="$boost_ldpath/lib$boost_lib.$libext"
+          test -e "$Boost_lib_LIBS" || continue;; #(
         *) # No: use -lboost_foo to find the shared library.
           Boost_lib_LIBS="-l$boost_lib";;
       esac
