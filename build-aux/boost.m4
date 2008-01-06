@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# serial 4
+# serial 5
 # Original sources can be found at http://repo.or.cz/w/boost.m4.git
 # You can fetch the latest version of the script by doing:
 #   wget 'http://repo.or.cz/w/boost.m4.git?a=blob_plain;f=build-aux/boost.m4;hb=HEAD' -O boost.m4
@@ -29,7 +29,7 @@
 # define BOOST_CPPFLAGS accordingly.  It will add an option --with-boost to
 # your configure so that users can specify non standard locations.
 # For more README and documentation, go to http://repo.or.cz/w/boost.m4.git
-# Note: THESE MACRO ASSUME THAT YOU USE LIBTOOL.  If you don't, don't worry,
+# Note: THESE MACROS ASSUME THAT YOU USE LIBTOOL.  If you don't, don't worry,
 # simply read the README, it will show you what to do step by step.
 
 m4_pattern_forbid([^_?BOOST_])
@@ -449,6 +449,18 @@ AC_DEFUN([BOOST_REGEX],
                 [boost/regex.hpp],
                 [boost::regex exp("*"); boost::regex_match("foo", exp);])
 ])# BOOST_REGEX
+
+
+# BOOST_SERIALIZATION([PREFERRED-RT-OPT])
+# ---------------------------------------
+# Look for Boost.Serialization.  For the documentation of PREFERRED-RT-OPT, see
+# the documentation of BOOST_FIND_LIB above.
+AC_DEFUN([BOOST_SERIALIZATION],
+[BOOST_FIND_LIB([serialization], [$1],
+                [boost/archive/text_oarchive.hpp],
+                [std::ostream* o = 0; // Cheap way to get an ostream...
+                boost::archive::text_oarchive t(*o);])
+])# BOOST_SIGNALS
 
 
 # BOOST_SIGNALS([PREFERRED-RT-OPT])
