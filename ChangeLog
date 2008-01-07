@@ -1,3 +1,17 @@
+2008-01-07  Benoit Sigoure  <tsuna@lrde.epita.fr>
+
+	Fix the test for Boost.Test.
+	Some extra code is required to use Boost.Test which defines its own
+	`main' function.
+	* build-aux/boost.m4 (BOOST_FIND_LIB): Accept a 5th optional
+	argument.
+	(BOOST_TEST): Use it to define `init_unit_test_suite'.
+	* tests/testsuite.at: Add a test for the static flavor of
+	BOOST_TEST.
+	* THANKS: Update.
+	Problem reported by Jens Seidel.  Patch contributed by Hubert
+	Figuière.
+
 2008-01-06  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
 	Add support for Boost.Serialization.

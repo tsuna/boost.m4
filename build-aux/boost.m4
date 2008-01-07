@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# serial 5
+# serial 6
 # Original sources can be found at http://repo.or.cz/w/boost.m4.git
 # You can fetch the latest version of the script by doing:
 #   wget 'http://repo.or.cz/w/boost.m4.git?a=blob_plain;f=build-aux/boost.m4;hb=HEAD' -O boost.m4
@@ -173,11 +173,14 @@ AC_LANG_POP([C++])dnl
 ])# BOOST_FIND_HEADER
 
 
-# BOOST_FIND_LIB([LIB-NAME], [PREFERRED-RT-OPT], [HEADER-NAME], [CXX-TEST])
+# BOOST_FIND_LIB([LIB-NAME], [PREFERRED-RT-OPT], [HEADER-NAME], [CXX-TEST],
+#                [CXX-PROLOGUE])
 # -------------------------------------------------------------------------
 # Look for the Boost library LIB-NAME (e.g., LIB-NAME = `thread', for
 # libboost_thread).  Check that HEADER-NAME works and check that
-# libboost_LIB-NAME can link with the code CXX-TEST.
+# libboost_LIB-NAME can link with the code CXX-TEST.  The optional argument
+# CXX-PROLOGUE can be used to include some C++ code before the `main'
+# function.
 #
 # Invokes BOOST_FIND_HEADER([HEADER-NAME]) (see above).
 #
@@ -227,7 +230,8 @@ AC_CACHE_CHECK([for the Boost $1 library], [Boost_lib],
     AC_MSG_ERROR([the libext variable is empty, did you invoke Libtool?])
   boost_save_ac_objext=$ac_objext
   # Generate the test file.
-  AC_LANG_CONFTEST([AC_LANG_PROGRAM([#include <$3>], [$4])])
+  AC_LANG_CONFTEST([AC_LANG_PROGRAM([#include <$3>
+$5], [$4])])
 dnl Optimization hacks: compiling C++ is slow, especially with Boost.  What
 dnl we're trying to do here is guess the right combination of link flags
 dnl (LIBS / LDFLAGS) to use a given library.  This can take several
@@ -498,7 +502,10 @@ AC_DEFUN([BOOST_STRING_ALGO],
 AC_DEFUN([BOOST_TEST],
 [m4_pattern_allow([^BOOST_CHECK$])dnl
 BOOST_FIND_LIB([unit_test_framework], [$1],
-               [boost/test/unit_test.hpp], [BOOST_CHECK(2==2);])
+               [boost/test/unit_test.hpp], [BOOST_CHECK(2 == 2);],
+               [using boost::unit_test::test_suite;
+               test_suite* init_unit_test_suite(int argc, char ** argv)
+               { return NULL; }])
 ])# BOOST_TEST
 
 
