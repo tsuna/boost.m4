@@ -88,10 +88,17 @@ AC_LANG_PUSH([C++])dnl
       && boost_subminor_chk="|| (B_V_MAJ == $boost_version_major \
 && B_V_MIN == $boost_version_minor \
 && B_V_SUB < $boost_version_subminor)"
-    for boost_inc in "$with_boost/include" '' \
+    for boost_dir in "$with_boost/include" '' \
              /opt/local/include /usr/local/include /opt/include /usr/include \
              "$with_boost" C:/Boost/include
     do
+    # Without --layout=system, Boost (or at least some versions) installs
+    # itself in <prefix>/include/boost-<version>.  This inner loop helps to
+    # find headers in such directories.
+    # I didn't indent this loop on purpose (to avoid over-indented code)
+    for boost_inc in "$boost_dir" "$boost_dir"/boost-*
+    do
+      # $boost_inc can often be a symlink, so keep -e here.
       test -e "$boost_inc" || continue
       # Ensure that version.hpp exists: we're going to read it.  Moreover,
       # Boost could be reachable thanks to the default include path so we can
@@ -118,8 +125,9 @@ m4_pattern_allow([^BOOST_VERSION$])dnl
         if test x"$boost_inc" != x; then
           boost_cv_inc_path=$boost_inc
         fi
-        break
+        break 2
       fi
+    done
     done
 AC_LANG_POP([C++])dnl
     ])

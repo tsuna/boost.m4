@@ -1,3 +1,14 @@
+2008-01-11  Benoit Sigoure  <tsuna@lrde.epita.fr>
+
+	Handle multiple versions of Boost under the same prefix.
+	* build-aux/boost.m4 (BOOST_REQUIRE): Find the headers of all the
+	versions of Boost installed.  If you have, say,
+	/usr/local/include/boost which is a symlink to
+	/usr/local/include/boost-1_34 and you also have
+	/usr/local/include/boost-1_35 installed, the macro needs to find
+	them all if you required Boost 1.35 for instance.
+	Bug reported by David Herring.
+
 2008-01-07  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
 	Fix the test for Boost.Test.
