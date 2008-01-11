@@ -4,7 +4,7 @@
 	* build-aux/boost.m4 (_BOOST_FIND_COMPILER_TAG): When the compiler
 	is gcc also try the `gcc' tag (after the version-specific tag e.g.
 	`gcc41') since newer versions of Boost (>= 1.35?) seem to do that.
-	Report and patch by David Herring.
+	Report and patch by Daniel Herring.
 
 2008-01-11  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
@@ -15,7 +15,7 @@
 	/usr/local/include/boost-1_34 and you also have
 	/usr/local/include/boost-1_35 installed, the macro needs to find
 	them all if you required Boost 1.35 for instance.
-	Bug reported by David Herring.
+	Bug reported by Daniel Herring.
 
 2008-01-07  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
@@ -42,7 +42,7 @@
 
 	Do not try to link with non existent static archives.
 	* build-aux/boost.m4 (BOOST_FIND_LIB): Here.
-	Suggested by David Herring.
+	Suggested by Daniel Herring.
 
 2007-12-17  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
@@ -129,7 +129,7 @@
 	Add a test for Boost.Wave.
 	* README: Mention the new library.
 	* build-aux/boost.m4 (BOOST_WAVE): New.  Contributed by
-	David Herring.
+	Daniel Herring.
 	* tests/testsuite.at: Add a test.
 
 2007-11-20  Benoit Sigoure  <tsuna@lrde.epita.fr>
@@ -193,7 +193,7 @@
 	* build-aux/boost.m4 (BOOST_FIND_LIB): Compile the test file once
 	and then try to link it.
 	(_BOOST_AC_LINK_IFELSE): Fork of the Autoconf macro _AC_LINK_IFELSE.
-	Optimization suggested by David Herring.
+	Optimization suggested by Daniel Herring.
 
 2007-11-20  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
@@ -223,7 +223,7 @@
 	Fix a typo in BOOST_THREADS.
 	* build-aux/boost.m4 (BOOST_THREADS): Properly set
 	`boost_threads_save_CPPFLAGS' to `CPPFLAGS' instead of `LIBS'!
-	Bug reported by David Herring.
+	Bug reported by Daniel Herring.
 
 2007-11-13  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
