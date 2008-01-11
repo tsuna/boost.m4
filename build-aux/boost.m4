@@ -732,10 +732,19 @@ AC_CACHE_CHECK([for the toolset name used by Boost for $CXX], [boost_cv_lib_tag]
   done
 AC_LANG_POP([C++])dnl
 ])
-  if test x"$boost_cv_lib_tag" = xunknown; then
-    AC_MSG_WARN([[could not figure out which toolset name to use for $CXX]])
-    boost_cv_lib_tag=
-  fi
+  case $boost_cv_lib_tag in #(
+    # Some newer (>= 1.35?) versions of Boost seem to only use "gcc" as opposed
+    # to "gcc41" for instance.
+    gcc*)
+      # We can specify multiple tags in this variable because it's used by
+      # BOOST_FIND_LIB that does a `for tag in -$boost_cv_lib_tag' ...
+      boost_cv_lib_tag="$boost_cv_lib_tag -gcc"
+      ;; #(
+    unknown)
+      AC_MSG_WARN([[could not figure out which toolset name to use for $CXX]])
+      boost_cv_lib_tag=
+      ;;
+  esac
 ])# _BOOST_FIND_COMPILER_TAG
 
 

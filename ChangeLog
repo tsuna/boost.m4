@@ -1,5 +1,13 @@
 2008-01-11  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
+	Handle the `gcc' tag used by newer versions of Boost.
+	* build-aux/boost.m4 (_BOOST_FIND_COMPILER_TAG): When the compiler
+	is gcc also try the `gcc' tag (after the version-specific tag e.g.
+	`gcc41') since newer versions of Boost (>= 1.35?) seem to do that.
+	Report and patch by David Herring.
+
+2008-01-11  Benoit Sigoure  <tsuna@lrde.epita.fr>
+
 	Handle multiple versions of Boost under the same prefix.
 	* build-aux/boost.m4 (BOOST_REQUIRE): Find the headers of all the
 	versions of Boost installed.  If you have, say,
