@@ -441,6 +441,13 @@ AC_DEFUN([BOOST_LAMBDA],
 [BOOST_FIND_HEADER([boost/lambda/lambda.hpp])])
 
 
+# BOOST_PREPROCESSOR()
+# --------------------
+# Look for Boost.Preprocessor
+AC_DEFUN([BOOST_PREPROCESSOR],
+[BOOST_FIND_HEADER([boost/preprocessor/repeat.hpp])])
+
+
 # BOOST_PROGRAM_OPTIONS([PREFERRED-RT-OPT])
 # -----------------------------------------
 # Look for Boost.Program_options.  For the documentation of PREFERRED-RT-OPT, see
