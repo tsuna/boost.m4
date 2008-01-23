@@ -97,6 +97,7 @@ implemented:
     - Format
     - Function
     - Hash (aka Functional/Hash)
+    - Lambda
     - Utility
     - Ref
     - SmartPtr

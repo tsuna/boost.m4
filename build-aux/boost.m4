@@ -434,6 +434,13 @@ AC_DEFUN([BOOST_HASH],
 [BOOST_FIND_HEADER([boost/functional/hash.hpp])])
 
 
+# BOOST_LAMBDA()
+# --------------
+# Look for Boost.Lambda
+AC_DEFUN([BOOST_LAMBDA],
+[BOOST_FIND_HEADER([boost/lambda/lambda.hpp])])
+
+
 # BOOST_PROGRAM_OPTIONS([PREFERRED-RT-OPT])
 # -----------------------------------------
 # Look for Boost.Program_options.  For the documentation of PREFERRED-RT-OPT, see

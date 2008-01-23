@@ -1,3 +1,10 @@
+2008-01-23  Benoit Sigoure  <tsuna@lrde.epita.fr>
+
+	Add support for Boost.Lambda.
+	* README: Mention the new library.
+	* build-aux/boost.m4 (BOOST_LAMBDA): New.
+	* tests/testsuite.at: Test the new macro.
+
 2008-01-11  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
 	Handle the `gcc' tag used by newer versions of Boost.
