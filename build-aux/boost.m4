@@ -21,7 +21,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# serial 6
+# serial 7
 # Original sources can be found at http://repo.or.cz/w/boost.m4.git
 # You can fetch the latest version of the script by doing:
 #   wget 'http://repo.or.cz/w/boost.m4.git?a=blob_plain;f=build-aux/boost.m4;hb=HEAD' -O boost.m4
@@ -234,10 +234,15 @@ AC_CACHE_CHECK([for the Boost $1 library], [Boost_lib],
     mt* | mt-*) boost_mt=-mt; boost_rtopt=`expr "X$2" : 'Xmt-*\(.*\)'`;; #(
     *) boost_mt=; boost_rtopt=$2;;
   esac
-  # If the PREFERRED-RT-OPT are not empty, prepend a `-'.
+  # Find the proper debug variant depending on what we've been asked to find.
   case $boost_rtopt in #(
-    *[[a-z0-9A-Z]]*) boost_rtopt="-$boost_rtopt";;
+    *d*) boost_rt_d=$boost_rtopt;; #(
+    *[[sgpn]]*) # Insert the `d' at the right place (in between `sg' and `pn')
+      boost_rt_d=`echo "$boost_rtopt" | sed 's/\(s*g*\)\(p*n*\)/\1\2/'`;; #(
+    *) boost_rt_d='-d';;
   esac
+  # If the PREFERRED-RT-OPT are not empty, prepend a `-'.
+  test -n "$boost_rtopt" && boost_rtopt="-$boost_rtopt"
   $boost_guess_use_mt && boost_mt=-mt
   # Look for the abs path the static archive.
   # $libext is computed by Libtool but let's make sure it's non empty.
@@ -276,9 +281,8 @@ for boost_mt_ in $boost_mt -mt ''; do
 for boost_rtopt_ in $boost_rtopt '' -d; do
   for boost_lib in \
     boost_$1$boost_tag_$boost_mt_$boost_rtopt_$boost_ver_ \
-    boost_$1$boost_tag_$boost_mt_$boost_ver_ \
     boost_$1$boost_tag_$boost_rtopt_$boost_ver_ \
-    boost_$1$boost_tag_$boost_mt_ \
+    boost_$1$boost_tag_$boost_mt_$boost_ver_ \
     boost_$1$boost_tag_$boost_ver_
   do
     # Avoid testing twice the same lib

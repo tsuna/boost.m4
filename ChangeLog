@@ -1,3 +1,14 @@
+2008-09-10  Benoit Sigoure <tsuna@lrde.epita.fr>
+
+	Properly find the debug variant and adjust the library search order.
+	* build-aux/boost.m4 (BOOST_REQUIRE): In order to get the proper debug
+	variant of a library, the `d' must be properly inserted in the runtime
+	options.
+	The for-loop that covers the search space of possible library names
+	was searching twice the same space, so simplify it..
+	* THANKS: Update.
+	Bug reported by Alexandre Rostovtsev.
+
 2008-01-23  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
 	Add support for Boost.Preprocessor.
