@@ -1,5 +1,12 @@
 2008-09-10  Benoit Sigoure <tsuna@lrde.epita.fr>
 
+	Prioritize GCC 4.3 now that it has been released and add support for
+	GCC 4.4.
+	* build-aux/boost.m4 (_BOOST_FIND_COMPILER_TAG): Here.
+	Patch contributed by Jens Seidel.
+
+2008-09-10  Benoit Sigoure <tsuna@lrde.epita.fr>
+
         Add support for Boost.Asio.
 	* README: Mention the new library.
 	* build-aux/boost.m4 (BOOST_ASIO): New.

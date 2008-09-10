@@ -781,8 +781,9 @@ AC_CACHE_CHECK([for the toolset name used by Boost for $CXX], [boost_cv_lib_tag]
   #   como, edg, kcc, bck, mp, sw, tru, xlc
   # I'm not sure about my test for `il' (be careful: Intel's ICC pre-defines
   # the same defines as GCC's).
-  # TODO: Move the test on GCC 4.3 up once it's released.
+  # TODO: Move the test on GCC 4.4 up once it's released.
   for i in \
+    _BOOST_gcc_test(4, 3) \
     _BOOST_gcc_test(4, 2) \
     _BOOST_gcc_test(4, 1) \
     _BOOST_gcc_test(4, 0) \
@@ -800,7 +801,7 @@ AC_CACHE_CHECK([for the toolset name used by Boost for $CXX], [boost_cv_lib_tag]
     "defined __ICC && (defined __unix || defined __unix__) @ il" \
     "defined __ICL @ iw" \
     "defined _MSC_VER && _MSC_VER == 1300 @ vc7" \
-    _BOOST_gcc_test(4, 3) \
+    _BOOST_gcc_test(4, 4) \
     _BOOST_gcc_test(2, 95) \
     "defined __MWERKS__ && __MWERKS__ <= 0x32FF @ cw9" \
     "defined _MSC_VER && _MSC_VER < 1300 && !defined UNDER_CE @ vc6" \
