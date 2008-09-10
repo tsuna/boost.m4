@@ -361,6 +361,14 @@ AC_LANG_POP([C++])dnl
 # version of each library (among other things).
 
 
+# BOOST_ASIO()
+# ------------
+# Look for Boost.Asio (new in Boost 1.35).
+AC_DEFUN([BOOST_ASIO],
+[AC_REQUIRE([BOOST_SYSTEM])dnl
+BOOST_FIND_HEADER([boost/asio.hpp])])
+
+
 # BOOST_BIND()
 # ------------
 # Look for Boost.Bind

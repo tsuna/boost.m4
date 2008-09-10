@@ -1,5 +1,14 @@
 2008-09-10  Benoit Sigoure <tsuna@lrde.epita.fr>
 
+        Add support for Boost.Asio.
+	* README: Mention the new library.
+	* build-aux/boost.m4 (BOOST_ASIO): New.
+	* tests/testsuite.at: Test the new macro.
+	* THANKS: Update.
+	Report & some code by Jeremy Powell.
+
+2008-09-10  Benoit Sigoure <tsuna@lrde.epita.fr>
+
 	Fix a thinko in the README.
 	* README: Swap "library" / "program" when specifying when LIBS/LDADD
 	must be used.
