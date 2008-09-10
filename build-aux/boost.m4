@@ -666,6 +666,13 @@ LDFLAGS=$boost_wave_save_LDFLAGS
 ])# BOOST_WAVE
 
 
+# BOOST_XPRESSIVE()
+# -----------------
+# Look for Boost.Xpressive (new since 1.36.0).
+AC_DEFUN([BOOST_XPRESSIVE],
+[BOOST_FIND_HEADER([boost/xpressive/xpressive.hpp])])
+
+
 # ----------------- #
 # Internal helpers. #
 # ----------------- #

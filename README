@@ -107,6 +107,7 @@ implemented:
     - Tribool
     - Tuple
     - Variant
+    - Xpressive
 Thus you can invoke BOOST_FOREACH (for instance).  It will check that
 <boost/foreach.hpp> works and define the preprocessor symbol
 HAVE_BOOST_FOREACH_HPP.  For each of the libraries mentioned above, a couple

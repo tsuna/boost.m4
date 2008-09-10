@@ -1,5 +1,13 @@
 2008-09-10  Benoit Sigoure <tsuna@lrde.epita.fr>
 
+        Add support for Boost.Xpressive.
+	* README: Mention the new library.
+	* build-aux/boost.m4 (BOOST_XPRESSIVE): New.
+	* tests/testsuite.at: Test the new macro.
+	Report & some code by Staffan Gimåker.
+
+2008-09-10  Benoit Sigoure <tsuna@lrde.epita.fr>
+
 	Handle Boost.System and adjust the code to handle the binary
 	dependencies.
 
