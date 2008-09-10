@@ -56,8 +56,8 @@ HOWTO
       AM_CPPFLAGS = $(BOOST_CPPFLAGS)
       AM_LDFLAGS = $(BOOST_THREADS_LDFLAGS)
       LIBS = $(BOOST_THREAD_LIBS)
-   Remember that for targets that are programs, you must use LIBS or
-   progname_LIBS, but for libraries you must use LDADD or libname_LDADD.
+   Remember that for targets that are programs, you must use LDADD or
+   progname_LDADD, but for libraries you must use LIBS or libname_LIBS.
 
 MACROS
 ------
