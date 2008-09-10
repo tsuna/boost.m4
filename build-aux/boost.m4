@@ -21,7 +21,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# serial 7
+# serial 8
 # Original sources can be found at http://repo.or.cz/w/boost.m4.git
 # You can fetch the latest version of the script by doing:
 #   wget 'http://repo.or.cz/w/boost.m4.git?a=blob_plain;f=build-aux/boost.m4;hb=HEAD' -O boost.m4
@@ -159,6 +159,13 @@ AC_SUBST([BOOST_CPPFLAGS])dnl
     test -e "$boost_version_hpp" \
       && boost_cv_lib_version=`sed "$boost_sed_version" "$boost_version_hpp"`
     ])
+    # e.g. "134" for 1_34_1 or "135" for 1_35
+    boost_major_version=`echo "$boost_cv_lib_version" | sed 's/_//;s/_.*//'`
+    case $boost_major_version in
+      '' | *[[^0-9]]*)
+        AC_MSG_ERROR([Invalid value: boost_major_version=$boost_major_version])
+        ;;
+    esac
 m4_popdef([BOOST_VERSION_REQ])dnl
 ])# BOOST_REQUIRE
 
@@ -383,12 +390,26 @@ AC_DEFUN([BOOST_DATE_TIME],
 
 # BOOST_FILESYSTEM([PREFERRED-RT-OPT])
 # ------------------------------------
-# Look for Boost.Filesystem.  For the documentation of PREFERRED-RT-OPT, see the
-# documentation of BOOST_FIND_LIB above.
-# Do not check for boost/filesystem.hpp because this file was introduced in 1.34.
+# Look for Boost.Filesystem.  For the documentation of PREFERRED-RT-OPT, see
+# the documentation of BOOST_FIND_LIB above.
+# Do not check for boost/filesystem.hpp because this file was introduced in
+# 1.34.
 AC_DEFUN([BOOST_FILESYSTEM],
-[BOOST_FIND_LIB([filesystem], [$1],
+[# Do we have to check for Boost.System?  This link-time dependency was
+# added as of 1.35.0.  If we have a version <1.35, we must not attempt to
+# find Boost.System as it didn't exist by then.
+if test $boost_major_version -ge 135; then
+BOOST_SYSTEM([$1])
+fi # end of the Boost.System check.
+boost_filesystem_save_LIBS=$LIBS
+boost_filesystem_save_LDFLAGS=$LDFLAGS
+m4_pattern_allow([^BOOST_SYSTEM_(LIBS|LDFLAGS)$])dnl
+LIBS="$LIBS $BOOST_SYSTEM_LIBS"
+LDFLAGS="$LDFLAGS $BOOST_SYSTEM_LDFLAGS"
+BOOST_FIND_LIB([filesystem], [$1],
                 [boost/filesystem/path.hpp], [boost::filesystem::path p;])
+LIBS=$boost_filesystem_save_LIBS
+LDFLAGS=$boost_filesystem_save_LDFLAGS
 ])# BOOST_FILESYSTEM
 
 
@@ -528,6 +549,18 @@ AC_DEFUN([BOOST_STRING_ALGO],
 ])
 
 
+# BOOST_SYSTEM([PREFERRED-RT-OPT])
+# --------------------------------
+# Look for Boost.System.  For the documentation of PREFERRED-RT-OPT, see the
+# documentation of BOOST_FIND_LIB above.  This library was introduced in Boost
+# 1.35.0.
+AC_DEFUN([BOOST_SYSTEM],
+[BOOST_FIND_LIB([system], [$1],
+                [boost/system/error_code.hpp],
+                [boost::system::error_code e; e.clear();])
+])# BOOST_SYSTEM
+
+
 # BOOST_TEST([PREFERRED-RT-OPT])
 # ------------------------------
 # Look for Boost.Test.  For the documentation of PREFERRED-RT-OPT, see the
@@ -611,12 +644,26 @@ BOOST_FIND_HEADER([boost/variant.hpp])])
 
 # BOOST_WAVE([PREFERRED-RT-OPT])
 # ------------------------------
+# NOTE: If you intend to use Wave/Spirit with thread support, make sure you
+# call BOOST_THREADS first.
 # Look for Boost.Wave.  For the documentation of PREFERRED-RT-OPT, see the
 # documentation of BOOST_FIND_LIB above.
 AC_DEFUN([BOOST_WAVE],
-[BOOST_FIND_LIB([wave], [$1],
+[AC_REQUIRE([BOOST_FILESYSTEM])dnl
+AC_REQUIRE([BOOST_DATE_TIME])dnl
+boost_wave_save_LIBS=$LIBS
+boost_wave_save_LDFLAGS=$LDFLAGS
+m4_pattern_allow([^BOOST_((FILE)?SYSTEM|DATE_TIME|THREAD)_(LIBS|LDFLAGS)$])dnl
+LIBS="$LIBS $BOOST_SYSTEM_LIBS $BOOST_FILESYSTEM_LIBS $BOOST_DATE_TIME_LIBS\
+$BOOST_THREAD_LIBS"
+LDFLAGS="$LDFLAGS $BOOST_SYSTEM_LDFLAGS $BOOST_FILESYSTEM_LDFLAGS\
+$BOOST_DATE_TIME_LDFLAGS $BOOST_THREAD_LDFLAGS"
+BOOST_FIND_LIB([wave], [$1],
                 [boost/wave.hpp],
-                [boost::wave::token_id id; get_token_name(id);])])
+                [boost::wave::token_id id; get_token_name(id);])
+LIBS=$boost_wave_save_LIBS
+LDFLAGS=$boost_wave_save_LDFLAGS
+])# BOOST_WAVE
 
 
 # ----------------- #

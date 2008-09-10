@@ -133,6 +133,7 @@ The following libraries are supported:
   - Regex
   - Serialization
   - Signals
+  - System
   - Test (aka Unit Test Framework)
   - Threads
   - Wave
@@ -156,6 +157,9 @@ compilation flags BOOST_<LIB-NAME>_LDFLAGS and BOOST_<LIB-NAME>_LIBS.
 Small pitfall: BOOST_TEST generates BOOST_UNIT_TEST_FRAMEWORK_LDFLAGS and
 BOOST_UNIT_TEST_FRAMEWORK_LIBS, not BOOST_TEST_LFDLAGS and BOOST_TEST_LIBS.
 Sorry for the inconsistency.
+
+NOTE: If you intend to use Wave/Spirit with thread support, make sure you
+call BOOST_THREADS first.
 
   Writing your own checks / supporting more Boost libraries
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

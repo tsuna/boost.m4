@@ -1,5 +1,25 @@
 2008-09-10  Benoit Sigoure <tsuna@lrde.epita.fr>
 
+	Handle Boost.System and adjust the code to handle the binary
+	dependencies.
+
+	Boost.Filesystem (and the libraries depending on it) now requires
+	Boost.System at link time.  Boost.System was introduced in Boost 1.35
+	so we must only try to find it if the version at hand is >= 1.35.
+	* README: Add the new library and mention that BOOST_THREADS must be
+	invoked if Wave/Spirit is intended to be used with thread support.
+	* build-aux/boost.m4 (BOOST_REQUIRE): Define $boost_major_version.
+	(BOOST_FILESYSTEM): Also check for Boost.System if
+	$boost_major_version indicates we have Boost >= 1.35 at hand.
+	(BOOST_SYSTEM): New.
+	(BOOST_WAVE): Require Boost.Filesystem and Boost.DateTime.
+	* tests/testsuite.at: Add a test for BOOST_SYSTEM.
+	* THANKS: Update.
+	Bug reported by Daniel Herring with some code contributions of
+	Daniel Herring and Paul Balomiri.
+
+2008-09-10  Benoit Sigoure <tsuna@lrde.epita.fr>
+
 	Properly find the debug variant and adjust the library search order.
 	* build-aux/boost.m4 (BOOST_REQUIRE): In order to get the proper debug
 	variant of a library, the `d' must be properly inserted in the runtime
