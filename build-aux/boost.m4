@@ -169,6 +169,16 @@ AC_SUBST([BOOST_CPPFLAGS])dnl
 m4_popdef([BOOST_VERSION_REQ])dnl
 ])# BOOST_REQUIRE
 
+# BOOST_STATIC()
+# --------------
+# Add the "--enable-static-boost" configure argument. If this argument is given
+# on the command line, static versions of the libraries will be looked up.
+AC_DEFUN([BOOST_STATIC],
+  [AC_ARG_ENABLE([static-boost],
+     [AC_HELP_STRING([--enable-static-boost],
+               [Prefer the static boost libraries over the shared ones [no]])],
+     [enable_static_boost=yes],
+     [enable_static_boost=no])])# BOOST_STATIC
 
 # BOOST_FIND_HEADER([HEADER-NAME], [ACTION-IF-NOT-FOUND], [ACTION-IF-FOUND])
 # --------------------------------------------------------------------------
@@ -219,6 +229,7 @@ AC_LANG_POP([C++])dnl
 AC_DEFUN([BOOST_FIND_LIB],
 [AC_REQUIRE([_BOOST_FIND_COMPILER_TAG])dnl
 AC_REQUIRE([BOOST_REQUIRE])dnl
+AC_REQUIRE([BOOST_STATIC])dnl
 AC_REQUIRE([_BOOST_GUESS_WHETHER_TO_USE_MT])dnl
 AC_LANG_PUSH([C++])dnl
 AS_VAR_PUSHDEF([Boost_lib], [boost_cv_lib_$1])dnl
@@ -241,6 +252,9 @@ AC_CACHE_CHECK([for the Boost $1 library], [Boost_lib],
     mt* | mt-*) boost_mt=-mt; boost_rtopt=`expr "X$2" : 'Xmt-*\(.*\)'`;; #(
     *) boost_mt=; boost_rtopt=$2;;
   esac
+  if test $enable_static_boost = yes; then
+    boost_rtopt="s$boost_rtopt"
+  fi
   # Find the proper debug variant depending on what we've been asked to find.
   case $boost_rtopt in #(
     *d*) boost_rt_d=$boost_rtopt;; #(
