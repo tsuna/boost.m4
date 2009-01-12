@@ -21,7 +21,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# serial 9
+# serial 10
 # Original sources can be found at http://repo.or.cz/w/boost.m4.git
 # You can fetch the latest version of the script by doing:
 #   wget 'http://repo.or.cz/w/boost.m4.git?a=blob_plain;f=build-aux/boost.m4;hb=HEAD' -O boost.m4
@@ -73,54 +73,39 @@ rm -f conftest*
 # FIXME: Add a 2nd optional argument so that it's not fatal if Boost isn't found
 # and add an AC_DEFINE to tell whether HAVE_BOOST.
 AC_DEFUN([BOOST_REQUIRE],
-[dnl First find out what kind of argument we have.
-dnl If we have an empty argument, there is no constraint on the version of
-dnl Boost to use.  If it's a literal version number, we can split it in M4 (so
-dnl the resulting configure script will be smaller/faster).  Otherwise we do
-dnl the splitting at runtime.
-m4_bmatch([$1],
-  [^ *$], [m4_pushdef([BOOST_VERSION_REQ], [])dnl
-           boost_version_major=0
-           boost_version_minor=0
-           boost_version_subminor=0
-],
-  [^[0-9]+\([-._][0-9]+\)*$],
-    [m4_pushdef([BOOST_VERSION_REQ], [ version >= $1])dnl
-     boost_version_major=m4_bregexp([$1], [^\([0-9]+\)], [\1])
-     boost_version_minor=m4_bregexp([$1], [^[0-9]+[-._]\([0-9]+\)], [\1])
-     boost_version_subminor=m4_bregexp([$1], [^[0-9]+[-._][0-9]+[-._]\([0-9]+\)], [\1])
-],
-  [^\$[a-zA-Z_]+$],
-    [m4_pushdef([BOOST_VERSION_REQ], [])dnl
-     boost_version_major=`expr "X$1" : 'X\([[^-._]]*\)'`
-     boost_version_minor=`expr "X$1" : 'X[[0-9]]*[[-._]]\([[^-._]]*\)'`
-     boost_version_subminor=`expr "X$1" : 'X[[0-9]]*[[-._]][[0-9]]*[[-._]]\([[0-9]]*\)'`
-     case $boost_version_major:$boost_version_minor in #(
-       *: | :* | *[[^0-9]]*:* | *:*[[^0-9]]*)
-         AC_MSG_ERROR([[Invalid argument for REQUIRE_BOOST: `$1']])
-         ;;
-     esac
-],
-  [m4_fatal(Invalid argument: `$1')]
-)dnl
+[boost_save_IFS=$IFS
+boost_version_req="$1"
+IFS=.
+set x $boost_version_req 0 0 0
+IFS=$boost_save_IFS
+shift
+boost_version_req=`expr "$[1]" '*' 100000 + "$[2]" '*' 100 + "$[3]"`
 AC_ARG_WITH([boost],
    [AS_HELP_STRING([--with-boost=DIR],
-                   [prefix of Boost]BOOST_VERSION_REQ[ @<:@guess@:>@])])dnl
+                   [prefix of Boost $1 @<:@guess@:>@])])dnl
 AC_SUBST([DISTCHECK_CONFIGURE_FLAGS],
          ["$DISTCHECK_CONFIGURE_FLAGS '--with-boost=$with_boost'"])
-  boost_save_CPPFLAGS=$CPPFLAGS
-  AC_CACHE_CHECK([for Boost headers[]BOOST_VERSION_REQ],
+boost_save_CPPFLAGS=$CPPFLAGS
+  AC_CACHE_CHECK([for Boost headers version >= $boost_version_req],
     [boost_cv_inc_path],
     [boost_cv_inc_path=no
 AC_LANG_PUSH([C++])dnl
-    boost_subminor_chk=
-    test x"$boost_version_subminor" != x \
-      && boost_subminor_chk="|| (B_V_MAJ == $boost_version_major \
-&& B_V_MIN == $boost_version_minor \
-&& B_V_SUB < $boost_version_subminor)"
-    for boost_dir in "$with_boost/include" '' \
-             /opt/local/include /usr/local/include /opt/include /usr/include \
-             "$with_boost" C:/Boost/include
+m4_pattern_allow([^BOOST_VERSION$])dnl
+    AC_LANG_CONFTEST([AC_LANG_PROGRAM([[#include <boost/version.hpp>
+#if !defined BOOST_VERSION
+# error BOOST_VERSION is not defined
+#elif BOOST_VERSION < $boost_version_req
+# error Boost headers version < $boost_version_req
+#endif
+]])])
+      # If the user provided a value to --with-boost, use it and only it.
+    case $with_boost in #(
+      ''|yes) set x '' /opt/local/include /usr/local/include /opt/include \
+                 /usr/include C:/Boost/include;; #(
+      *)      set x "$with_boost/include" "$with_boost";;
+    esac
+    shift
+    for boost_dir
     do
     # Without --layout=system, Boost (or at least some versions) installs
     # itself in <prefix>/include/boost-<version>.  This inner loop helps to
@@ -129,20 +114,7 @@ AC_LANG_PUSH([C++])dnl
     for boost_inc in "$boost_dir" "$boost_dir"/boost-*
     do
       test x"$boost_inc" != x && CPPFLAGS="$CPPFLAGS -I$boost_inc"
-m4_pattern_allow([^BOOST_VERSION$])dnl
-      AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <boost/version.hpp>
-#ifndef BOOST_VERSION
-# error BOOST_VERSION is not defined
-#endif
-#define B_V_MAJ (BOOST_VERSION / 100000)
-#define B_V_MIN (BOOST_VERSION / 100 % 1000)
-#define B_V_SUB (BOOST_VERSION % 100)
-#if (B_V_MAJ < $boost_version_major) \
-   || (B_V_MAJ == $boost_version_major \
-       && B_V_MIN < $boost_version_minor) $boost_subminor_chk
-# error Boost headers version < $1
-#endif
-]])], [boost_cv_inc_path=yes], [boost_cv_version=no])
+      AC_COMPILE_IFELSE([], [boost_cv_inc_path=yes], [boost_cv_version=no])
       if test x"$boost_cv_inc_path" = xyes; then
         if test x"$boost_inc" != x; then
           boost_cv_inc_path=$boost_inc
@@ -154,7 +126,7 @@ m4_pattern_allow([^BOOST_VERSION$])dnl
 AC_LANG_POP([C++])dnl
     ])
     case $boost_cv_inc_path in #(
-      no)   AC_MSG_ERROR([Could not find Boost headers[]BOOST_VERSION_REQ]);;#(
+      no)   AC_MSG_ERROR([cannot find Boost headers version >= $boost_version_req]);;#(
       yes)  BOOST_CPPFLAGS=;;#(
       *)    AC_SUBST([BOOST_CPPFLAGS], ["-I$boost_cv_inc_path"]);;
     esac
@@ -173,7 +145,6 @@ boost-lib-version = BOOST_LIB_VERSION],
         ;;
     esac
 CPPFLAGS=$boost_save_CPPFLAGS
-m4_popdef([BOOST_VERSION_REQ])dnl
 ])# BOOST_REQUIRE
 
 # BOOST_STATIC()
