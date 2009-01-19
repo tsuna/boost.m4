@@ -811,10 +811,10 @@ AC_CACHE_CHECK([for the toolset name used by Boost for $CXX], [boost_cv_lib_tag]
 ]])], [boost_cv_lib_tag=$boost_tag; break], [])
   done
 AC_LANG_POP([C++])dnl
-])
   case $boost_cv_lib_tag in #(
     # Some newer (>= 1.35?) versions of Boost seem to only use "gcc" as opposed
     # to "gcc41" for instance.
+    *-gcc | *'-gcc ') :;; #(  Don't re-add -gcc: it's already in there.
     gcc*)
       # We can specify multiple tags in this variable because it's used by
       # BOOST_FIND_LIB that does a `for tag in -$boost_cv_lib_tag' ...
@@ -825,6 +825,7 @@ AC_LANG_POP([C++])dnl
       boost_cv_lib_tag=
       ;;
   esac
+])dnl end of AC_CACHE_CHECK
 ])# _BOOST_FIND_COMPILER_TAG
 
 
