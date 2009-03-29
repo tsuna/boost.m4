@@ -486,6 +486,13 @@ AC_DEFUN([BOOST_LAMBDA],
 [BOOST_FIND_HEADER([boost/lambda/lambda.hpp])])
 
 
+# BOOST_OPTIONAL()
+# ----------------
+# Look for Boost.Optional
+AC_DEFUN([BOOST_OPTIONAL],
+[BOOST_FIND_HEADER([boost/optional.hpp])])
+
+
 # BOOST_PREPROCESSOR()
 # --------------------
 # Look for Boost.Preprocessor
