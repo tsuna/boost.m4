@@ -561,6 +561,13 @@ BOOST_FIND_HEADER([boost/shared_ptr.hpp])
 ])
 
 
+# BOOST_STATICASSERT()
+# --------------------
+# Look for Boost.StaticAssert
+AC_DEFUN([BOOST_STATICASSERT],
+[BOOST_FIND_HEADER([boost/static_assert.hpp])])
+
+
 # BOOST_STRING_ALGO()
 # -------------------
 # Look for Boost.StringAlgo
@@ -644,6 +651,13 @@ BOOST_FIND_HEADER([boost/logic/tribool.hpp])
 # Look for Boost.Tuple
 AC_DEFUN([BOOST_TUPLE],
 [BOOST_FIND_HEADER([boost/tuple/tuple.hpp])])
+
+
+# BOOST_TYPETRAITS()
+# --------------------
+# Look for Boost.TypeTraits
+AC_DEFUN([BOOST_TYPETRAITS],
+[BOOST_FIND_HEADER([boost/type_traits.hpp])])
 
 
 # BOOST_UTILITY()
