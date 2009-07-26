@@ -791,6 +791,7 @@ m4_define([_BOOST_gcc_test],
 # build.  The Boost build system seems to call this a `tag'.
 AC_DEFUN([_BOOST_FIND_COMPILER_TAG],
 [AC_REQUIRE([AC_PROG_CXX])dnl
+AC_REQUIRE([AC_CANONICAL_HOST])dnl
 AC_CACHE_CHECK([for the toolset name used by Boost for $CXX], [boost_cv_lib_tag],
 [AC_LANG_PUSH([C++])dnl
   boost_cv_lib_tag=unknown
@@ -850,9 +851,17 @@ AC_LANG_POP([C++])dnl
     # to "gcc41" for instance.
     *-gcc | *'-gcc ') :;; #(  Don't re-add -gcc: it's already in there.
     gcc*)
+      boost_tag_x=
+      case $host_os in #(
+        darwin*)
+          if test $boost_major_version -ge 136; then
+            # The `x' added in r46793 of Boost.
+            boost_tag_x=x
+          fi;;
+      esac
       # We can specify multiple tags in this variable because it's used by
       # BOOST_FIND_LIB that does a `for tag in -$boost_cv_lib_tag' ...
-      boost_cv_lib_tag="$boost_cv_lib_tag -gcc"
+      boost_cv_lib_tag="$boost_tag_x$boost_cv_lib_tag -${boost_tag_x}gcc"
       ;; #(
     unknown)
       AC_MSG_WARN([[could not figure out which toolset name to use for $CXX]])
