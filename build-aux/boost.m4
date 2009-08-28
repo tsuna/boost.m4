@@ -21,7 +21,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# serial 11
+m4_define([_BOOST_SERIAL], [m4_translit([
+# serial 12
+], [#
+], [])])
+
 # Original sources can be found at http://github.com/tsuna/boost.m4
 # You can fetch the latest version of the script by doing:
 #   wget http://github.com/tsuna/boost.m4/raw/master/build-aux/boost.m4
@@ -79,8 +83,9 @@ rm -rf conftest*
 AC_DEFUN([BOOST_REQUIRE],
 [AC_REQUIRE([AC_PROG_CXX])dnl
 AC_REQUIRE([AC_PROG_GREP])dnl
+echo "$as_me: this is boost.m4[]_BOOST_SERIAL" >&AS_MESSAGE_LOG_FD
 boost_save_IFS=$IFS
-boost_version_req="$1"
+boost_version_req=$1
 IFS=.
 set x $boost_version_req 0 0 0
 IFS=$boost_save_IFS
