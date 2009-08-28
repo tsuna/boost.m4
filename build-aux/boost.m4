@@ -143,7 +143,21 @@ m4_pattern_allow([^BOOST_VERSION$])dnl
       else
         boost_inc="$boost_dir" # Uses sentinel in boost_layout_system_search_list
       fi
-      test x"$boost_inc" != x && CPPFLAGS="$CPPFLAGS -I$boost_inc"
+      if test x"$boost_inc" != x; then
+        # We are going to check whether the version of Boost installed
+        # in $boost_inc is usable by running a compilation that
+        # #includes it.  But if we pass a -I/some/path in which Boost
+        # is not installed, the compiler will just skip this -I and
+        # use other locations (either from CPPFLAGS, or from its list
+        # of system include directories).  As a result we would use
+        # header installed on the machine instead of the /some/path
+        # specified by the user.  So in that precise case (trying
+        # $boost_inc), make sure the version.hpp exists.
+        #
+        # Use test -e as there can be symlinks.
+        test -e "$boost_inc/boost/version.hpp" || continue
+        CPPFLAGS="$CPPFLAGS -I$boost_inc"
+      fi
       AC_COMPILE_IFELSE([], [boost_cv_inc_path=yes], [boost_cv_version=no])
       if test x"$boost_cv_inc_path" = xyes; then
         if test x"$boost_inc" != x; then
