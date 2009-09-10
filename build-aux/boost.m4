@@ -182,7 +182,7 @@ boost-lib-version = BOOST_LIB_VERSION],
     boost_major_version=`echo "$boost_cv_lib_version" | sed 's/_//;s/_.*//'`
     case $boost_major_version in #(
       '' | *[[!0-9]]*)
-        AC_MSG_ERROR([Invalid value: boost_major_version=$boost_major_version])
+        AC_MSG_ERROR([invalid value: boost_major_version=$boost_major_version])
         ;;
     esac
 CPPFLAGS=$boost_save_CPPFLAGS
@@ -321,7 +321,7 @@ dnl empty because the test file is generated only once above (before we
 dnl start the for loops).
   AC_COMPILE_IFELSE([],
     [ac_objext=do_not_rm_me_plz],
-    [AC_MSG_ERROR([Cannot compile a test that uses Boost $1])])
+    [AC_MSG_ERROR([cannot compile a test that uses Boost $1])])
   ac_objext=$boost_save_ac_objext
   boost_failed_libs=
 # Don't bother to ident the 6 nested for loops, only the 2 innermost ones
@@ -383,7 +383,8 @@ done
 rm -f conftest.$ac_objext
 ])
 case $Boost_lib in #(
-  no) AC_MSG_ERROR([Could not find the flags to link with Boost $1])
+  no) _AC_MSG_LOG_CONFTEST
+    AC_MSG_ERROR([cannot not find the flags to link with Boost $1])
     ;;
 esac
 AC_SUBST(AS_TR_CPP([BOOST_$1_LDFLAGS]), [$Boost_lib_LDFLAGS])
@@ -967,11 +968,14 @@ AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
 # rm -f conftest.$ac_objext in between to really different tests, otherwise
 # you will try to link a conftest.o left behind by a previous test.
 # Used to aggressively optimize BOOST_FIND_LIB (see the big comment in this
-# macro)
+# macro).
+#
+# Don't use "break" in the actions, as it would short-circuit some code
+# this macro runs after the actions.
 m4_define([_BOOST_AC_LINK_IFELSE],
 [m4_ifvaln([$1], [AC_LANG_CONFTEST([$1])])dnl
 rm -f conftest$ac_exeext
-boost_ac_ext_save=$ac_ext
+boost_save_ac_ext=$ac_ext
 boost_use_source=:
 # If we already have a .o, re-use it.  We change $ac_ext so that $ac_link
 # tries to link the existing object file instead of compiling from source.
@@ -990,6 +994,8 @@ dnl FIXME: use AS_TEST_X instead when 2.61 is widespread enough.
          _AC_MSG_LOG_CONFTEST
        fi
        $3])
+ac_objext=$boost_save_ac_objext
+ac_ext=$boost_save_ac_ext
 dnl Delete also the IPA/IPO (Inter Procedural Analysis/Optimization)
 dnl information created by the PGI compiler (conftest_ipa8_conftest.oo),
 dnl as it would interfere with the next link command.
