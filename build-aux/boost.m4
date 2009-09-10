@@ -60,8 +60,15 @@ AC_REQUIRE([AC_PROG_SED])dnl
 AC_LANG_CONFTEST([AC_LANG_SOURCE([[$2]])])
 AS_IF([dnl eval is necessary to expand ac_cpp.
 dnl Ultrix and Pyramid sh refuse to redirect output of eval, so use subshell.
+dnl Beware of Windows end-of-lines, for instance if we are running
+dnl some Windows programs under Wine.  In that case, boost/version.hpp
+dnl is certainly using "\r\n", but the regular Unix shell will only
+dnl strip `\n' with backquotes, not the `\r'.  This results in
+dnl boost_cv_lib_version='1_37\r' for instance, which breaks
+dnl everything else.
 dnl Cannot use 'dnl' after [$4] because a trailing dnl may break AC_CACHE_CHECK
 (eval "$ac_cpp conftest.$ac_ext") 2>&AS_MESSAGE_LOG_FD |
+  tr -d '\r' |
   $SED -n -e "$1" >conftest.i 2>&1],
   [$3],
   [$4])
