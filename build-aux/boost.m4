@@ -76,6 +76,7 @@ rm -rf conftest*
 # and add an AC_DEFINE to tell whether HAVE_BOOST.
 AC_DEFUN([BOOST_REQUIRE],
 [AC_REQUIRE([AC_PROG_CXX])dnl
+AC_REQUIRE([AC_PROG_GREP])dnl
 boost_save_IFS=$IFS
 boost_version_req="$1"
 IFS=.
@@ -124,9 +125,22 @@ m4_pattern_allow([^BOOST_VERSION$])dnl
     # Without --layout=system, Boost (or at least some versions) installs
     # itself in <prefix>/include/boost-<version>.  This inner loop helps to
     # find headers in such directories.
+    #
+    # Any ${boost_dir}/boost-x_xx directories are searched in reverse version
+    # order followed by ${boost_dir}.  The final '.' is a sentinel for
+    # searching $boost_dir" itself.  Entries are whitespace separated.
+    #
     # I didn't indent this loop on purpose (to avoid over-indented code)
-    for boost_inc in "$boost_dir" "$boost_dir"/boost-*
+    boost_layout_system_search_list=`cd "$boost_dir" 2>/dev/null \
+        && ls -1 | "${GREP}" '^boost-' | sort -rn -t- -k2 \
+        && echo .`
+    for boost_inc in $boost_layout_system_search_list
     do
+      if test x"$boost_inc" != x.; then
+        boost_inc="$boost_dir/$boost_inc"
+      else
+        boost_inc="$boost_dir" # Uses sentinel in boost_layout_system_search_list
+      fi
       test x"$boost_inc" != x && CPPFLAGS="$CPPFLAGS -I$boost_inc"
       AC_COMPILE_IFELSE([], [boost_cv_inc_path=yes], [boost_cv_version=no])
       if test x"$boost_cv_inc_path" = xyes; then
