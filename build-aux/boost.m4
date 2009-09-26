@@ -502,6 +502,18 @@ AC_DEFUN([BOOST_LAMBDA],
 [BOOST_FIND_HEADER([boost/lambda/lambda.hpp])])
 
 
+# BOOST_MATH()
+# ------------
+# Look for Boost.Math
+# TODO: This library isn't header-only but it comes in multiple different
+# flavors that don't play well with BOOST_FIND_LIB (e.g, libboost_math_c99,
+# libboost_math_c99f, libboost_math_c99l, libboost_math_tr1,
+# libboost_math_tr1f, libboost_math_tr1l).  This macro must be fixed to do the
+# right thing anyway.
+AC_DEFUN([BOOST_MATH],
+[BOOST_FIND_HEADER([boost/math/special_functions.hpp])])
+
+
 # BOOST_OPTIONAL()
 # ----------------
 # Look for Boost.Optional

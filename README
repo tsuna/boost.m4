@@ -99,6 +99,7 @@ implemented:
     - Function
     - Hash (aka Functional/Hash)
     - Lambda
+    - Math
     - Preprocessor
     - Utility
     - Ref
