@@ -56,10 +56,11 @@ AC_REQUIRE([AC_PROG_SED])dnl
 AC_LANG_CONFTEST([AC_LANG_SOURCE([[$2]])])
 AS_IF([dnl eval is necessary to expand ac_cpp.
 dnl Ultrix and Pyramid sh refuse to redirect output of eval, so use subshell.
+dnl Cannot use 'dnl' after [$4] because a trailing dnl may break AC_CACHE_CHECK
 (eval "$ac_cpp conftest.$ac_ext") 2>&AS_MESSAGE_LOG_FD |
   $SED -n -e "$1" >conftest.i 2>&1],
   [$3],
-  [$4])dnl
+  [$4])
 rm -rf conftest*
 ])# AC_EGREP_CPP
 
