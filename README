@@ -91,6 +91,7 @@ For each of the Boost libraries that are only made of headers, the macro to
 invoke is BOOST_<LIB-NAME> where <LIB-NAME> is the capitalized name of the
 library.  Here is the list of libraries for which checks have been
 implemented:
+    - Array
     - Asio
     - Bind
     - Conversion

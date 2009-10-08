@@ -381,6 +381,12 @@ AC_LANG_POP([C++])dnl
 # The page http://beta.boost.org/doc/libs is useful: it gives the first release
 # version of each library (among other things).
 
+# BOOST_ARRAY()
+# -------------
+# Look for Boost.Array
+AC_DEFUN([BOOST_ARRAY],
+[BOOST_FIND_HEADER([boost/array.hpp])])
+
 
 # BOOST_ASIO()
 # ------------
