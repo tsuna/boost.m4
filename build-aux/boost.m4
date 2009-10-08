@@ -514,6 +514,13 @@ AC_DEFUN([BOOST_MATH],
 [BOOST_FIND_HEADER([boost/math/special_functions.hpp])])
 
 
+# BOOST_MULTIARRAY()
+# ------------------
+# Look for Boost.MultiArray
+AC_DEFUN([BOOST_MULTIARRAY],
+[BOOST_FIND_HEADER([boost/multi_array.hpp])])
+
+
 # BOOST_OPTIONAL()
 # ----------------
 # Look for Boost.Optional
