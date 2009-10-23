@@ -551,6 +551,14 @@ AC_DEFUN([BOOST_MULTIARRAY],
 [BOOST_FIND_HEADER([boost/multi_array.hpp])])
 
 
+# BOOST_NUMERIC_CONVERSION()
+# --------------------------
+# Look for Boost.NumericConversion (policy-based numeric conversion)
+AC_DEFUN([BOOST_NUMERIC_CONVERSION],
+[BOOST_FIND_HEADER([boost/numeric/conversion/converter.hpp])
+])# BOOST_NUMERIC_CONVERSION
+
+
 # BOOST_OPTIONAL()
 # ----------------
 # Look for Boost.Optional
