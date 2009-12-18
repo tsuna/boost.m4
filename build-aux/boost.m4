@@ -919,7 +919,8 @@ AC_CACHE_CHECK([for the toolset name used by Boost for $CXX], [boost_cv_lib_tag]
          || defined __WIN32__ || defined __WINNT || defined __WINNT__) @ mgw" \
     _BOOST_gcc_test(3, 4) \
     _BOOST_gcc_test(3, 3) \
-    "defined _MSC_VER && _MSC_VER >= 1400 @ vc80" \
+    "defined _MSC_VER && _MSC_VER >= 1500 @ vc90" \
+    "defined _MSC_VER && _MSC_VER == 1400 @ vc80" \
     _BOOST_gcc_test(3, 2) \
     "defined _MSC_VER && _MSC_VER == 1310 @ vc71" \
     _BOOST_gcc_test(3, 1) \
