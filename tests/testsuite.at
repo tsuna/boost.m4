@@ -263,6 +263,14 @@ AT_CHECK_MACRO([BOOST_REQUIRE 0.0], [core], [BOOST_REQUIRE([0.0])])
 AT_CHECK_MACRO_CROSS([BOOST_REQUIRE 1.0], [core], [BOOST_REQUIRE([1.0])])
 AT_CHECK_MACRO([BOOST_REQUIRE 1.1.1], [core], [BOOST_REQUIRE([1.1.1])])
 
+# Check with a version number higher than any version released so that the
+# check will fail.  Since we provide a 2nd argument to BOOST_REQUIRE, it means
+# that Boost is optional and that we can continue without it.
+AT_CHECK_MACRO([BOOST_REQUIRE 9.9.9 (optional dep)], [core],
+               [BOOST_REQUIRE([9.9.9], [echo OMG Boost 9.9.9 not released])
+                BOOST_FOREACH
+                BOOST_SYSTEM])
+
 AT_CHECK_MACRO([BOOST_REQUIRE $var 0.0], [core],
                [var=0.0; BOOST_REQUIRE([$var])])
 AT_CHECK_MACRO_CROSS([BOOST_REQUIRE $var 1.0], [core],

@@ -66,15 +66,16 @@ rm -rf conftest*
 
 
 
-# BOOST_REQUIRE([VERSION])
-# ------------------------
+# BOOST_REQUIRE([VERSION], [ACTION-IF-NOT-FOUND])
+# -----------------------------------------------
 # Look for Boost.  If version is given, it must either be a literal of the form
 # "X.Y.Z" where X, Y and Z are integers (the ".Z" part being optional) or a
 # variable "$var".
 # Defines the value BOOST_CPPFLAGS.  This macro only checks for headers with
 # the required version, it does not check for any of the Boost libraries.
-# FIXME: Add a 2nd optional argument so that it's not fatal if Boost isn't found
-# and add an AC_DEFINE to tell whether HAVE_BOOST.
+# On # success, defines HAVE_BOOST.  On failure, calls the optional
+# ACTION-IF-NOT-FOUND action if one was supplied.
+# Otherwise aborts with an error message.
 AC_DEFUN([BOOST_REQUIRE],
 [AC_REQUIRE([AC_PROG_CXX])dnl
 AC_REQUIRE([AC_PROG_GREP])dnl
@@ -155,9 +156,20 @@ m4_pattern_allow([^BOOST_VERSION$])dnl
 AC_LANG_POP([C++])dnl
     ])
     case $boost_cv_inc_path in #(
-      no)   AC_MSG_ERROR([cannot find Boost headers version >= $boost_version_req]);;#(
-      yes)  BOOST_CPPFLAGS=;;#(
-      *)    AC_SUBST([BOOST_CPPFLAGS], ["-I$boost_cv_inc_path"]);;
+      no)
+        boost_errmsg="cannot find Boost headers version >= $boost_version_req"
+        m4_if([$2], [],  [AC_MSG_ERROR([$boost_errmsg])],
+                        [AC_MSG_NOTICE([$boost_errmsg])])
+        $2
+        ;;#(
+      yes)
+        BOOST_CPPFLAGS=
+        AC_DEFINE([HAVE_BOOST], [1],
+                  [Defined if the requested minimum BOOST version is satisfied])
+        ;;#(
+      *)
+        AC_SUBST([BOOST_CPPFLAGS], ["-I$boost_cv_inc_path"])
+        ;;
     esac
   AC_CACHE_CHECK([for Boost's header version],
     [boost_cv_lib_version],
@@ -193,13 +205,19 @@ AC_DEFUN([BOOST_STATIC],
 # some parts of the Boost library which are only made of headers and don't
 # require linking (such as Boost.Foreach).
 #
-# Default ACTION-IF-NOT-FOUND: Fail with a fatal error.
+# Default ACTION-IF-NOT-FOUND: Fail with a fatal error unless Boost couldn't be
+# found in the first place, in which case by default a notice is issued to the
+# user.  Presumably if we haven't died already it's because it's OK to not have
+# Boost, which is why only a notice is issued instead of a hard error.
 #
 # Default ACTION-IF-FOUND: define the preprocessor symbol HAVE_<HEADER-NAME> in
 # case of success # (where HEADER-NAME is written LIKE_THIS, e.g.,
 # HAVE_BOOST_FOREACH_HPP).
 AC_DEFUN([BOOST_FIND_HEADER],
 [AC_REQUIRE([BOOST_REQUIRE])dnl
+if test x"$boost_cv_inc_path" = xno; then
+  m4_default([$2], [AC_MSG_NOTICE([Boost not available, not searching for $1])])
+else
 AC_LANG_PUSH([C++])dnl
 boost_save_CPPFLAGS=$CPPFLAGS
 CPPFLAGS="$CPPFLAGS $BOOST_CPPFLAGS"
@@ -209,6 +227,7 @@ AC_CHECK_HEADER([$1],
   [m4_default([$2], [AC_MSG_ERROR([cannot find $1])])])
 CPPFLAGS=$boost_save_CPPFLAGS
 AC_LANG_POP([C++])dnl
+fi
 ])# BOOST_FIND_HEADER
 
 
@@ -238,6 +257,10 @@ AC_DEFUN([BOOST_FIND_LIB],
 AC_REQUIRE([_BOOST_FIND_COMPILER_TAG])dnl
 AC_REQUIRE([BOOST_STATIC])dnl
 AC_REQUIRE([_BOOST_GUESS_WHETHER_TO_USE_MT])dnl
+if test x"$boost_cv_inc_path" = xno; then
+  AC_MSG_NOTICE([Boost not available, not searching for the Boost $1 library])
+else
+dnl The else branch is huge and wasn't intended on purpose.
 AC_LANG_PUSH([C++])dnl
 AS_VAR_PUSHDEF([Boost_lib], [boost_cv_lib_$1])dnl
 AS_VAR_PUSHDEF([Boost_lib_LDFLAGS], [boost_cv_lib_$1_LDFLAGS])dnl
@@ -370,6 +393,7 @@ AS_VAR_POPDEF([Boost_lib])dnl
 AS_VAR_POPDEF([Boost_lib_LDFLAGS])dnl
 AS_VAR_POPDEF([Boost_lib_LIBS])dnl
 AC_LANG_POP([C++])dnl
+fi
 ])# BOOST_FIND_LIB
 
 
