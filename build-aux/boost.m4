@@ -75,7 +75,8 @@ rm -f conftest*
 # FIXME: Add a 2nd optional argument so that it's not fatal if Boost isn't found
 # and add an AC_DEFINE to tell whether HAVE_BOOST.
 AC_DEFUN([BOOST_REQUIRE],
-[boost_save_IFS=$IFS
+[AC_REQUIRE([AC_PROG_CXX])dnl
+boost_save_IFS=$IFS
 boost_version_req="$1"
 IFS=.
 set x $boost_version_req 0 0 0
