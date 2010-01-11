@@ -14,7 +14,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Most of the macros were shamelessly stolen from autoconf's own testsuite.
-# Version used to steal the macros: dc51583
+# Version used to steal the macros: d99296e
 
 # If you want to add a test, look near the end of this file.
 
@@ -39,9 +39,14 @@ AT_CHECK([$at_diff "$1" "$2"])
 # AT_CHECK_M4(COMMAND, [EXIT-STATUS = 0], STDOUT, STDERR)
 # -------------------------------------------------------
 # If stderr is specified, normalize the observed stderr.
-# This (using GNU M4 1.4.6 or later)
+# This (using GNU M4 1.4.6)
 #
 #  /usr/local/bin/m4:script.4s:1: cannot open `foo': No such file or directory
+#  autom4te: /usr/local/bin/m4 failed with exit status: 1
+#
+# or this (GNU M4 1.4.11)
+#
+#  /usr/local/bin/m4:script.4s:1: include: cannot open `foo': No such file or directory
 #  autom4te: /usr/local/bin/m4 failed with exit status: 1
 #
 # or this (GNU M4 1.4 installed as gm4)
@@ -62,6 +67,7 @@ AT_CHECK([$at_diff "$1" "$2"])
 #
 # and
 #     m4:(file):(line): Cannot open foo:
+# or  m4:(file):(line): include: cannot open `foo':
 # to  m4:(file):(line): cannot open `foo':
 #
 # and
@@ -76,15 +82,14 @@ m4_define([AT_CHECK_M4],
 [AT_CHECK([$1], [$2], [$3],
           m4_case([$4], [], [], [ignore], [ignore], [stderr]))
 m4_case([$4], [], [], [ignore], [],
-[AT_CHECK([[sed 's/^[^:]*m4: *\([^:]*:\) *\([0-9][0-9]*: \)/m4:\1\2/
-	s/^\([^:]*:\) *\([0-9][0-9]*:\)[^:]*m4: /m4:\1\2 /
-	s/^\(m4:[^:]*:[0-9][0-9]*: \)C\(annot open \)\([^`:]*\):/\1c\2`\3'\'':/
-	s/^autom4te: [^ ]*m4 /autom4te: m4 /
-	s/^autom4te: [^ ]*m4\.exe /autom4te: m4 /
+[AT_CHECK([[sed 's/^[^:]*m4[.ex]*: *\([^:]*:\) *\([0-9][0-9]*: \)/m4:\1\2/
+	s/^\([^:]*:\) *\([0-9][0-9]*:\)[^:]*m4[.ex]*: /m4:\1\2 /
+	s/: C\(annot open \)\([^`:]*\):/: c\1`\2'\'':/
+	s/: include:\( cannot open\)/:\1/
+	s/^autom4te: [^ ]*m4[.ex]* /autom4te: m4 /
 	s/ (E[A-Z]*)$//
     ' stderr >&2]], [0], [], [$4])])
 ])
-
 
 # AT_CONFIGURE_AC(BODY)
 # ---------------------
@@ -150,6 +155,8 @@ m4_define([AT_CHECK_CONFIGURE],
 # - RANDOM [zsh]
 # - SECONDS [zsh]
 # - '$' [zsh]
+# - argv [zsh]
+# - ARGC [zsh]
 #
 # Furthermore, it is okay for a non-cache variable initialized to empty in one
 # run to be unset in another run.  This happens when, for example, cache update
@@ -172,11 +179,12 @@ do
 	/^RANDOM=/ d
 	/^SECONDS=/ d
 	/'\'\\\$\''=/ d
+	/^argv=/ d
+	/^ARGC=/ d
 	' $act_file >at_config_vars-$act_file
 done
 AT_CMP([at_config_vars-$1], [at_config_vars-$2])[]dnl
 ])# AT_CONFIG_CMP
-
 
 # AT_CHECK_MACRO(MACRO, [KEYWORDS], [MACRO-USE], [ADDITIONAL-CMDS],
 #                [AUTOCONF-FLAGS = -W obsolete])
