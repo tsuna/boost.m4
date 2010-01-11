@@ -60,7 +60,7 @@ dnl Ultrix and Pyramid sh refuse to redirect output of eval, so use subshell.
   $SED -n -e "$1" >conftest.i 2>&1],
   [$3],
   [$4])dnl
-rm -f conftest*
+rm -rf conftest*
 ])# AC_EGREP_CPP
 
 

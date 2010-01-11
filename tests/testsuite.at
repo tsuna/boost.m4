@@ -212,7 +212,11 @@ AT_CHECK_AUTOCONF([m4_default([$5], [])])
 
 for at_run in r1 r2
 do
-    AT_CHECK_CONFIGURE([-C])
+    # Capture the stderr output of configure ...
+    AT_CHECK_CONFIGURE([-C], [0], [ignore], [stderr])
+    # ... and discard the spurious error messages related to conftest.dSYM
+    # that may be printed on OSX when using an old version of autoconf.
+    AT_CHECK([[sed '/conftest\.dSYM/d' stderr]])
     cp -f state-env.after state-env.$at_run
     dnl cp -f config.h config-h.$at_run
     dnl AT_CHECK_ENV
