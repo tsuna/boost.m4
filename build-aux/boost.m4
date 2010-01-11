@@ -219,8 +219,8 @@ AC_LANG_POP([C++])dnl
 # ...  If you want to make sure you have a specific version of Boost
 # (eg, >= 1.33) you *must* invoke BOOST_REQUIRE before this macro.
 AC_DEFUN([BOOST_FIND_LIB],
-[AC_REQUIRE([_BOOST_FIND_COMPILER_TAG])dnl
-AC_REQUIRE([BOOST_REQUIRE])dnl
+[AC_REQUIRE([BOOST_REQUIRE])dnl
+AC_REQUIRE([_BOOST_FIND_COMPILER_TAG])dnl
 AC_REQUIRE([BOOST_STATIC])dnl
 AC_REQUIRE([_BOOST_GUESS_WHETHER_TO_USE_MT])dnl
 AC_LANG_PUSH([C++])dnl
