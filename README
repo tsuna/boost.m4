@@ -176,9 +176,9 @@ existing library checks should help you to easily write your own additional
 checks.  Please contribute them to me by email to <tsuna at lrde.epita.fr>.
 
 You can checkout the Git source tree of this package at
-http://repo.or.cz/w/boost.m4.git
+http://github.com/tsuna/boost.m4
 Or simply download the latest version:
-  wget 'http://repo.or.cz/w/boost.m4.git?a=blob_plain;f=build-aux/boost.m4;hb=HEAD' -O boost.m4
+   wget http://github.com/tsuna/boost.m4/raw/master/build-aux/boost.m4
 Patches welcome.
 
 LICENSE

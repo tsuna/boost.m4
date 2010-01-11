@@ -21,10 +21,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# serial 10
-# Original sources can be found at http://repo.or.cz/w/boost.m4.git
+# serial 11
+# Original sources can be found at http://github.com/tsuna/boost.m4
 # You can fetch the latest version of the script by doing:
-#   wget 'http://repo.or.cz/w/boost.m4.git?a=blob_plain;f=build-aux/boost.m4;hb=HEAD' -O boost.m4
+#   wget http://github.com/tsuna/boost.m4/raw/master/build-aux/boost.m4
 
 # ------ #
 # README #
@@ -37,7 +37,7 @@
 # your configure so that users can specify non standard locations.
 # If the user's environment contains BOOST_ROOT and --with-boost was not
 # specified, --with-boost=$BOOST_ROOT is implicitly used.
-# For more README and documentation, go to http://repo.or.cz/w/boost.m4.git
+# For more README and documentation, go to http://github.com/tsuna/boost.m4
 # Note: THESE MACROS ASSUME THAT YOU USE LIBTOOL.  If you don't, don't worry,
 # simply read the README, it will show you what to do step by step.
 
