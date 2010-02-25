@@ -190,11 +190,17 @@ AC_LANG_POP([C++])dnl
         ;;#(
       yes)
         BOOST_CPPFLAGS=
-        AC_DEFINE([HAVE_BOOST], [1],
-                  [Defined if the requested minimum BOOST version is satisfied])
         ;;#(
       *)
         AC_SUBST([BOOST_CPPFLAGS], ["-I$boost_cv_inc_path"])
+        ;;
+    esac
+    case $boost_cv_inc_path in #(
+      no)
+        ;;#(
+      *)
+        AC_DEFINE([HAVE_BOOST], [1],
+                  [Defined if the requested minimum BOOST version is satisfied])
         ;;
     esac
   AC_CACHE_CHECK([for Boost's header version],
