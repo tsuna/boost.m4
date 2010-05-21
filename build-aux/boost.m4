@@ -98,6 +98,7 @@ set x $boost_version_req 0 0 0
 IFS=$boost_save_IFS
 shift
 boost_version_req=`expr "$[1]" '*' 100000 + "$[2]" '*' 100 + "$[3]"`
+boost_version_req_string=$[1].$[2].$[3]
 AC_ARG_WITH([boost],
    [AS_HELP_STRING([--with-boost=DIR],
                    [prefix of Boost $1 @<:@guess@:>@])])dnl
@@ -115,7 +116,7 @@ fi
 AC_SUBST([DISTCHECK_CONFIGURE_FLAGS],
          ["$DISTCHECK_CONFIGURE_FLAGS '--with-boost=$with_boost'"])
 boost_save_CPPFLAGS=$CPPFLAGS
-  AC_CACHE_CHECK([for Boost headers version >= $boost_version_req],
+  AC_CACHE_CHECK([for Boost headers version >= $boost_version_req_string],
     [boost_cv_inc_path],
     [boost_cv_inc_path=no
 AC_LANG_PUSH([C++])dnl
@@ -183,7 +184,7 @@ AC_LANG_POP([C++])dnl
     ])
     case $boost_cv_inc_path in #(
       no)
-        boost_errmsg="cannot find Boost headers version >= $boost_version_req"
+        boost_errmsg="cannot find Boost headers version >= $boost_version_req_string"
         m4_if([$2], [],  [AC_MSG_ERROR([$boost_errmsg])],
                         [AC_MSG_NOTICE([$boost_errmsg])])
         $2
