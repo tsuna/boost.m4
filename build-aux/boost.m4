@@ -1,5 +1,5 @@
 # boost.m4: Locate Boost headers and libraries for autoconf-based projects.
-# Copyright (C) 2007, 2008, 2009  Benoit Sigoure <tsuna@lrde.epita.fr>
+# Copyright (C) 2007, 2008, 2009, 2010  Benoit Sigoure <tsuna@lrde.epita.fr>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 m4_define([_BOOST_SERIAL], [m4_translit([
-# serial 12
+# serial 13
 ], [#
 ], [])])
 
@@ -292,6 +292,7 @@ dnl The else branch is huge and wasn't intended on purpose.
 AC_LANG_PUSH([C++])dnl
 AS_VAR_PUSHDEF([Boost_lib], [boost_cv_lib_$1])dnl
 AS_VAR_PUSHDEF([Boost_lib_LDFLAGS], [boost_cv_lib_$1_LDFLAGS])dnl
+AS_VAR_PUSHDEF([Boost_lib_LDPATH], [boost_cv_lib_$1_LDPATH])dnl
 AS_VAR_PUSHDEF([Boost_lib_LIBS], [boost_cv_lib_$1_LIBS])dnl
 BOOST_FIND_HEADER([$3])
 boost_save_CPPFLAGS=$CPPFLAGS
@@ -398,6 +399,7 @@ dnl generated only once above (before we start the for loops).
       LIBS=$boost_save_LIBS
       if test x"$Boost_lib" = xyes; then
         Boost_lib_LDFLAGS="-L$boost_ldpath -R$boost_ldpath"
+        Boost_lib_LDPATH="$boost_ldpath"
         break 6
       else
         boost_failed_libs="$boost_failed_libs@$boost_lib@"
@@ -416,10 +418,13 @@ case $Boost_lib in #(
     ;;
 esac
 AC_SUBST(AS_TR_CPP([BOOST_$1_LDFLAGS]), [$Boost_lib_LDFLAGS])
+AC_SUBST(AS_TR_CPP([BOOST_$1_LDPATH]), [$Boost_lib_LDPATH])
+AC_SUBST([BOOST_LDPATH], [$Boost_lib_LDPATH])
 AC_SUBST(AS_TR_CPP([BOOST_$1_LIBS]), [$Boost_lib_LIBS])
 CPPFLAGS=$boost_save_CPPFLAGS
 AS_VAR_POPDEF([Boost_lib])dnl
 AS_VAR_POPDEF([Boost_lib_LDFLAGS])dnl
+AS_VAR_POPDEF([Boost_lib_LDPATH])dnl
 AS_VAR_POPDEF([Boost_lib_LIBS])dnl
 AC_LANG_POP([C++])dnl
 fi
