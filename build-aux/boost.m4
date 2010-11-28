@@ -22,7 +22,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 m4_define([_BOOST_SERIAL], [m4_translit([
-# serial 13
+# serial 14
 ], [#
 ], [])])
 
@@ -606,6 +606,41 @@ AC_DEFUN([BOOST_LAMBDA],
 # right thing anyway.
 AC_DEFUN([BOOST_MATH],
 [BOOST_FIND_HEADER([boost/math/special_functions.hpp], [$2], [$3])])
+
+
+# BOOST_MPI([PREFERRED-RT-OPT], [ACTION-IF-FOUND], [ACTION-IF-NOT-FOUND],
+#           [MPI_CPPFLAGS], [MPI_CXXFLAGS], [MPI_LDFLAGS], [MPI_LIBS])
+# -----------------------------------------------------------------------
+# Look for Boost.MPI (introduced in Boost 1.35).  
+# Optional arguments MPI_CPPFLAGS, MPI_CXXFLAGS, MPI_LDFLAGS and
+# MPI_LIBS state *additional* compiler/linker flags to use when
+# searching for the Boost.MPI library.  A handy autoconf macro to find
+# out values for these flags for most MPI implementations is Tood
+# Gamblin's LX_FIND_MPI, available at:
+# https://github.com/tgamblin/libra/blob/master/m4/lx_find_mpi.m4
+# For the documentation of PREFERRED-RT-OPT, see the documentation of
+# BOOST_FIND_LIB above.
+AC_DEFUN([BOOST_MPI],
+[
+boost_mpi_outer_save_CPPFLAGS="$CPPFLAGS"
+boost_mpi_outer_save_CXXFLAGS="$CXXFLAGS"
+boost_mpi_outer_save_LDFLAGS="$LDFLAGS"
+boost_mpi_outer_save_LIBS="$LIBS"
+CPPFLAGS="$4 $CPPFLAGS"
+CXXFLAGS="$5 $CXXFLAGS"
+LDFLAGS="$6 $LDFLAGS"
+LIBS="$7 $LIBS"
+BOOST_FIND_LIB([mpi], [$1], 
+                [boost/mpi.hpp],
+                [boost::mpi::environment world],
+                [],
+                [$2],
+                [$3])
+CPPFLAGS="$boost_mpi_outer_save_CPPFLAGS"
+CXXFLAGS="$boost_mpi_outer_save_CXXFLAGS"
+LDFLAGS="$boost_mpi_outer_save_LDFLAGS"
+LIBS="$boost_mpi_outer_save_LIBS"
+]) # BOOST_MPI
 
 
 # BOOST_MULTIARRAY([ACTION-IF-NOT-FOUND], [ACTION-IF-FOUND])
