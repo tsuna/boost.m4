@@ -365,7 +365,8 @@ for boost_rtopt_ in $boost_rtopt '' -d; do
     boost_$1$boost_tag_$boost_mt_$boost_rtopt_$boost_ver_ \
     boost_$1$boost_tag_$boost_rtopt_$boost_ver_ \
     boost_$1$boost_tag_$boost_mt_$boost_ver_ \
-    boost_$1$boost_tag_$boost_ver_
+    boost_$1$boost_tag_$boost_ver_ \
+    boost_$1$boost_tag_
   do
     # Avoid testing twice the same lib
     case $boost_failed_libs in #(
