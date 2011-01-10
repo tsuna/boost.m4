@@ -415,7 +415,7 @@ rm -f conftest.$ac_objext
 ])
 case $Boost_lib in #(
   no) _AC_MSG_LOG_CONFTEST
-    AC_MSG_ERROR([cannot not find the flags to link with Boost $1])
+    AC_MSG_ERROR([cannot find the flags to link with Boost $1])
     ;;
 esac
 AC_SUBST(AS_TR_CPP([BOOST_$1_LDFLAGS]), [$Boost_lib_LDFLAGS])
