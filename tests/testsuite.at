@@ -1,4 +1,4 @@
-# Copyright (C) 2007  Benoit Sigoure <tsuna@lrde.epita.fr>
+# Copyright (C) 2007, 2011  Benoit Sigoure <tsuna@lrde.epita.fr>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -287,6 +287,8 @@ AT_CHECK_MACRO([BOOST_GRAPH], [lib])
 AT_CHECK_MACRO([BOOST_IOSTREAMS], [lib])
 AT_CHECK_MACRO([BOOST_IOSTREAMS (static)], [lib], [BOOST_IOSTREAMS([s])])
 AT_CHECK_MACRO([BOOST_PROGRAM_OPTIONS], [lib])
+AT_CHECK_MACRO([BOOST_PYTHON], [lib])
+AT_CHECK_MACRO([BOOST_PYTHON (static)], [lib], [BOOST_PYTHON([s])])
 AT_CHECK_MACRO([BOOST_SERIALIZATION], [lib])
 AT_CHECK_MACRO([BOOST_SIGNALS], [lib])
 AT_CHECK_MACRO([BOOST_SYSTEM], [lib])
