@@ -52,8 +52,12 @@ m4_pattern_forbid([^_?BOOST_])
 #                [ACTION-IF-FOUND], [ACTION-IF-NOT-FOUND])
 # --------------------------------------------------------
 # Same as AC_EGREP_CPP, but leave the result in conftest.i.
-# PATTERN is *not* overquoted, as in AC_EGREP_CPP.  It could be useful
-# to turn this into a macro which extracts the value of any macro.
+#
+# SED-PROGRAM is *not* overquoted, as in AC_EGREP_CPP.  It is expanded
+# in double-quotes, so escape your double quotes.
+#
+# It could be useful to turn this into a macro which extracts the
+# value of any macro.
 m4_define([_BOOST_SED_CPP],
 [AC_LANG_PREPROC_REQUIRE()dnl
 AC_REQUIRE([AC_PROG_SED])dnl
@@ -202,7 +206,7 @@ AC_LANG_POP([C++])dnl
   AC_CACHE_CHECK([for Boost's header version],
     [boost_cv_lib_version],
     [m4_pattern_allow([^BOOST_LIB_VERSION$])dnl
-     _BOOST_SED_CPP([/^boost-lib-version = /{s///;s/\"//g;p;g;}],
+     _BOOST_SED_CPP([/^boost-lib-version = /{s///;s/\"//g;p;q;}],
                     [#include <boost/version.hpp>
 boost-lib-version = BOOST_LIB_VERSION],
     [boost_cv_lib_version=`cat conftest.i`])])
