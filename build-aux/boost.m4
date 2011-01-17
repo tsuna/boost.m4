@@ -1,5 +1,5 @@
 # boost.m4: Locate Boost headers and libraries for autoconf-based projects.
-# Copyright (C) 2007, 2008, 2009, 2010  Benoit Sigoure <tsuna@lrde.epita.fr>
+# Copyright (C) 2007, 2008, 2009, 2010, 2011  Benoit Sigoure <tsuna@lrde.epita.fr>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 m4_define([_BOOST_SERIAL], [m4_translit([
-# serial 13
+# serial 14
 ], [#
 ], [])])
 
@@ -547,7 +547,7 @@ AC_DEFUN([BOOST_GRAPH],
 
 
 # BOOST_IOSTREAMS([PREFERRED-RT-OPT])
-# -------------------------------
+# -----------------------------------
 # Look for Boost.IOStreams.  For the documentation of PREFERRED-RT-OPT, see the
 # documentation of BOOST_FIND_LIB above.
 AC_DEFUN([BOOST_IOSTREAMS],
@@ -614,13 +614,43 @@ AC_DEFUN([BOOST_PREPROCESSOR],
 
 # BOOST_PROGRAM_OPTIONS([PREFERRED-RT-OPT])
 # -----------------------------------------
-# Look for Boost.Program_options.  For the documentation of PREFERRED-RT-OPT, see
-# the documentation of BOOST_FIND_LIB above.
+# Look for Boost.Program_options.  For the documentation of PREFERRED-RT-OPT,
+# see the documentation of BOOST_FIND_LIB above.
 AC_DEFUN([BOOST_PROGRAM_OPTIONS],
 [BOOST_FIND_LIB([program_options], [$1],
                 [boost/program_options.hpp],
                 [boost::program_options::options_description d("test");])
 ])# BOOST_PROGRAM_OPTIONS
+
+
+
+# _BOOST_PYTHON_CONFIG(VARIABLE, FLAG)
+# ------------------------------------
+# Save VARIABLE, and define it via `python-config --FLAG`.
+# Substitute BOOST_PYTHON_VARIABLE.
+m4_define([_BOOST_PYTHON_CONFIG],
+[AC_SUBST([BOOST_PYTHON_$1],
+          [`python-config --$2 2>/dev/null`])dnl
+boost_python_save_$1=$$1
+$1="$$1 $BOOST_PYTHON_$1"])
+
+
+# BOOST_PYTHON([PREFERRED-RT-OPT])
+# --------------------------------
+# Look for Boost.Python.  For the documentation of PREFERRED-RT-OPT,
+# see the documentation of BOOST_FIND_LIB above.
+AC_DEFUN([BOOST_PYTHON],
+[_BOOST_PYTHON_CONFIG([CPPFLAGS], [includes])
+_BOOST_PYTHON_CONFIG([LDFLAGS],   [ldflags])
+_BOOST_PYTHON_CONFIG([LIBS],      [libs])
+m4_pattern_allow([^BOOST_PYTHON_MODULE$])dnl
+BOOST_FIND_LIB([python], [$1],
+               [boost/python.hpp],
+               [], [BOOST_PYTHON_MODULE(empty) {}])
+CPPFLAGS=$boost_python_save_CPPFLAGS
+LDFLAGS=$boost_python_save_LDFLAGS
+LIBS=$boost_python_save_LIBS
+])# BOOST_PYTHON
 
 
 # BOOST_REF()
@@ -734,7 +764,7 @@ LIBS="$LIBS $boost_cv_pthread_flag"
 #   threading: -pthread (Linux), -pthreads (Solaris) or -mthreads (Mingw32)"
 CPPFLAGS="$CPPFLAGS $boost_cv_pthread_flag"
 BOOST_FIND_LIB([thread], [$1],
-                [boost/thread.hpp], [boost::thread t; boost::mutex m;])
+               [boost/thread.hpp], [boost::thread t; boost::mutex m;])
 BOOST_THREAD_LIBS="$BOOST_THREAD_LIBS $boost_cv_pthread_flag"
 BOOST_CPPFLAGS="$BOOST_CPPFLAGS $boost_cv_pthread_flag"
 LIBS=$boost_threads_save_LIBS
