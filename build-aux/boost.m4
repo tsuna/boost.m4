@@ -22,7 +22,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 m4_define([_BOOST_SERIAL], [m4_translit([
-# serial 14
+# serial 15
 ], [#
 ], [])])
 
@@ -379,8 +379,8 @@ for boost_rtopt_ in $boost_rtopt '' -d; do
     boost_tmp_lib=$with_boost
     test x"$with_boost" = x && boost_tmp_lib=${boost_cv_inc_path%/include}
     for boost_ldpath in "$boost_tmp_lib/lib" '' \
-             /opt/local/lib /usr/local/lib /opt/lib /usr/lib \
-             "$with_boost" C:/Boost/lib /lib /usr/lib64 /lib64
+             /opt/local/lib* /usr/local/lib* /opt/lib* /usr/lib* \
+             "$with_boost" C:/Boost/lib /lib*
     do
       test -e "$boost_ldpath" || continue
       boost_save_LDFLAGS=$LDFLAGS
