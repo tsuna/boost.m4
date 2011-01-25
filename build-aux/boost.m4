@@ -118,7 +118,7 @@ if test x"$BOOST_ROOT" != x; then
   fi
 fi
 AC_SUBST([DISTCHECK_CONFIGURE_FLAGS],
-         ["$DISTCHECK_CONFIGURE_FLAGS '--with-boost=$with_boost'"])
+         ["$DISTCHECK_CONFIGURE_FLAGS '--with-boost=$with_boost'"])dnl
 boost_save_CPPFLAGS=$CPPFLAGS
   AC_CACHE_CHECK([for Boost headers version >= $boost_version_req_string],
     [boost_cv_inc_path],
@@ -197,7 +197,7 @@ AC_LANG_POP([C++])dnl
         BOOST_CPPFLAGS=
         ;;#(
       *)
-        AC_SUBST([BOOST_CPPFLAGS], ["-I$boost_cv_inc_path"])
+        AC_SUBST([BOOST_CPPFLAGS], ["-I$boost_cv_inc_path"])dnl
         ;;
     esac
   if test x"$boost_cv_inc_path" != xno; then
@@ -422,10 +422,10 @@ case $Boost_lib in #(
     AC_MSG_ERROR([cannot find the flags to link with Boost $1])
     ;;
 esac
-AC_SUBST(AS_TR_CPP([BOOST_$1_LDFLAGS]), [$Boost_lib_LDFLAGS])
-AC_SUBST(AS_TR_CPP([BOOST_$1_LDPATH]), [$Boost_lib_LDPATH])
-AC_SUBST([BOOST_LDPATH], [$Boost_lib_LDPATH])
-AC_SUBST(AS_TR_CPP([BOOST_$1_LIBS]), [$Boost_lib_LIBS])
+AC_SUBST(AS_TR_CPP([BOOST_$1_LDFLAGS]), [$Boost_lib_LDFLAGS])dnl
+AC_SUBST(AS_TR_CPP([BOOST_$1_LDPATH]), [$Boost_lib_LDPATH])dnl
+AC_SUBST([BOOST_LDPATH], [$Boost_lib_LDPATH])dnl
+AC_SUBST(AS_TR_CPP([BOOST_$1_LIBS]), [$Boost_lib_LIBS])dnl
 CPPFLAGS=$boost_save_CPPFLAGS
 AS_VAR_POPDEF([Boost_lib])dnl
 AS_VAR_POPDEF([Boost_lib_LDFLAGS])dnl
