@@ -421,20 +421,22 @@ rm -f conftest.$ac_objext
 ])
 case $Boost_lib in #(
   no) _AC_MSG_LOG_CONFTEST
-    :
+    AC_SUBST(AS_TR_CPP([BOOST_$1_LDFLAGS]), [])
+    AC_SUBST(AS_TR_CPP([BOOST_$1_LDPATH]), [])
+    AC_SUBST([BOOST_LDPATH], [])
+    AC_SUBST(AS_TR_CPP([BOOST_$1_LIBS]), [])
     ifelse([$6],[],
             [AC_MSG_ERROR([cannot find the flags to link with Boost.$1])],
             [$6])
     ;; #(
   yes)
-    :
+    AC_SUBST(AS_TR_CPP([BOOST_$1_LDFLAGS]), [$Boost_lib_LDFLAGS])dnl
+    AC_SUBST(AS_TR_CPP([BOOST_$1_LDPATH]), [$Boost_lib_LDPATH])dnl
+    AC_SUBST([BOOST_LDPATH], [$Boost_lib_LDPATH])dnl
+    AC_SUBST(AS_TR_CPP([BOOST_$1_LIBS]), [$Boost_lib_LIBS])dnl
     $7
     ;;
 esac
-AC_SUBST(AS_TR_CPP([BOOST_$1_LDFLAGS]), [$Boost_lib_LDFLAGS])dnl
-AC_SUBST(AS_TR_CPP([BOOST_$1_LDPATH]), [$Boost_lib_LDPATH])dnl
-AC_SUBST([BOOST_LDPATH], [$Boost_lib_LDPATH])dnl
-AC_SUBST(AS_TR_CPP([BOOST_$1_LIBS]), [$Boost_lib_LIBS])dnl
 CPPFLAGS=$boost_save_CPPFLAGS
 AS_VAR_POPDEF([Boost_lib])dnl
 AS_VAR_POPDEF([Boost_lib_LDFLAGS])dnl
