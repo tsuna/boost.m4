@@ -1007,6 +1007,14 @@ LDFLAGS=$boost_wave_save_LDFLAGS
 ])# BOOST_WAVE
 
 
+# BOOST_XINT([ACTION-IF-NOT-FOUND], [ACTION-IF-FOUND])
+# ----------------------------------------------------
+# Look for Boost.XInt (not yet official as of 1.47.0).  If the library
+# is found, run ACTION-IF-FOUND, otherwise run ACTION-IF-NOT-FOUND.
+BOOST_DEFUN([XInt],
+[BOOST_FIND_HEADER([boost/xint/integer.hpp], [$1], [$2])])
+
+
 # BOOST_XPRESSIVE([ACTION-IF-NOT-FOUND], [ACTION-IF-FOUND])
 # ---------------------------------------------------------
 # Look for Boost.Xpressive (new since 1.36.0).  If the library is
