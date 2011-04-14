@@ -636,6 +636,13 @@ BOOST_DEFUN([Unordered],
 [BOOST_FIND_HEADER([boost/unordered_map.hpp])])
 
 
+# BOOST_UUID()
+# ------------
+# Look for Boost.Uuid
+BOOST_DEFUN([Uuid],
+[BOOST_FIND_HEADER([boost/uuid/uuid.hpp])])
+
+
 # BOOST_PROGRAM_OPTIONS([PREFERRED-RT-OPT])
 # -----------------------------------------
 # Look for Boost.Program_options.  For the documentation of PREFERRED-RT-OPT,
