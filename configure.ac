@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-AC_INIT([boost-m4-test], [0.1], [tsuna@lrde.epita.fr])
+AC_INIT([boost-m4-test], [0.2], [tsunanet@gmail.com])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_HEADERS([config.h])
 AM_INIT_AUTOMAKE
@@ -26,8 +26,11 @@ AC_PROG_GREP
 AC_PROG_EGREP
 AC_PROG_CXX
 
+dnl First look for Boost, maybe for a specific minimum version:
 BOOST_REQUIRE([1.34])
-_BOOST_FIND_COMPILER_TAG
+dnl Then look for specific Boost libraries you need:
+BOOST_ARRAY
+BOOST_DATE_TIME
 
 # Initialize the test suite.
 AC_CONFIG_TESTDIR([tests])
