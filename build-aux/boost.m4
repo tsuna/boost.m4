@@ -403,7 +403,15 @@ dnl generated only once above (before we start the for loops).
       LDFLAGS=$boost_save_LDFLAGS
       LIBS=$boost_save_LIBS
       if test x"$Boost_lib" = xyes; then
-        Boost_lib_LDFLAGS="-L$boost_ldpath -Wl,-R$boost_ldpath"
+        # Because Boost is often installed in non-standard locations we want to
+        # hardcode the path to the library (with rpath).  Here we assume that
+        # Libtool's macro was already invoked so we can steal its variable
+        # hardcode_libdir_flag_spec in order to get the right flags for ld.
+        boost_save_libdir=$libdir
+        libdir=$boost_ldpath
+        eval boost_rpath=\"$hardcode_libdir_flag_spec\"
+        libdir=$boost_save_libdir
+        Boost_lib_LDFLAGS="-L$boost_ldpath $boost_rpath"
         Boost_lib_LDPATH="$boost_ldpath"
         break 6
       else
