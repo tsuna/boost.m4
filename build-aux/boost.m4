@@ -89,11 +89,11 @@ AC_DEFUN([_BOOST_LANG_PUSH_CXX],[
 AC_REQUIRE([LT_OUTPUT])dnl
 AC_LANG_PUSH([C++])dnl
 case "$ac_compile" in                                                       #(
-  ./libtool*)                                                             ;;#(
+  ./libtool*) :                                                           ;;#(
   *)          ac_compile="./libtool --mode=compile --tag=CXX $ac_compile" ;;
 esac
 case "$ac_link" in                                                          #(
-  ./libtool*)                                                             ;;#(
+  ./libtool*) :                                                           ;;#(
   *)          ac_link="./libtool --mode=link --tag=CXX $ac_link"          ;;
 esac
 ]) # _BOOST_LANG_PUSH_CXX
