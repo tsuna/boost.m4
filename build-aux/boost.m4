@@ -474,7 +474,7 @@ m4_popdef([BOOST_Library])dnl
 # Look for Boost.Array.  If the library is found, run ACTION-IF-FOUND,
 # otherwise run ACTION-IF-NOT-FOUND.
 BOOST_DEFUN([Array],
-[BOOST_FIND_HEADER([boost/array.hpp], [$2], [$3])])
+[BOOST_FIND_HEADER([boost/array.hpp], [$1], [$2])])
 
 
 # BOOST_ASIO([ACTION-IF-NOT-FOUND], [ACTION-IF-FOUND])
@@ -483,7 +483,7 @@ BOOST_DEFUN([Array],
 # run ACTION-IF-FOUND, otherwise run ACTION-IF-NOT-FOUND.
 BOOST_DEFUN([Asio],
 [AC_REQUIRE([BOOST_SYSTEM])dnl
-BOOST_FIND_HEADER([boost/asio.hpp], [$2], [$3])])
+BOOST_FIND_HEADER([boost/asio.hpp], [$1], [$2])])
 
 
 # BOOST_BIND([ACTION-IF-NOT-FOUND], [ACTION-IF-FOUND])
@@ -491,7 +491,7 @@ BOOST_FIND_HEADER([boost/asio.hpp], [$2], [$3])])
 # Look for Boost.Bind. If the library is found, run ACTION-IF-FOUND,
 # otherwise run ACTION-IF-NOT-FOUND.
 BOOST_DEFUN([Bind],
-[BOOST_FIND_HEADER([boost/bind.hpp], [$2], [$3])])
+[BOOST_FIND_HEADER([boost/bind.hpp], [$1], [$2])])
 
 
 # BOOST_CONVERSION([ACTION-IF-NOT-FOUND], [ACTION-IF-FOUND])
@@ -499,8 +499,8 @@ BOOST_DEFUN([Bind],
 # Look for Boost.Conversion (cast / lexical_cast). If the library is
 # found, run ACTION-IF-FOUND, otherwise run ACTION-IF-NOT-FOUND.
 BOOST_DEFUN([Conversion],
-[BOOST_FIND_HEADER([boost/cast.hpp], [$2], 
-    [BOOST_FIND_HEADER([boost/lexical_cast.hpp], [$2], [$3])])
+[BOOST_FIND_HEADER([boost/cast.hpp], [$1], 
+    [BOOST_FIND_HEADER([boost/lexical_cast.hpp], [$1], [$2])])
 ])# BOOST_CONVERSION
 
 
@@ -554,7 +554,7 @@ LDFLAGS=$boost_filesystem_save_LDFLAGS
 # Look for Boost.Foreach. If the library is found, run ACTION-IF-FOUND,
 # otherwise run ACTION-IF-NOT-FOUND.
 BOOST_DEFUN([Foreach],
-[BOOST_FIND_HEADER([boost/foreach.hpp], [$2], [$3])])
+[BOOST_FIND_HEADER([boost/foreach.hpp], [$1], [$2])])
 
 
 # BOOST_FORMAT([ACTION-IF-NOT-FOUND], [ACTION-IF-FOUND])
@@ -566,7 +566,7 @@ BOOST_DEFUN([Foreach],
 # boost/format/detail/config_macros.hpp:88: error: 'locale' in namespace 'std'
 #                                                  does not name a type
 BOOST_DEFUN([Format],
-[BOOST_FIND_HEADER([boost/format.hpp], [$2], [$3])])
+[BOOST_FIND_HEADER([boost/format.hpp], [$1], [$2])])
 
 
 # BOOST_FUNCTION([ACTION-IF-NOT-FOUND], [ACTION-IF-FOUND])
@@ -574,7 +574,7 @@ BOOST_DEFUN([Format],
 # Look for Boost.Function.  If the library is found, run ACTION-IF-FOUND,
 # otherwise run ACTION-IF-NOT-FOUND.
 BOOST_DEFUN([Function],
-[BOOST_FIND_HEADER([boost/function.hpp], [$2], [$3])])
+[BOOST_FIND_HEADER([boost/function.hpp], [$1], [$2])])
 
 
 # BOOST_GRAPH([PREFERRED-RT-OPT], [ACTION-IF-NOT-FOUND], [ACTION-IF-FOUND])
@@ -608,7 +608,7 @@ BOOST_DEFUN([IOStreams],
 # Look for Boost.Functional/Hash.  If the library is found, run
 # ACTION-IF-FOUND, otherwise run ACTION-IF-NOT-FOUND.
 BOOST_DEFUN([Hash],
-[BOOST_FIND_HEADER([boost/functional/hash.hpp], [$2], [$3])])
+[BOOST_FIND_HEADER([boost/functional/hash.hpp], [$1], [$2])])
 
 
 # BOOST_LAMBDA([ACTION-IF-NOT-FOUND], [ACTION-IF-FOUND])
@@ -616,7 +616,7 @@ BOOST_DEFUN([Hash],
 # Look for Boost.Lambda.  If the library is found, run ACTION-IF-FOUND,
 # otherwise run ACTION-IF-NOT-FOUND.
 BOOST_DEFUN([Lambda],
-[BOOST_FIND_HEADER([boost/lambda/lambda.hpp], [$2], [$3])])
+[BOOST_FIND_HEADER([boost/lambda/lambda.hpp], [$1], [$2])])
 
 
 # BOOST_LOG([PREFERRED-RT-OPT], [ACTION-IF-NOT-FOUND], [ACTION-IF-FOUND])
@@ -656,7 +656,7 @@ BOOST_FIND_LIB([log_setup], [$1],
 # libboost_math_tr1f, libboost_math_tr1l).  This macro must be fixed to do the
 # right thing anyway.
 BOOST_DEFUN([Math],
-[BOOST_FIND_HEADER([boost/math/special_functions.hpp], [$2], [$3])])
+[BOOST_FIND_HEADER([boost/math/special_functions.hpp], [$1], [$2])])
 
 
 # BOOST_MPI([PREFERRED-RT-OPT], [ACTION-IF-FOUND], [ACTION-IF-NOT-FOUND],
@@ -699,7 +699,7 @@ LIBS="$boost_mpi_outer_save_LIBS"
 # Look for Boost.MultiArray.  If the library is found, run ACTION-IF-FOUND,
 # otherwise run ACTION-IF-NOT-FOUND.
 BOOST_DEFUN([MultiArray],
-[BOOST_FIND_HEADER([boost/multi_array.hpp], [$2], [$3])])
+[BOOST_FIND_HEADER([boost/multi_array.hpp], [$1], [$2])])
 
 
 # BOOST_NUMERIC_CONVERSION([ACTION-IF-NOT-FOUND], [ACTION-IF-FOUND])
@@ -717,7 +717,7 @@ BOOST_DEFUN([NumericConversion],
 # Look for Boost.Optional.  If the library is found, run ACTION-IF-FOUND,
 # otherwise run ACTION-IF-NOT-FOUND.
 BOOST_DEFUN([Optional],
-[BOOST_FIND_HEADER([boost/optional.hpp], [$2], [$3])])
+[BOOST_FIND_HEADER([boost/optional.hpp], [$1], [$2])])
 
 
 # BOOST_PREPROCESSOR([ACTION-IF-NOT-FOUND], [ACTION-IF-FOUND])
@@ -725,7 +725,7 @@ BOOST_DEFUN([Optional],
 # Look for Boost.Preprocessor.  If the library is found, run ACTION-IF-FOUND,
 # otherwise run ACTION-IF-NOT-FOUND.
 BOOST_DEFUN([Preprocessor],
-[BOOST_FIND_HEADER([boost/preprocessor/repeat.hpp], [$2], [$3])])
+[BOOST_FIND_HEADER([boost/preprocessor/repeat.hpp], [$1], [$2])])
 
 
 # BOOST_UNORDERED([ACTION-IF-NOT-FOUND], [ACTION-IF-FOUND])
@@ -794,7 +794,7 @@ LIBS=$boost_python_save_LIBS
 # Look for Boost.Ref.  If the library is found, run ACTION-IF-FOUND,
 # otherwise run ACTION-IF-NOT-FOUND.
 BOOST_DEFUN([Ref],
-[BOOST_FIND_HEADER([boost/ref.hpp], [$2], [$3])])
+[BOOST_FIND_HEADER([boost/ref.hpp], [$1], [$2])])
 
 
 # BOOST_REGEX([PREFERRED-RT-OPT], [ACTION-IF-NOT-FOUND], [ACTION-IF-FOUND])
@@ -840,11 +840,12 @@ BOOST_DEFUN([Signals],
 
 # BOOST_SMART_PTR([ACTION-IF-NOT-FOUND], [ACTION-IF-FOUND])
 # ---------------------------------------------------------
-# Look for Boost.SmartPtr.  If the library is found, run ACTION-IF-FOUND,
+# Look for Boost.SmartPtr (scoped_ptr and shared_ptr).  
+# If the library is found, run ACTION-IF-FOUND,
 # otherwise run ACTION-IF-NOT-FOUND.
 BOOST_DEFUN([Smart_Ptr],
-[BOOST_FIND_HEADER([boost/scoped_ptr.hpp], [$2],
-    [BOOST_FIND_HEADER([boost/shared_ptr.hpp], [$2], [$3])])
+[BOOST_FIND_HEADER([boost/scoped_ptr.hpp], [$1],
+    [BOOST_FIND_HEADER([boost/shared_ptr.hpp], [$1], [$2])])
 ])
 
 
@@ -853,7 +854,7 @@ BOOST_DEFUN([Smart_Ptr],
 # Look for Boost.StaticAssert.  If the library is found, run ACTION-IF-FOUND,
 # otherwise run ACTION-IF-NOT-FOUND.
 BOOST_DEFUN([StaticAssert],
-[BOOST_FIND_HEADER([boost/static_assert.hpp], [$2], [$3])])
+[BOOST_FIND_HEADER([boost/static_assert.hpp], [$1], [$2])])
 
 
 # BOOST_STRING_ALGO([ACTION-IF-NOT-FOUND], [ACTION-IF-FOUND])
@@ -933,7 +934,7 @@ CPPFLAGS=$boost_threads_save_CPPFLAGS
 # Look for Boost.Tokenizer.  If the library is found, run ACTION-IF-FOUND,
 # otherwise run ACTION-IF-NOT-FOUND.
 BOOST_DEFUN([Tokenizer],
-[BOOST_FIND_HEADER([boost/tokenizer.hpp], [$2], [$3])])
+[BOOST_FIND_HEADER([boost/tokenizer.hpp], [$1], [$2])])
 
 
 # BOOST_TRIBOOL([ACTION-IF-NOT-FOUND], [ACTION-IF-FOUND])
@@ -941,8 +942,8 @@ BOOST_DEFUN([Tokenizer],
 # Look for Boost.Tribool (tribool and tribool_fwd).  If the library is
 # found, run ACTION-IF-FOUND, otherwise run ACTION-IF-NOT-FOUND.
 BOOST_DEFUN([Tribool],
-[BOOST_FIND_HEADER([boost/logic/tribool_fwd.hpp], [$2], 
-        [BOOST_FIND_HEADER([boost/logic/tribool.hpp], [$2], [$3])])
+[BOOST_FIND_HEADER([boost/logic/tribool_fwd.hpp], [$1], 
+        [BOOST_FIND_HEADER([boost/logic/tribool.hpp], [$1], [$2])])
 ])
 
 
@@ -951,7 +952,7 @@ BOOST_DEFUN([Tribool],
 # Look for Boost.Tuple.  If the library is found, run ACTION-IF-FOUND,
 # otherwise run ACTION-IF-NOT-FOUND.
 BOOST_DEFUN([Tuple],
-[BOOST_FIND_HEADER([boost/tuple/tuple.hpp], [$2], [$3])])
+[BOOST_FIND_HEADER([boost/tuple/tuple.hpp], [$1], [$2])])
 
 
 # BOOST_TYPETRAITS([ACTION-IF-NOT-FOUND], [ACTION-IF-FOUND])
@@ -959,7 +960,7 @@ BOOST_DEFUN([Tuple],
 # Look for Boost.TypeTraits.  If the library is found, run ACTION-IF-FOUND,
 # otherwise run ACTION-IF-NOT-FOUND.
 BOOST_DEFUN([TypeTraits],
-[BOOST_FIND_HEADER([boost/type_traits.hpp], [$2], [$3])])
+[BOOST_FIND_HEADER([boost/type_traits.hpp], [$1], [$2])])
 
 
 # BOOST_UTILITY([ACTION-IF-NOT-FOUND], [ACTION-IF-FOUND])
@@ -968,7 +969,7 @@ BOOST_DEFUN([TypeTraits],
 # idiom, etc.)  If the library is found, run ACTION-IF-FOUND,
 # otherwise run ACTION-IF-NOT-FOUND.
 BOOST_DEFUN([Utility],
-[BOOST_FIND_HEADER([boost/utility.hpp], [$2], [$3])])
+[BOOST_FIND_HEADER([boost/utility.hpp], [$1], [$2])])
 
 
 # BOOST_VARIANT([ACTION-IF-NOT-FOUND], [ACTION-IF-FOUND])
@@ -976,8 +977,8 @@ BOOST_DEFUN([Utility],
 # Look for Boost.Variant (variant and variant_fwd).  If the library is
 # found, run ACTION-IF-FOUND, otherwise run ACTION-IF-NOT-FOUND.
 BOOST_DEFUN([Variant],
-[BOOST_FIND_HEADER([boost/variant/variant_fwd.hpp], [$2], 
-        [BOOST_FIND_HEADER([boost/variant.hpp], [$2], [$3])])
+[BOOST_FIND_HEADER([boost/variant/variant_fwd.hpp], [$1], 
+        [BOOST_FIND_HEADER([boost/variant.hpp], [$1], [$2])])
 ])
 
 
@@ -1020,7 +1021,7 @@ BOOST_DEFUN([XInt],
 # Look for Boost.Xpressive (new since 1.36.0).  If the library is
 # found, run ACTION-IF-FOUND, otherwise run ACTION-IF-NOT-FOUND.
 BOOST_DEFUN([Xpressive],
-[BOOST_FIND_HEADER([boost/xpressive/xpressive.hpp], [$2], [$3])])
+[BOOST_FIND_HEADER([boost/xpressive/xpressive.hpp], [$1], [$2])])
 
 
 # ----------------- #
