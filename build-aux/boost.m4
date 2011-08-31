@@ -734,7 +734,7 @@ BOOST_DEFUN([Serialization],
                 [boost/archive/text_oarchive.hpp],
                 [std::ostream* o = 0; // Cheap way to get an ostream...
                 boost::archive::text_oarchive t(*o);])
-])# BOOST_SIGNALS
+])# BOOST_SERIALIZATION
 
 
 # BOOST_SIGNALS([PREFERRED-RT-OPT])
