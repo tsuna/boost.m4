@@ -789,6 +789,14 @@ LIBS=$boost_python_save_LIBS
 ])# BOOST_PYTHON
 
 
+# BOOST_RANDOM([ACTION-IF-NOT-FOUND], [ACTION-IF-FOUND])
+# ---------------------------------------------------
+# Look for Boost.Random.  If the library is found, run ACTION-IF-FOUND,
+# otherwise run ACTION-IF-NOT-FOUND.
+BOOST_DEFUN([Random],
+[BOOST_FIND_HEADER([boost/random.hpp], [$1], [$2])])
+
+
 # BOOST_REF([ACTION-IF-NOT-FOUND], [ACTION-IF-FOUND])
 # ---------------------------------------------------
 # Look for Boost.Ref.  If the library is found, run ACTION-IF-FOUND,
