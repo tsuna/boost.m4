@@ -135,6 +135,7 @@ The following libraries are supported:
   - Filesystem
   - Graph
   - IOStreams
+  - MPI
   - Program_options
   - Regex
   - Serialization

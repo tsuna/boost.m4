@@ -88,7 +88,7 @@ rm -rf conftest*
 # variable "$var".
 # Defines the value BOOST_CPPFLAGS.  This macro only checks for headers with
 # the required version, it does not check for any of the Boost libraries.
-# On # success, defines HAVE_BOOST.  On failure, calls the optional
+# On success, defines HAVE_BOOST.  On failure, calls the optional
 # ACTION-IF-NOT-FOUND action if one was supplied.
 # Otherwise aborts with an error message.
 AC_DEFUN([BOOST_REQUIRE],
@@ -228,7 +228,7 @@ CPPFLAGS=$boost_save_CPPFLAGS
 AC_DEFUN([BOOST_STATIC],
   [AC_ARG_ENABLE([static-boost],
      [AC_HELP_STRING([--enable-static-boost],
-               [Prefer the static boost libraries over the shared ones [no]])],
+               [Prefer the static Boost libraries over the shared ones [no]])],
      [enable_static_boost=yes],
      [enable_static_boost=no])])# BOOST_STATIC
 
@@ -265,13 +265,14 @@ fi
 
 
 # BOOST_FIND_LIB([LIB-NAME], [PREFERRED-RT-OPT], [HEADER-NAME], [CXX-TEST],
-#                [CXX-PROLOGUE])
+#                [CXX-PROLOGUE], [ACTION-IF-NOT-FOUND], [ACTION-IF-FOUND])
 # -------------------------------------------------------------------------
 # Look for the Boost library LIB-NAME (e.g., LIB-NAME = `thread', for
 # libboost_thread).  Check that HEADER-NAME works and check that
 # libboost_LIB-NAME can link with the code CXX-TEST.  The optional argument
 # CXX-PROLOGUE can be used to include some C++ code before the `main'
-# function.
+# function.  If the library is found, run ACTION-IF-FOUND,
+# otherwise run ACTION-IF-NOT-FOUND.
 #
 # Invokes BOOST_FIND_HEADER([HEADER-NAME]) (see above).
 #
@@ -368,7 +369,8 @@ for boost_rtopt_ in $boost_rtopt '' -d; do
     boost_$1$boost_tag_$boost_mt_$boost_rtopt_$boost_ver_ \
     boost_$1$boost_tag_$boost_rtopt_$boost_ver_ \
     boost_$1$boost_tag_$boost_mt_$boost_ver_ \
-    boost_$1$boost_tag_$boost_ver_
+    boost_$1$boost_tag_$boost_ver_ \
+    boost_$1$boost_tag_
   do
     # Avoid testing twice the same lib
     case $boost_failed_libs in #(
@@ -419,13 +421,22 @@ rm -f conftest.$ac_objext
 ])
 case $Boost_lib in #(
   no) _AC_MSG_LOG_CONFTEST
-    AC_MSG_ERROR([cannot find the flags to link with Boost $1])
+    AC_SUBST(AS_TR_CPP([BOOST_$1_LDFLAGS]), [])
+    AC_SUBST(AS_TR_CPP([BOOST_$1_LDPATH]), [])
+    AC_SUBST([BOOST_LDPATH], [])
+    AC_SUBST(AS_TR_CPP([BOOST_$1_LIBS]), [])
+    ifelse([$6],[],
+            [AC_MSG_ERROR([cannot find the flags to link with Boost.$1])],
+            [$6])
+    ;; #(
+  yes)
+    AC_SUBST(AS_TR_CPP([BOOST_$1_LDFLAGS]), [$Boost_lib_LDFLAGS])dnl
+    AC_SUBST(AS_TR_CPP([BOOST_$1_LDPATH]), [$Boost_lib_LDPATH])dnl
+    AC_SUBST([BOOST_LDPATH], [$Boost_lib_LDPATH])dnl
+    AC_SUBST(AS_TR_CPP([BOOST_$1_LIBS]), [$Boost_lib_LIBS])dnl
+    $7
     ;;
 esac
-AC_SUBST(AS_TR_CPP([BOOST_$1_LDFLAGS]), [$Boost_lib_LDFLAGS])dnl
-AC_SUBST(AS_TR_CPP([BOOST_$1_LDPATH]), [$Boost_lib_LDPATH])dnl
-AC_SUBST([BOOST_LDPATH], [$Boost_lib_LDPATH])dnl
-AC_SUBST(AS_TR_CPP([BOOST_$1_LIBS]), [$Boost_lib_LIBS])dnl
 CPPFLAGS=$boost_save_CPPFLAGS
 AS_VAR_POPDEF([Boost_lib])dnl
 AS_VAR_POPDEF([Boost_lib_LDFLAGS])dnl
@@ -458,52 +469,61 @@ m4_popdef([BOOST_Library])dnl
 ])
 ])
 
-# BOOST_ARRAY()
-# -------------
-# Look for Boost.Array
+# BOOST_ARRAY([ACTION-IF-NOT-FOUND], [ACTION-IF-FOUND])
+# -----------------------------------------------------
+# Look for Boost.Array.  If the library is found, run ACTION-IF-FOUND,
+# otherwise run ACTION-IF-NOT-FOUND.
 BOOST_DEFUN([Array],
-[BOOST_FIND_HEADER([boost/array.hpp])])
+[BOOST_FIND_HEADER([boost/array.hpp], [$1], [$2])])
 
 
-# BOOST_ASIO()
-# ------------
-# Look for Boost.Asio (new in Boost 1.35).
+# BOOST_ASIO([ACTION-IF-NOT-FOUND], [ACTION-IF-FOUND])
+# ----------------------------------------------------
+# Look for Boost.Asio (new in Boost 1.35).  If the library is found,
+# run ACTION-IF-FOUND, otherwise run ACTION-IF-NOT-FOUND.
 BOOST_DEFUN([Asio],
 [AC_REQUIRE([BOOST_SYSTEM])dnl
-BOOST_FIND_HEADER([boost/asio.hpp])])
+BOOST_FIND_HEADER([boost/asio.hpp], [$1], [$2])])
 
 
-# BOOST_BIND()
-# ------------
-# Look for Boost.Bind
+# BOOST_BIND([ACTION-IF-NOT-FOUND], [ACTION-IF-FOUND])
+# ----------------------------------------------------
+# Look for Boost.Bind. If the library is found, run ACTION-IF-FOUND,
+# otherwise run ACTION-IF-NOT-FOUND.
 BOOST_DEFUN([Bind],
-[BOOST_FIND_HEADER([boost/bind.hpp])])
+[BOOST_FIND_HEADER([boost/bind.hpp], [$1], [$2])])
 
 
-# BOOST_CONVERSION()
-# ------------------
-# Look for Boost.Conversion (cast / lexical_cast)
+# BOOST_CONVERSION([ACTION-IF-NOT-FOUND], [ACTION-IF-FOUND])
+# ----------------------------------------------------------
+# Look for Boost.Conversion (cast / lexical_cast). If the library is
+# found, run ACTION-IF-FOUND, otherwise run ACTION-IF-NOT-FOUND.
 BOOST_DEFUN([Conversion],
-[BOOST_FIND_HEADER([boost/cast.hpp])
-BOOST_FIND_HEADER([boost/lexical_cast.hpp])
+[BOOST_FIND_HEADER([boost/cast.hpp], [$1], 
+    [BOOST_FIND_HEADER([boost/lexical_cast.hpp], [$1], [$2])])
 ])# BOOST_CONVERSION
 
 
-# BOOST_DATE_TIME([PREFERRED-RT-OPT])
-# -----------------------------------
-# Look for Boost.Date_Time.  For the documentation of PREFERRED-RT-OPT, see the
-# documentation of BOOST_FIND_LIB above.
+# BOOST_DATE_TIME([PREFERRED-RT-OPT], [ACTION-IF-NOT-FOUND], [ACTION-IF-FOUND])
+# -----------------------------------------------------------------------------
+# Look for Boost.Date_Time.  For the documentation of
+# PREFERRED-RT-OPT, see the documentation of BOOST_FIND_LIB above.  If
+# the library is found, run ACTION-IF-FOUND, otherwise run
+# ACTION-IF-NOT-FOUND.
 BOOST_DEFUN([Date_Time],
 [BOOST_FIND_LIB([date_time], [$1],
                 [boost/date_time/posix_time/posix_time.hpp],
-                [boost::posix_time::ptime t;])
+                [boost::posix_time::ptime t;], 
+                [], [$2], [$3])
 ])# BOOST_DATE_TIME
 
 
-# BOOST_FILESYSTEM([PREFERRED-RT-OPT])
-# ------------------------------------
-# Look for Boost.Filesystem.  For the documentation of PREFERRED-RT-OPT, see
-# the documentation of BOOST_FIND_LIB above.
+# BOOST_FILESYSTEM([PREFERRED-RT-OPT], [ACTION-IF-NOT-FOUND], [ACTION-IF-FOUND])
+# ------------------------------------------------------------------------------
+# Look for Boost.Filesystem.  For the documentation of
+# PREFERRED-RT-OPT, see the documentation of BOOST_FIND_LIB above. If
+# the library is found, run ACTION-IF-FOUND, otherwise run
+# ACTION-IF-NOT-FOUND.
 # Do not check for boost/filesystem.hpp because this file was introduced in
 # 1.34.
 BOOST_DEFUN([Filesystem],
@@ -519,7 +539,8 @@ m4_pattern_allow([^BOOST_SYSTEM_(LIBS|LDFLAGS)$])dnl
 LIBS="$LIBS $BOOST_SYSTEM_LIBS"
 LDFLAGS="$LDFLAGS $BOOST_SYSTEM_LDFLAGS"
 BOOST_FIND_LIB([filesystem], [$1],
-                [boost/filesystem/path.hpp], [boost::filesystem::path p;])
+                [boost/filesystem/path.hpp], [boost::filesystem::path p;],
+                [], [$2], [$3])
 if test $enable_static_boost = yes && test $boost_major_version -ge 135; then
     AC_SUBST([BOOST_FILESYSTEM_LIBS], ["$BOOST_FILESYSTEM_LIBS $BOOST_SYSTEM_LIBS"])
 fi
@@ -528,154 +549,213 @@ LDFLAGS=$boost_filesystem_save_LDFLAGS
 ])# BOOST_FILESYSTEM
 
 
-# BOOST_FOREACH()
-# ---------------
-# Look for Boost.Foreach
+# BOOST_FOREACH([ACTION-IF-NOT-FOUND], [ACTION-IF-FOUND])
+# -------------------------------------------------------
+# Look for Boost.Foreach. If the library is found, run ACTION-IF-FOUND,
+# otherwise run ACTION-IF-NOT-FOUND.
 BOOST_DEFUN([Foreach],
-[BOOST_FIND_HEADER([boost/foreach.hpp])])
+[BOOST_FIND_HEADER([boost/foreach.hpp], [$1], [$2])])
 
 
-# BOOST_FORMAT()
-# --------------
-# Look for Boost.Format
+# BOOST_FORMAT([ACTION-IF-NOT-FOUND], [ACTION-IF-FOUND])
+# ------------------------------------------------------
+# Look for Boost.Format.  If the library is found, run ACTION-IF-FOUND,
+# otherwise run ACTION-IF-NOT-FOUND.
 # Note: we can't check for boost/format/format_fwd.hpp because the header isn't
 # standalone.  It can't be compiled because it triggers the following error:
 # boost/format/detail/config_macros.hpp:88: error: 'locale' in namespace 'std'
 #                                                  does not name a type
 BOOST_DEFUN([Format],
-[BOOST_FIND_HEADER([boost/format.hpp])])
+[BOOST_FIND_HEADER([boost/format.hpp], [$1], [$2])])
 
 
-# BOOST_FUNCTION()
-# ----------------
-# Look for Boost.Function
+# BOOST_FUNCTION([ACTION-IF-NOT-FOUND], [ACTION-IF-FOUND])
+# --------------------------------------------------------
+# Look for Boost.Function.  If the library is found, run ACTION-IF-FOUND,
+# otherwise run ACTION-IF-NOT-FOUND.
 BOOST_DEFUN([Function],
-[BOOST_FIND_HEADER([boost/function.hpp])])
+[BOOST_FIND_HEADER([boost/function.hpp], [$1], [$2])])
 
 
-# BOOST_GRAPH([PREFERRED-RT-OPT])
-# -------------------------------
-# Look for Boost.Graphs.  For the documentation of PREFERRED-RT-OPT, see the
-# documentation of BOOST_FIND_LIB above.
+# BOOST_GRAPH([PREFERRED-RT-OPT], [ACTION-IF-NOT-FOUND], [ACTION-IF-FOUND])
+# -------------------------------------------------------------------------
+# Look for Boost.Graphs.  For the documentation of PREFERRED-RT-OPT,
+# see the documentation of BOOST_FIND_LIB above.  If the library is
+# found, run ACTION-IF-FOUND, otherwise run ACTION-IF-NOT-FOUND.
 BOOST_DEFUN([Graph],
 [BOOST_FIND_LIB([graph], [$1],
-                [boost/graph/adjacency_list.hpp], [boost::adjacency_list<> g;])
+                [boost/graph/adjacency_list.hpp], [boost::adjacency_list<> g;],
+                [], [$2], [$3])
 ])# BOOST_GRAPH
 
 
-# BOOST_IOSTREAMS([PREFERRED-RT-OPT])
-# -----------------------------------
-# Look for Boost.IOStreams.  For the documentation of PREFERRED-RT-OPT, see the
-# documentation of BOOST_FIND_LIB above.
+# BOOST_IOSTREAMS([PREFERRED-RT-OPT], [ACTION-IF-NOT-FOUND], [ACTION-IF-FOUND])
+# -----------------------------------------------------------------------------
+# Look for Boost.IOStreams.  For the documentation of
+# PREFERRED-RT-OPT, see the documentation of BOOST_FIND_LIB above.  If
+# the library is found, run ACTION-IF-FOUND, otherwise run
+# ACTION-IF-NOT-FOUND.
 BOOST_DEFUN([IOStreams],
 [BOOST_FIND_LIB([iostreams], [$1],
                 [boost/iostreams/device/file_descriptor.hpp],
-                [boost::iostreams::file_descriptor fd; fd.close();])
+                [boost::iostreams::file_descriptor fd; fd.close();],
+                [], [$2], [$3])
 ])# BOOST_IOSTREAMS
 
 
-# BOOST_HASH()
-# ------------
-# Look for Boost.Functional/Hash
+# BOOST_HASH([ACTION-IF-NOT-FOUND], [ACTION-IF-FOUND])
+# ----------------------------------------------------
+# Look for Boost.Functional/Hash.  If the library is found, run
+# ACTION-IF-FOUND, otherwise run ACTION-IF-NOT-FOUND.
 BOOST_DEFUN([Hash],
-[BOOST_FIND_HEADER([boost/functional/hash.hpp])])
+[BOOST_FIND_HEADER([boost/functional/hash.hpp], [$1], [$2])])
 
 
-# BOOST_LAMBDA()
-# --------------
-# Look for Boost.Lambda
+# BOOST_LAMBDA([ACTION-IF-NOT-FOUND], [ACTION-IF-FOUND])
+# ------------------------------------------------------
+# Look for Boost.Lambda.  If the library is found, run ACTION-IF-FOUND,
+# otherwise run ACTION-IF-NOT-FOUND.
 BOOST_DEFUN([Lambda],
-[BOOST_FIND_HEADER([boost/lambda/lambda.hpp])])
+[BOOST_FIND_HEADER([boost/lambda/lambda.hpp], [$1], [$2])])
 
 
-# BOOST_LOG([PREFERRED-RT-OPT])
-# -----------------------------
-# Look for Boost.Log For the documentation of PREFERRED-RT-OPT, see the
-# documentation of BOOST_FIND_LIB above.
+# BOOST_LOG([PREFERRED-RT-OPT], [ACTION-IF-NOT-FOUND], [ACTION-IF-FOUND])
+# -----------------------------------------------------------------------
+# Look for Boost.Log For the documentation of PREFERRED-RT-OPT, see
+# the documentation of BOOST_FIND_LIB above.  If the library is found,
+# run ACTION-IF-FOUND, otherwise run ACTION-IF-NOT-FOUND.
 BOOST_DEFUN([Log],
 [BOOST_FIND_LIB([log], [$1],
     [boost/log/core/core.hpp],
-    [boost::log::attribute a; a.get_value();])
+    [boost::log::attribute a; a.get_value();],
+    [], [$2], [$3])
 ])# BOOST_LOG
 
 
-# BOOST_LOG_SETUP([PREFERRED-RT-OPT])
-# -----------------------------------
+# BOOST_LOG_SETUP([PREFERRED-RT-OPT], [ACTION-IF-NOT-FOUND], [ACTION-IF-FOUND])
+# -----------------------------------------------------------------------------
 # Look for Boost.Log For the documentation of PREFERRED-RT-OPT, see the
-# documentation of BOOST_FIND_LIB above.
+# documentation of BOOST_FIND_LIB above.  If the library is found,
+# run ACTION-IF-FOUND, otherwise run ACTION-IF-NOT-FOUND.
 BOOST_DEFUN([Log_Setup],
 [AC_REQUIRE([BOOST_LOG])dnl
 BOOST_FIND_LIB([log_setup], [$1],
     [boost/log/utility/init/from_settings.hpp],
-    [boost::log::basic_settings<char> bs; bs.empty();])
+    [boost::log::basic_settings<char> bs; bs.empty();],
+    [], [$2], [$3])
 ])# BOOST_LOG_SETUP
 
 
-# BOOST_MATH()
-# ------------
-# Look for Boost.Math
+# BOOST_MATH([ACTION-IF-NOT-FOUND], [ACTION-IF-FOUND])
+# ----------------------------------------------------
+# Look for Boost.Math.  If the library is found, run ACTION-IF-FOUND,
+# otherwise run ACTION-IF-NOT-FOUND.
 # TODO: This library isn't header-only but it comes in multiple different
 # flavors that don't play well with BOOST_FIND_LIB (e.g, libboost_math_c99,
 # libboost_math_c99f, libboost_math_c99l, libboost_math_tr1,
 # libboost_math_tr1f, libboost_math_tr1l).  This macro must be fixed to do the
 # right thing anyway.
 BOOST_DEFUN([Math],
-[BOOST_FIND_HEADER([boost/math/special_functions.hpp])])
+[BOOST_FIND_HEADER([boost/math/special_functions.hpp], [$1], [$2])])
 
 
-# BOOST_MULTIARRAY()
-# ------------------
-# Look for Boost.MultiArray
+# BOOST_MPI([PREFERRED-RT-OPT], [ACTION-IF-FOUND], [ACTION-IF-NOT-FOUND],
+#           [MPI_CPPFLAGS], [MPI_CXXFLAGS], [MPI_LDFLAGS], [MPI_LIBS])
+# -----------------------------------------------------------------------
+# Look for Boost.MPI (introduced in Boost 1.35).  
+# Optional arguments MPI_CPPFLAGS, MPI_CXXFLAGS, MPI_LDFLAGS and
+# MPI_LIBS state *additional* compiler/linker flags to use when
+# searching for the Boost.MPI library.  A handy autoconf macro to find
+# out values for these flags for most MPI implementations is Tood
+# Gamblin's LX_FIND_MPI, available at:
+# https://github.com/tgamblin/libra/blob/master/m4/lx_find_mpi.m4
+# For the documentation of PREFERRED-RT-OPT, see the documentation of
+# BOOST_FIND_LIB above.
+BOOST_DEFUN([MPI],
+[
+boost_mpi_outer_save_CPPFLAGS="$CPPFLAGS"
+boost_mpi_outer_save_CXXFLAGS="$CXXFLAGS"
+boost_mpi_outer_save_LDFLAGS="$LDFLAGS"
+boost_mpi_outer_save_LIBS="$LIBS"
+CPPFLAGS="$4 $CPPFLAGS"
+CXXFLAGS="$5 $CXXFLAGS"
+LDFLAGS="$6 $LDFLAGS"
+LIBS="$7 $LIBS"
+BOOST_FIND_LIB([mpi], [$1], 
+                [boost/mpi.hpp],
+                [boost::mpi::environment world],
+                [],
+                [$2],
+                [$3])
+CPPFLAGS="$boost_mpi_outer_save_CPPFLAGS"
+CXXFLAGS="$boost_mpi_outer_save_CXXFLAGS"
+LDFLAGS="$boost_mpi_outer_save_LDFLAGS"
+LIBS="$boost_mpi_outer_save_LIBS"
+]) # BOOST_MPI
+
+
+# BOOST_MULTIARRAY([ACTION-IF-NOT-FOUND], [ACTION-IF-FOUND])
+# ----------------------------------------------------------
+# Look for Boost.MultiArray.  If the library is found, run ACTION-IF-FOUND,
+# otherwise run ACTION-IF-NOT-FOUND.
 BOOST_DEFUN([MultiArray],
-[BOOST_FIND_HEADER([boost/multi_array.hpp])])
+[BOOST_FIND_HEADER([boost/multi_array.hpp], [$1], [$2])])
 
 
-# BOOST_NUMERIC_CONVERSION()
-# --------------------------
-# Look for Boost.NumericConversion (policy-based numeric conversion)
-BOOST_DEFUN([Numeric_Conversion],
-[BOOST_FIND_HEADER([boost/numeric/conversion/converter.hpp])
+# BOOST_NUMERIC_CONVERSION([ACTION-IF-NOT-FOUND], [ACTION-IF-FOUND])
+# ------------------------------------------------------------------
+# Look for Boost.NumericConversion (policy-based numeric conversion).
+# If the library is found, run ACTION-IF-FOUND, otherwise run
+# ACTION-IF-NOT-FOUND.
+BOOST_DEFUN([NumericConversion],
+[BOOST_FIND_HEADER([boost/numeric/conversion/converter.hpp], [$2], [$3])
 ])# BOOST_NUMERIC_CONVERSION
 
 
-# BOOST_OPTIONAL()
-# ----------------
-# Look for Boost.Optional
+# BOOST_OPTIONAL([ACTION-IF-NOT-FOUND], [ACTION-IF-FOUND])
+# --------------------------------------------------------
+# Look for Boost.Optional.  If the library is found, run ACTION-IF-FOUND,
+# otherwise run ACTION-IF-NOT-FOUND.
 BOOST_DEFUN([Optional],
-[BOOST_FIND_HEADER([boost/optional.hpp])])
+[BOOST_FIND_HEADER([boost/optional.hpp], [$1], [$2])])
 
 
-# BOOST_PREPROCESSOR()
-# --------------------
-# Look for Boost.Preprocessor
+# BOOST_PREPROCESSOR([ACTION-IF-NOT-FOUND], [ACTION-IF-FOUND])
+# ------------------------------------------------------------
+# Look for Boost.Preprocessor.  If the library is found, run ACTION-IF-FOUND,
+# otherwise run ACTION-IF-NOT-FOUND.
 BOOST_DEFUN([Preprocessor],
-[BOOST_FIND_HEADER([boost/preprocessor/repeat.hpp])])
+[BOOST_FIND_HEADER([boost/preprocessor/repeat.hpp], [$1], [$2])])
 
 
-# BOOST_UNORDERED()
-# -----------------
-# Look for Boost.Unordered
+# BOOST_UNORDERED([ACTION-IF-NOT-FOUND], [ACTION-IF-FOUND])
+# ---------------------------------------------------------
+# Look for Boost.Unordered.  If the library is found, run ACTION-IF-FOUND,
+# otherwise run ACTION-IF-NOT-FOUND.
 BOOST_DEFUN([Unordered],
-[BOOST_FIND_HEADER([boost/unordered_map.hpp])])
+[BOOST_FIND_HEADER([boost/unordered_map.hpp], [$2], [$3])])
 
 
-# BOOST_UUID()
-# ------------
-# Look for Boost.Uuid
+# BOOST_UUID([ACTION-IF-NOT-FOUND], [ACTION-IF-FOUND])
+# ----------------------------------------------------
+# Look for Boost.Uuid.  If the library is found, run ACTION-IF-FOUND,
+# otherwise run ACTION-IF-NOT-FOUND.
 BOOST_DEFUN([Uuid],
-[BOOST_FIND_HEADER([boost/uuid/uuid.hpp])])
+[BOOST_FIND_HEADER([boost/uuid/uuid.hpp], [$2], [$3])])
 
 
-# BOOST_PROGRAM_OPTIONS([PREFERRED-RT-OPT])
-# -----------------------------------------
-# Look for Boost.Program_options.  For the documentation of PREFERRED-RT-OPT,
-# see the documentation of BOOST_FIND_LIB above.
-BOOST_DEFUN([Program_Options],
+# BOOST_PROGRAM_OPTIONS([PREFERRED-RT-OPT], [ACTION-IF-NOT-FOUND], [ACTION-IF-FOUND])
+# -----------------------------------------------------------------------------------
+# Look for Boost.Program_options.  For the documentation of
+# PREFERRED-RT-OPT, see the documentation of BOOST_FIND_LIB above.  If
+# the library is found, run ACTION-IF-FOUND, otherwise run
+# ACTION-IF-NOT-FOUND.
+BOOST_DEFUN([Program_options],
 [BOOST_FIND_LIB([program_options], [$1],
                 [boost/program_options.hpp],
-                [boost::program_options::options_description d("test");])
+                [boost::program_options::options_description d("test");],
+                [], [$2], [$3])
 ])# BOOST_PROGRAM_OPTIONS
-
 
 
 # _BOOST_PYTHON_CONFIG(VARIABLE, FLAG)
@@ -689,10 +769,11 @@ boost_python_save_$1=$$1
 $1="$$1 $BOOST_PYTHON_$1"])
 
 
-# BOOST_PYTHON([PREFERRED-RT-OPT])
-# --------------------------------
+# BOOST_PYTHON([PREFERRED-RT-OPT], [ACTION-IF-NOT-FOUND], [ACTION-IF-FOUND])
+# --------------------------------------------------------------------------
 # Look for Boost.Python.  For the documentation of PREFERRED-RT-OPT,
-# see the documentation of BOOST_FIND_LIB above.
+# see the documentation of BOOST_FIND_LIB above.  If the library is
+# found, run ACTION-IF-FOUND, otherwise run ACTION-IF-NOT-FOUND.
 BOOST_DEFUN([Python],
 [_BOOST_PYTHON_CONFIG([CPPFLAGS], [includes])
 _BOOST_PYTHON_CONFIG([LDFLAGS],   [ldflags])
@@ -700,108 +781,135 @@ _BOOST_PYTHON_CONFIG([LIBS],      [libs])
 m4_pattern_allow([^BOOST_PYTHON_MODULE$])dnl
 BOOST_FIND_LIB([python], [$1],
                [boost/python.hpp],
-               [], [BOOST_PYTHON_MODULE(empty) {}])
+               [], [BOOST_PYTHON_MODULE(empty) {}],
+               [$2], [$3])
 CPPFLAGS=$boost_python_save_CPPFLAGS
 LDFLAGS=$boost_python_save_LDFLAGS
 LIBS=$boost_python_save_LIBS
 ])# BOOST_PYTHON
 
 
-# BOOST_REF()
-# -----------
-# Look for Boost.Ref
+# BOOST_RANDOM([ACTION-IF-NOT-FOUND], [ACTION-IF-FOUND])
+# ---------------------------------------------------
+# Look for Boost.Random.  If the library is found, run ACTION-IF-FOUND,
+# otherwise run ACTION-IF-NOT-FOUND.
+BOOST_DEFUN([Random],
+[BOOST_FIND_HEADER([boost/random.hpp], [$1], [$2])])
+
+
+# BOOST_REF([ACTION-IF-NOT-FOUND], [ACTION-IF-FOUND])
+# ---------------------------------------------------
+# Look for Boost.Ref.  If the library is found, run ACTION-IF-FOUND,
+# otherwise run ACTION-IF-NOT-FOUND.
 BOOST_DEFUN([Ref],
-[BOOST_FIND_HEADER([boost/ref.hpp])])
+[BOOST_FIND_HEADER([boost/ref.hpp], [$1], [$2])])
 
 
-# BOOST_REGEX([PREFERRED-RT-OPT])
-# -------------------------------
-# Look for Boost.Regex.  For the documentation of PREFERRED-RT-OPT, see the
-# documentation of BOOST_FIND_LIB above.
+# BOOST_REGEX([PREFERRED-RT-OPT], [ACTION-IF-NOT-FOUND], [ACTION-IF-FOUND])
+# -------------------------------------------------------------------------
+# Look for Boost.Regex.  For the documentation of PREFERRED-RT-OPT,
+# see the documentation of BOOST_FIND_LIB above.  If the library is
+# found, run ACTION-IF-FOUND, otherwise run ACTION-IF-NOT-FOUND.
 BOOST_DEFUN([Regex],
 [BOOST_FIND_LIB([regex], [$1],
                 [boost/regex.hpp],
-                [boost::regex exp("*"); boost::regex_match("foo", exp);])
+                [boost::regex exp("*"); boost::regex_match("foo", exp);],
+                [], [$2], [$3])
 ])# BOOST_REGEX
 
 
-# BOOST_SERIALIZATION([PREFERRED-RT-OPT])
-# ---------------------------------------
-# Look for Boost.Serialization.  For the documentation of PREFERRED-RT-OPT, see
-# the documentation of BOOST_FIND_LIB above.
+# BOOST_SERIALIZATION([PREFERRED-RT-OPT], [ACTION-IF-NOT-FOUND], [ACTION-IF-FOUND])
+# ---------------------------------------------------------------------------------
+# Look for Boost.Serialization.  For the documentation of
+# PREFERRED-RT-OPT, see the documentation of BOOST_FIND_LIB above.  If
+# the library is found, run ACTION-IF-FOUND, otherwise run
+# ACTION-IF-NOT-FOUND.
 BOOST_DEFUN([Serialization],
 [BOOST_FIND_LIB([serialization], [$1],
                 [boost/archive/text_oarchive.hpp],
                 [std::ostream* o = 0; // Cheap way to get an ostream...
-                boost::archive::text_oarchive t(*o);])
+                boost::archive::text_oarchive t(*o);],
+                [], [$2], [$3])
 ])# BOOST_SERIALIZATION
 
 
-# BOOST_SIGNALS([PREFERRED-RT-OPT])
-# ---------------------------------
-# Look for Boost.Signals.  For the documentation of PREFERRED-RT-OPT, see the
-# documentation of BOOST_FIND_LIB above.
+# BOOST_SIGNALS([PREFERRED-RT-OPT], [ACTION-IF-NOT-FOUND], [ACTION-IF-FOUND])
+# ---------------------------------------------------------------------------
+# Look for Boost.Signals.  For the documentation of PREFERRED-RT-OPT,
+# see the documentation of BOOST_FIND_LIB above.  If the library is
+# found, run ACTION-IF-FOUND, otherwise run ACTION-IF-NOT-FOUND.
 BOOST_DEFUN([Signals],
 [BOOST_FIND_LIB([signals], [$1],
                 [boost/signal.hpp],
-                [boost::signal<void ()> s;])
+                [boost::signal<void ()> s;],
+                [], [$2], [$3])
 ])# BOOST_SIGNALS
 
 
-# BOOST_SMART_PTR()
-# -----------------
-# Look for Boost.SmartPtr
+# BOOST_SMART_PTR([ACTION-IF-NOT-FOUND], [ACTION-IF-FOUND])
+# ---------------------------------------------------------
+# Look for Boost.SmartPtr (scoped_ptr and shared_ptr).  
+# If the library is found, run ACTION-IF-FOUND,
+# otherwise run ACTION-IF-NOT-FOUND.
 BOOST_DEFUN([Smart_Ptr],
-[BOOST_FIND_HEADER([boost/scoped_ptr.hpp])
-BOOST_FIND_HEADER([boost/shared_ptr.hpp])
+[BOOST_FIND_HEADER([boost/scoped_ptr.hpp], [$1],
+    [BOOST_FIND_HEADER([boost/shared_ptr.hpp], [$1], [$2])])
 ])
 
 
-# BOOST_STATICASSERT()
-# --------------------
-# Look for Boost.StaticAssert
+# BOOST_STATICASSERT([ACTION-IF-NOT-FOUND], [ACTION-IF-FOUND])
+# ------------------------------------------------------------
+# Look for Boost.StaticAssert.  If the library is found, run ACTION-IF-FOUND,
+# otherwise run ACTION-IF-NOT-FOUND.
 BOOST_DEFUN([StaticAssert],
-[BOOST_FIND_HEADER([boost/static_assert.hpp])])
+[BOOST_FIND_HEADER([boost/static_assert.hpp], [$1], [$2])])
 
 
-# BOOST_STRING_ALGO()
-# -------------------
-# Look for Boost.StringAlgo
+# BOOST_STRING_ALGO([ACTION-IF-NOT-FOUND], [ACTION-IF-FOUND])
+# -----------------------------------------------------------
+# Look for Boost.StringAlgo.  If the library is found, run ACTION-IF-FOUND,
+# otherwise run ACTION-IF-NOT-FOUND.
 BOOST_DEFUN([String_Algo],
-[BOOST_FIND_HEADER([boost/algorithm/string.hpp])
+[BOOST_FIND_HEADER([boost/algorithm/string.hpp], [$2], [$3])
 ])
 
 
-# BOOST_SYSTEM([PREFERRED-RT-OPT])
-# --------------------------------
-# Look for Boost.System.  For the documentation of PREFERRED-RT-OPT, see the
-# documentation of BOOST_FIND_LIB above.  This library was introduced in Boost
-# 1.35.0.
+# BOOST_SYSTEM([PREFERRED-RT-OPT], [ACTION-IF-NOT-FOUND], [ACTION-IF-FOUND])
+# --------------------------------------------------------------------------
+# Look for Boost.System.  For the documentation of PREFERRED-RT-OPT,
+# see the documentation of BOOST_FIND_LIB above.  If the library is
+# found, run ACTION-IF-FOUND, otherwise run ACTION-IF-NOT-FOUND.  
+# This library was introduced in Boost 1.35.0.  
 BOOST_DEFUN([System],
 [BOOST_FIND_LIB([system], [$1],
                 [boost/system/error_code.hpp],
-                [boost::system::error_code e; e.clear();])
+                [boost::system::error_code e; e.clear();],
+                [], [$2], [$3])
 ])# BOOST_SYSTEM
 
 
-# BOOST_TEST([PREFERRED-RT-OPT])
-# ------------------------------
-# Look for Boost.Test.  For the documentation of PREFERRED-RT-OPT, see the
-# documentation of BOOST_FIND_LIB above.
+# BOOST_TEST([PREFERRED-RT-OPT], [ACTION-IF-NOT-FOUND], [ACTION-IF-FOUND])
+# ------------------------------------------------------------------------
+# Look for Boost.Test.  For the documentation of PREFERRED-RT-OPT, see
+# the documentation of BOOST_FIND_LIB above.  If the library is found,
+# run ACTION-IF-FOUND, otherwise run ACTION-IF-NOT-FOUND.
 BOOST_DEFUN([Test],
 [m4_pattern_allow([^BOOST_CHECK$])dnl
 BOOST_FIND_LIB([unit_test_framework], [$1],
                [boost/test/unit_test.hpp], [BOOST_CHECK(2 == 2);],
                [using boost::unit_test::test_suite;
                test_suite* init_unit_test_suite(int argc, char ** argv)
-               { return NULL; }])
+               { return NULL; }],
+               [$2],
+               [$3])
 ])# BOOST_TEST
 
 
-# BOOST_THREADS([PREFERRED-RT-OPT])
-# ---------------------------------
-# Look for Boost.Thread.  For the documentation of PREFERRED-RT-OPT, see the
-# documentation of BOOST_FIND_LIB above.
+# BOOST_THREADS([PREFERRED-RT-OPT], [ACTION-IF-NOT-FOUND], [ACTION-IF-FOUND])
+# ---------------------------------------------------------------------------
+# Look for Boost.Thread.  For the documentation of PREFERRED-RT-OPT,
+# see the documentation of BOOST_FIND_LIB above.  If the library is
+# found, run ACTION-IF-FOUND, otherwise run ACTION-IF-NOT-FOUND.
 # FIXME: Provide an alias "BOOST_THREAD".
 BOOST_DEFUN([Threads],
 [dnl Having the pthread flag is required at least on GCC3 where
@@ -818,66 +926,77 @@ LIBS="$LIBS $boost_cv_pthread_flag"
 #   threading: -pthread (Linux), -pthreads (Solaris) or -mthreads (Mingw32)"
 CPPFLAGS="$CPPFLAGS $boost_cv_pthread_flag"
 BOOST_FIND_LIB([thread], [$1],
-               [boost/thread.hpp], [boost::thread t; boost::mutex m;])
-BOOST_THREAD_LIBS="$BOOST_THREAD_LIBS $boost_cv_pthread_flag"
-BOOST_CPPFLAGS="$BOOST_CPPFLAGS $boost_cv_pthread_flag"
+                [boost/thread.hpp], [boost::thread t; boost::mutex m;],
+                [], [$2], [
+                BOOST_THREAD_LIBS="$BOOST_THREAD_LIBS $boost_cv_pthread_flag"
+                BOOST_CPPFLAGS="$BOOST_CPPFLAGS $boost_cv_pthread_flag"
+                $3
+                ])
 LIBS=$boost_threads_save_LIBS
 CPPFLAGS=$boost_threads_save_CPPFLAGS
 ])# BOOST_THREADS
 
 
-# BOOST_TOKENIZER()
-# -----------------
-# Look for Boost.Tokenizer
+# BOOST_TOKENIZER([ACTION-IF-NOT-FOUND], [ACTION-IF-FOUND])
+# ---------------------------------------------------------
+# Look for Boost.Tokenizer.  If the library is found, run ACTION-IF-FOUND,
+# otherwise run ACTION-IF-NOT-FOUND.
 BOOST_DEFUN([Tokenizer],
-[BOOST_FIND_HEADER([boost/tokenizer.hpp])])
+[BOOST_FIND_HEADER([boost/tokenizer.hpp], [$1], [$2])])
 
 
-# BOOST_TRIBOOL()
-# ---------------
-# Look for Boost.Tribool
+# BOOST_TRIBOOL([ACTION-IF-NOT-FOUND], [ACTION-IF-FOUND])
+# -------------------------------------------------------
+# Look for Boost.Tribool (tribool and tribool_fwd).  If the library is
+# found, run ACTION-IF-FOUND, otherwise run ACTION-IF-NOT-FOUND.
 BOOST_DEFUN([Tribool],
-[BOOST_FIND_HEADER([boost/logic/tribool_fwd.hpp])
-BOOST_FIND_HEADER([boost/logic/tribool.hpp])
+[BOOST_FIND_HEADER([boost/logic/tribool_fwd.hpp], [$1], 
+        [BOOST_FIND_HEADER([boost/logic/tribool.hpp], [$1], [$2])])
 ])
 
 
-# BOOST_TUPLE()
-# -------------
-# Look for Boost.Tuple
+# BOOST_TUPLE([ACTION-IF-NOT-FOUND], [ACTION-IF-FOUND])
+# -----------------------------------------------------
+# Look for Boost.Tuple.  If the library is found, run ACTION-IF-FOUND,
+# otherwise run ACTION-IF-NOT-FOUND.
 BOOST_DEFUN([Tuple],
-[BOOST_FIND_HEADER([boost/tuple/tuple.hpp])])
+[BOOST_FIND_HEADER([boost/tuple/tuple.hpp], [$1], [$2])])
 
 
-# BOOST_TYPETRAITS()
-# --------------------
-# Look for Boost.TypeTraits
+# BOOST_TYPETRAITS([ACTION-IF-NOT-FOUND], [ACTION-IF-FOUND])
+# ----------------------------------------------------------
+# Look for Boost.TypeTraits.  If the library is found, run ACTION-IF-FOUND,
+# otherwise run ACTION-IF-NOT-FOUND.
 BOOST_DEFUN([TypeTraits],
-[BOOST_FIND_HEADER([boost/type_traits.hpp])])
+[BOOST_FIND_HEADER([boost/type_traits.hpp], [$1], [$2])])
 
 
-# BOOST_UTILITY()
-# ---------------
-# Look for Boost.Utility (noncopyable, result_of, base-from-member idiom,
-# etc.)
+# BOOST_UTILITY([ACTION-IF-NOT-FOUND], [ACTION-IF-FOUND])
+# -------------------------------------------------------
+# Look for Boost.Utility (noncopyable, result_of, base-from-member
+# idiom, etc.)  If the library is found, run ACTION-IF-FOUND,
+# otherwise run ACTION-IF-NOT-FOUND.
 BOOST_DEFUN([Utility],
-[BOOST_FIND_HEADER([boost/utility.hpp])])
+[BOOST_FIND_HEADER([boost/utility.hpp], [$1], [$2])])
 
 
-# BOOST_VARIANT()
-# ---------------
-# Look for Boost.Variant.
+# BOOST_VARIANT([ACTION-IF-NOT-FOUND], [ACTION-IF-FOUND])
+# -------------------------------------------------------
+# Look for Boost.Variant (variant and variant_fwd).  If the library is
+# found, run ACTION-IF-FOUND, otherwise run ACTION-IF-NOT-FOUND.
 BOOST_DEFUN([Variant],
-[BOOST_FIND_HEADER([boost/variant/variant_fwd.hpp])
-BOOST_FIND_HEADER([boost/variant.hpp])])
+[BOOST_FIND_HEADER([boost/variant/variant_fwd.hpp], [$1], 
+        [BOOST_FIND_HEADER([boost/variant.hpp], [$1], [$2])])
+])
 
 
-# BOOST_WAVE([PREFERRED-RT-OPT])
-# ------------------------------
+# BOOST_WAVE([PREFERRED-RT-OPT], [ACTION-IF-NOT-FOUND], [ACTION-IF-FOUND])
+# ------------------------------------------------------------------------
 # NOTE: If you intend to use Wave/Spirit with thread support, make sure you
 # call BOOST_THREADS first.
-# Look for Boost.Wave.  For the documentation of PREFERRED-RT-OPT, see the
-# documentation of BOOST_FIND_LIB above.
+# Look for Boost.Wave.  For the documentation of PREFERRED-RT-OPT, see
+# the documentation of BOOST_FIND_LIB above.  If the library is found,
+# run ACTION-IF-FOUND, otherwise run ACTION-IF-NOT-FOUND.
 BOOST_DEFUN([Wave],
 [AC_REQUIRE([BOOST_FILESYSTEM])dnl
 AC_REQUIRE([BOOST_DATE_TIME])dnl
@@ -890,17 +1009,27 @@ LDFLAGS="$LDFLAGS $BOOST_SYSTEM_LDFLAGS $BOOST_FILESYSTEM_LDFLAGS\
 $BOOST_DATE_TIME_LDFLAGS $BOOST_THREAD_LDFLAGS"
 BOOST_FIND_LIB([wave], [$1],
                 [boost/wave.hpp],
-                [boost::wave::token_id id; get_token_name(id);])
+                [boost::wave::token_id id; get_token_name(id);],
+                [], [$2], [$3])
 LIBS=$boost_wave_save_LIBS
 LDFLAGS=$boost_wave_save_LDFLAGS
 ])# BOOST_WAVE
 
 
-# BOOST_XPRESSIVE()
-# -----------------
-# Look for Boost.Xpressive (new since 1.36.0).
+# BOOST_XINT([ACTION-IF-NOT-FOUND], [ACTION-IF-FOUND])
+# ----------------------------------------------------
+# Look for Boost.XInt (not yet official as of 1.47.0).  If the library
+# is found, run ACTION-IF-FOUND, otherwise run ACTION-IF-NOT-FOUND.
+BOOST_DEFUN([XInt],
+[BOOST_FIND_HEADER([boost/xint/integer.hpp], [$1], [$2])])
+
+
+# BOOST_XPRESSIVE([ACTION-IF-NOT-FOUND], [ACTION-IF-FOUND])
+# ---------------------------------------------------------
+# Look for Boost.Xpressive (new since 1.36.0).  If the library is
+# found, run ACTION-IF-FOUND, otherwise run ACTION-IF-NOT-FOUND.
 BOOST_DEFUN([Xpressive],
-[BOOST_FIND_HEADER([boost/xpressive/xpressive.hpp])])
+[BOOST_FIND_HEADER([boost/xpressive/xpressive.hpp], [$1], [$2])])
 
 
 # ----------------- #
@@ -1107,11 +1236,11 @@ boost_use_source=:
 test -f conftest.$ac_objext && ac_ext=$ac_objext && boost_use_source=false &&
   _AS_ECHO_LOG([re-using the existing conftest.$ac_objext])
 AS_IF([_AC_DO_STDERR($ac_link) && {
-	 test -z "$ac_[]_AC_LANG_ABBREV[]_werror_flag" ||
-	 test ! -s conftest.err
+         test -z "$ac_[]_AC_LANG_ABBREV[]_werror_flag" ||
+         test ! -s conftest.err
        } && test -s conftest$ac_exeext && {
-	 test "$cross_compiling" = yes ||
-	 $as_executable_p conftest$ac_exeext
+         test "$cross_compiling" = yes ||
+         $as_executable_p conftest$ac_exeext
 dnl FIXME: use AS_TEST_X instead when 2.61 is widespread enough.
        }],
       [$2],
