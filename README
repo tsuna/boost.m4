@@ -131,6 +131,7 @@ runtime or not, etc.  The macro will try to find a library that matches your
 requirements but may fall back to another flavor of the library if the one you
 asked for isn't available.
 The following libraries are supported:
+  - Chrono
   - Date_Time
   - Filesystem
   - Graph
