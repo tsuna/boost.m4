@@ -809,8 +809,15 @@ dnl boost/thread.hpp would complain if we try to compile without
 dnl -pthread on GNU/Linux.
 AC_REQUIRE([_BOOST_PTHREAD_FLAG])dnl
 boost_threads_save_LIBS=$LIBS
+boost_threads_save_LDFLAGS=$LDFLAGS
 boost_threads_save_CPPFLAGS=$CPPFLAGS
-LIBS="$LIBS $boost_cv_pthread_flag"
+# Link-time dependency from thread to system was added as of 1.49.0.
+if test $boost_major_version -ge 149; then
+BOOST_SYSTEM([$1])
+fi # end of the Boost.System check.
+m4_pattern_allow([^BOOST_SYSTEM_(LIBS|LDFLAGS)$])dnl
+LIBS="$LIBS $BOOST_SYSTEM_LIBS $boost_cv_pthread_flag"
+LDFLAGS="$LDFLAGS $BOOST_SYSTEM_LDFLAGS"
 # Yes, we *need* to put the -pthread thing in CPPFLAGS because with GCC3,
 # boost/thread.hpp will trigger a #error if -pthread isn't used:
 #   boost/config/requires_threads.hpp:47:5: #error "Compiler threading support
@@ -819,9 +826,11 @@ LIBS="$LIBS $boost_cv_pthread_flag"
 CPPFLAGS="$CPPFLAGS $boost_cv_pthread_flag"
 BOOST_FIND_LIB([thread], [$1],
                [boost/thread.hpp], [boost::thread t; boost::mutex m;])
-BOOST_THREAD_LIBS="$BOOST_THREAD_LIBS $boost_cv_pthread_flag"
+BOOST_THREAD_LIBS="$BOOST_THREAD_LIBS $BOOST_SYSTEM_LIBS $boost_cv_pthread_flag"
+BOOST_THREAD_LDFLAGS="$BOOST_SYSTEM_LDFLAGS"
 BOOST_CPPFLAGS="$BOOST_CPPFLAGS $boost_cv_pthread_flag"
 LIBS=$boost_threads_save_LIBS
+LDFLAGS=$boost_threads_save_LDFLAGS
 CPPFLAGS=$boost_threads_save_CPPFLAGS
 ])# BOOST_THREADS
 
