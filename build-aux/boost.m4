@@ -851,8 +851,23 @@ LDFLAGS="$LDFLAGS $BOOST_SYSTEM_LDFLAGS"
 #   is not turned on. Please set the correct command line options for
 #   threading: -pthread (Linux), -pthreads (Solaris) or -mthreads (Mingw32)"
 CPPFLAGS="$CPPFLAGS $boost_cv_pthread_flag"
-BOOST_FIND_LIB([thread], [$1],
-               [boost/thread.hpp], [boost::thread t; boost::mutex m;])
+
+# When compiling for the Windows platform, the threads library is named
+# differently.
+case $host_os in
+  (*mingw*)
+    BOOST_FIND_LIB([thread_win32], [$1],
+                   [boost/thread.hpp], [boost::thread t; boost::mutex m;])
+    BOOST_THREADS_LDFLAGS=$BOOST_THREADS_WIN32_LDFLAGS
+    BOOST_THREADS_LDPATH=$BOOST_THREADS_WIN32_LDPATH
+    BOOST_THREADS_LIBS=$BOOST_THREADS_WIN32_LIBS
+  ;;
+  (*)
+    BOOST_FIND_LIB([thread], [$1],
+                   [boost/thread.hpp], [boost::thread t; boost::mutex m;])
+  ;;
+esac
+
 BOOST_THREAD_LIBS="$BOOST_THREAD_LIBS $BOOST_SYSTEM_LIBS $boost_cv_pthread_flag"
 BOOST_THREAD_LDFLAGS="$BOOST_SYSTEM_LDFLAGS"
 BOOST_CPPFLAGS="$BOOST_CPPFLAGS $boost_cv_pthread_flag"
