@@ -31,6 +31,7 @@ BOOST_REQUIRE([1.34])
 dnl Then look for specific Boost libraries you need:
 BOOST_ARRAY
 BOOST_DATE_TIME
+BOOST_THREADS
 
 # Initialize the test suite.
 AC_CONFIG_TESTDIR([tests])
