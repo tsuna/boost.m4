@@ -502,8 +502,8 @@ if test $enable_static_boost = yes && test $boost_major_version -ge 135; then
     AC_SUBST([BOOST_FILESYSTEM_LIBS], ["$BOOST_FILESYSTEM_LIBS $BOOST_SYSTEM_LIBS"])
 fi
 LIBS=$boost_filesystem_save_LIBS
-LDFLAGS=$boost_filesystem_save_LDFLAGS               
-                
+LDFLAGS=$boost_filesystem_save_LDFLAGS
+
 ])# BOOST_CHRONO
 
 
