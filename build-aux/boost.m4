@@ -383,12 +383,16 @@ done
 boost_tmp_lib=$with_boost
 test x"$with_boost" = x && boost_tmp_lib=${boost_cv_inc_path%/include}
 
+# This is the list of possible library locations.  They are searched in
+# order, so the most common ones are first.  Spaces are not permitted in
+# any path names.
+boost_all_paths="$with_boost /usr/lib* $boost_tmp_lib/lib \
+  /usr/local/lib* /opt/lib* /opt/local/lib* C:/Boost/lib /lib*"
+
 # Create some compiler parameters for each existing directory of the known
 # possibilities where Boost might be.
 boost_all_ldpaths=
-for boost_ldpath in "$boost_tmp_lib/lib" \
-  /opt/local/lib* /usr/local/lib* /opt/lib* /usr/lib* \
-  "$with_boost" C:/Boost/lib /lib*
+for boost_ldpath in $boost_all_paths
 do
   test -e "$boost_ldpath" || continue
   boost_all_ldpaths="$boost_all_ldpaths -L$boost_ldpath"
@@ -396,7 +400,7 @@ done
 
 boost_save_LDFLAGS=$LDFLAGS
 boost_save_LIBS=$LIBS
-for boost_tag_ in "$last_boost_tag" $boost_full_tags ''; do
+for boost_tag_ in "$boost_prev_tag" $boost_full_tags ''; do
   boost_lib=boost_$1$boost_tag_
   # Avoid testing twice the same lib
   case $boost_failed_libs in #(
@@ -406,9 +410,7 @@ for boost_tag_ in "$last_boost_tag" $boost_full_tags ''; do
   # Are we looking for a static library?
   case $boost_ldpath:$boost_rtopt_ in #(
     *?*:*s*) # Yes (Non empty boost_ldpath + s in rt opt)
-      for boost_ldpath in "$last_boost_libdir" '' "$boost_tmp_lib/lib" \
-        /opt/local/lib* /usr/local/lib* /opt/lib* /usr/lib* \
-        "$with_boost" C:/Boost/lib /lib*
+      for boost_ldpath in "$boost_prev_libdir" '' $boost_all_paths
       do
         Boost_lib_LIBS="$boost_ldpath/lib$boost_lib.$libext"
         test -e "$Boost_lib_LIBS" || continue
@@ -421,7 +423,7 @@ dnl generated only once above (before we start the for loops).
                               [Boost_lib=yes], [Boost_lib=no])
         ac_objext=$boost_save_ac_objext
         if test x"$Boost_lib" = xyes; then
-          last_boost_libdir="$boost_ldpath"
+          boost_prev_libdir="$boost_ldpath"
           if test x"$boost_ldpath" != x; then
             Boost_lib_LDFLAGS="-L$boost_ldpath -Wl,-R$boost_ldpath"
             Boost_lib_LDPATH="$boost_ldpath"
@@ -452,12 +454,12 @@ dnl generated only once above (before we start the for loops).
     # libdir.  Note we are only here when linking dynamically, not statically.
 
     # Remember the tag we just found to try first on the next library check.
-    last_boost_tag="$boost_tag_"
+    boost_prev_tag="$boost_tag_"
 
     # The empty path is checked first (after a previous successful path) in
     # case the libraries appear in the linker's built in search path.  (In this
     # case any path we specify would succeed, so we try specifying none first.)
-    for boost_ldpath in "$last_boost_libdir" '' $boost_all_paths; do
+    for boost_ldpath in "$boost_prev_libdir" '' $boost_all_paths; do
       Boost_lib_LIBS="-l$boost_lib"
       LIBS="$Boost_lib_LIBS $LIBS"
       LDFLAGS=$boost_save_LDFLAGS
@@ -475,7 +477,7 @@ dnl generated only once above (before we start the for loops).
           Boost_lib_LDPATH="$boost_ldpath"
         fi
         # Remember the directory to try first with the next lib.
-        last_boost_libdir="$boost_ldpath"
+        boost_prev_libdir="$boost_ldpath"
         break 2
       else
         boost_failed_libs="$boost_failed_libs@$boost_lib@"
