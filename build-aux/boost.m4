@@ -954,7 +954,7 @@ CPPFLAGS=$boost_threads_save_CPPFLAGS
 # Look for Boost.Timer.  For the documentation of PREFERRED-RT-OPT,
 # see the documentation of BOOST_FIND_LIB above.
 BOOST_DEFUN([Timer],
-[BOOST_SYSTEM([$1])
+[AC_REQUIRE([BOOST_SYSTEM])dnl
 boost_timer_save_LIBS=$LIBS
 boost_timer_save_LDFLAGS=$LDFLAGS
 m4_pattern_allow([^BOOST_SYSTEM_(LIBS|LDFLAGS)$])dnl
