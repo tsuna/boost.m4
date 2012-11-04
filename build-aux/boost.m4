@@ -227,7 +227,7 @@ CPPFLAGS=$boost_save_CPPFLAGS
 # on the command line, static versions of the libraries will be looked up.
 AC_DEFUN([BOOST_STATIC],
   [AC_ARG_ENABLE([static-boost],
-     [AC_HELP_STRING([--enable-static-boost],
+     [AS_HELP_STRING([--enable-static-boost],
                [Prefer the static boost libraries over the shared ones [no]])],
      [enable_static_boost=yes],
      [enable_static_boost=no])])# BOOST_STATIC
