@@ -922,6 +922,41 @@ BOOST_DEFUN([Variant],
 [BOOST_FIND_HEADER([boost/variant/variant_fwd.hpp])
 BOOST_FIND_HEADER([boost/variant.hpp])])
 
+# BOOST_POINTER_DEQUE()
+# ---------------------
+# Look for Boost.PointerContainer/ptr_deque.hpp
+BOOST_DEFUN([Pointer_Deque],
+[BOOST_FIND_HEADER([boost/ptr_container/ptr_deque.hpp])])
+
+# BOOST_POINTER_LIST()
+# --------------------
+# Look for Boost.PointerContainer/ptr_list.hpp
+BOOST_DEFUN([Pointer_List],
+[BOOST_FIND_HEADER([boost/ptr_container/ptr_list.hpp])])
+
+# BOOST_POINTER_VECTOR()
+# ---------------------
+# Look for Boost.PointerContainer/ptr_vector.hpp
+BOOST_DEFUN([Pointer_Vector],
+[BOOST_FIND_HEADER([boost/ptr_container/ptr_vector.hpp])])
+
+# BOOST_POINTER_ARRAY()
+# ---------------------
+# Look for Boost.PointerContainer/ptr_array.hpp
+BOOST_DEFUN([Pointer_Array],
+[BOOST_FIND_HEADER([boost/ptr_container/ptr_array.hpp])])
+
+# BOOST_POINTER_SET()
+# -------------------
+# Look for Boost.PointerContainer/ptr_set.hpp
+BOOST_DEFUN([Pointer_Set],
+[BOOST_FIND_HEADER([boost/ptr_container/ptr_set.hpp])])
+
+# BOOST_POINTER_MAP()
+# -------------------
+# Look for Boost.PointerContainer/ptr_map.hpp
+BOOST_DEFUN([Pointer_Map],
+[BOOST_FIND_HEADER([boost/ptr_container/ptr_map.hpp])])
 
 # BOOST_WAVE([PREFERRED-RT-OPT])
 # ------------------------------
@@ -1160,11 +1195,11 @@ boost_use_source=:
 test -f conftest.$ac_objext && ac_ext=$ac_objext && boost_use_source=false &&
   _AS_ECHO_LOG([re-using the existing conftest.$ac_objext])
 AS_IF([_AC_DO_STDERR($ac_link) && {
-	 test -z "$ac_[]_AC_LANG_ABBREV[]_werror_flag" ||
-	 test ! -s conftest.err
+   test -z "$ac_[]_AC_LANG_ABBREV[]_werror_flag" ||
+   test ! -s conftest.err
        } && test -s conftest$ac_exeext && {
-	 test "$cross_compiling" = yes ||
-	 $as_executable_p conftest$ac_exeext
+   test "$cross_compiling" = yes ||
+   $as_executable_p conftest$ac_exeext
 dnl FIXME: use AS_TEST_X instead when 2.61 is widespread enough.
        }],
       [$2],
