@@ -104,6 +104,7 @@ implemented:
     - MultiArray
     - NumericConversion
     - Preprocessor
+    - PointerContainer (ptr_deque.hpp, ptr_list.hpp, ptr_vector.hpp, ptr_array.hpp, ptr_set.hpp, ptr_map.hpp)
     - Utility
     - Ref
     - SmartPtr
