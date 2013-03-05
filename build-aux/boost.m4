@@ -946,6 +946,17 @@ BOOST_DEFUN([Variant],
 [BOOST_FIND_HEADER([boost/variant/variant_fwd.hpp])
 BOOST_FIND_HEADER([boost/variant.hpp])])
 
+# BOOST_POINTERCONTAINER()
+# ------------------------
+# Look for Boost.PointerContainer
+BOOST_DEFUN([Pointer_Container],
+[BOOST_FIND_HEADER([boost/ptr_container/ptr_deque.hpp])
+BOOST_FIND_HEADER([boost/ptr_container/ptr_list.hpp])
+BOOST_FIND_HEADER([boost/ptr_container/ptr_vector.hpp])
+BOOST_FIND_HEADER([boost/ptr_container/ptr_array.hpp])
+BOOST_FIND_HEADER([boost/ptr_container/ptr_set.hpp])
+BOOST_FIND_HEADER([boost/ptr_container/ptr_map.hpp])
+])# BOOST_POINTERCONTAINER
 
 # BOOST_WAVE([PREFERRED-RT-OPT])
 # ------------------------------
