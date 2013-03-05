@@ -95,9 +95,11 @@ implemented:
     - Asio
     - Bind
     - Conversion
+    - CRC
     - Foreach
     - Format
     - Function
+    - Geometry
     - Hash (aka Functional/Hash)
     - Lambda
     - Math
@@ -106,6 +108,7 @@ implemented:
     - Preprocessor
     - Utility
     - Ref
+    - Signals2
     - SmartPtr
     - StringAlgo
     - Tokenizer

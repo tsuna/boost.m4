@@ -516,6 +516,14 @@ BOOST_FIND_HEADER([boost/lexical_cast.hpp])
 ])# BOOST_CONVERSION
 
 
+# BOOST_CRC()
+# -----------
+# Look for Boost.CRC
+BOOST_DEFUN([CRC],
+[BOOST_FIND_HEADER([boost/crc.hpp])
+])# BOOST_CRC
+
+
 # BOOST_DATE_TIME([PREFERRED-RT-OPT])
 # -----------------------------------
 # Look for Boost.Date_Time.  For the documentation of PREFERRED-RT-OPT, see the
@@ -578,6 +586,14 @@ BOOST_DEFUN([Format],
 # Look for Boost.Function
 BOOST_DEFUN([Function],
 [BOOST_FIND_HEADER([boost/function.hpp])])
+
+
+# BOOST_GEOMETRY()
+# ----------------
+# Look for Boost.Geometry (new since 1.47.0).
+BOOST_DEFUN([Geometry],
+[BOOST_FIND_HEADER([boost/geometry.hpp])
+])# BOOST_GEOMETRY
 
 
 # BOOST_GRAPH([PREFERRED-RT-OPT])
@@ -773,6 +789,14 @@ BOOST_DEFUN([Signals],
                 [boost/signal.hpp],
                 [boost::signal<void ()> s;])
 ])# BOOST_SIGNALS
+
+
+# BOOST_SIGNALS2()
+# ----------------
+# Look for Boost.Signals2 (new since 1.39.0).
+BOOST_DEFUN([Signals2],
+[BOOST_FIND_HEADER([boost/signals2.hpp])
+])# BOOST_SIGNALS2
 
 
 # BOOST_SMART_PTR()
