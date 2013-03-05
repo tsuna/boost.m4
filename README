@@ -106,6 +106,7 @@ implemented:
     - MultiArray
     - NumericConversion
     - Preprocessor
+    - PointerContainer
     - Utility
     - Ref
     - Signals2
