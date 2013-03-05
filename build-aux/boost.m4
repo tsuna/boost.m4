@@ -403,7 +403,23 @@ dnl generated only once above (before we start the for loops).
       LDFLAGS=$boost_save_LDFLAGS
       LIBS=$boost_save_LIBS
       if test x"$Boost_lib" = xyes; then
-        Boost_lib_LDFLAGS="-L$boost_ldpath -Wl,-R$boost_ldpath"
+        # Check or used cached result of whether or not using -R or -rpath makes sense.
+        # Some implementations of ld, such as for Mac OSX, require -rpath but
+        # -R is the flag known to work on other systems.
+        # https://github.com/tsuna/boost.m4/issues/19
+        AC_CACHE_VAL([boost_cv_rpath_link_ldflag],
+          [for boost_cv_rpath_link_ldflag in -Wl,-R, -Wl,-rpath,; do
+            LDFLAGS="$boost_save_LDFLAGS $Boost_lib_LIBS -L$boost_ldpath $boost_cv_rpath_link_ldflag$boost_ldpath"
+            _BOOST_AC_LINK_IFELSE([],
+              [boost_rpath_link_ldflag_found=yes
+              break],
+              [boost_rpath_link_ldflag_found=no])
+          done
+          AS_IF([test "x$boost_rpath_link_ldflag_found" != "xyes"],
+            [AC_MSG_ERROR([Unable to determine whether to use -R or -rpath])])
+          LDFLAGS=$boost_save_LDFLAGS
+          ])
+        Boost_lib_LDFLAGS="-L$boost_ldpath $boost_cv_rpath_link_ldflag$boost_ldpath"
         Boost_lib_LDPATH="$boost_ldpath"
         break 6
       else
