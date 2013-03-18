@@ -22,7 +22,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 m4_define([_BOOST_SERIAL], [m4_translit([
-# serial 17
+# serial 18
 ], [#
 ], [])])
 
@@ -409,7 +409,8 @@ dnl generated only once above (before we start the for loops).
         # https://github.com/tsuna/boost.m4/issues/19
         AC_CACHE_VAL([boost_cv_rpath_link_ldflag],
           [for boost_cv_rpath_link_ldflag in -Wl,-R, -Wl,-rpath,; do
-            LDFLAGS="$boost_save_LDFLAGS $Boost_lib_LIBS -L$boost_ldpath $boost_cv_rpath_link_ldflag$boost_ldpath"
+            LDFLAGS="$boost_save_LDFLAGS -L$boost_ldpath $boost_cv_rpath_link_ldflag$boost_ldpath"
+            LIBS="$boost_save_LIBS $Boost_lib_LIBS"
             _BOOST_AC_LINK_IFELSE([],
               [boost_rpath_link_ldflag_found=yes
               break],
@@ -418,6 +419,7 @@ dnl generated only once above (before we start the for loops).
           AS_IF([test "x$boost_rpath_link_ldflag_found" != "xyes"],
             [AC_MSG_ERROR([Unable to determine whether to use -R or -rpath])])
           LDFLAGS=$boost_save_LDFLAGS
+          LIBS=$boost_save_LIBS
           ])
         Boost_lib_LDFLAGS="-L$boost_ldpath $boost_cv_rpath_link_ldflag$boost_ldpath"
         Boost_lib_LDPATH="$boost_ldpath"
