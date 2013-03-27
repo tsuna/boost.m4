@@ -622,6 +622,13 @@ BOOST_DEFUN([Optional],
 [BOOST_FIND_HEADER([boost/optional.hpp])])
 
 
+# BOOST_POINTER_CONTAINER()
+# --------------------------
+# Look for Boost.Pointer Container
+BOOST_DEFUN([Pointer_Container],
+[BOOST_FIND_HEADER([boost/ptr_container/ptr_list.hpp])])
+
+
 # BOOST_PREPROCESSOR()
 # --------------------
 # Look for Boost.Preprocessor
