@@ -99,6 +99,7 @@ implemented:
     - Format
     - Function
     - Hash (aka Functional/Hash)
+    - Intrusive
     - Lambda
     - Math
     - MultiArray

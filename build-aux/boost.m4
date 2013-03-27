@@ -618,6 +618,13 @@ BOOST_DEFUN([Hash],
 [BOOST_FIND_HEADER([boost/functional/hash.hpp])])
 
 
+# BOOST_INTRUSIVE()
+# ------------
+# Look for Boost.Intrusive any_hook
+BOOST_DEFUN([Intrusive],
+[BOOST_FIND_HEADER([boost/intrusive/any_hook.hpp])])
+
+
 # BOOST_LAMBDA()
 # --------------
 # Look for Boost.Lambda
