@@ -101,10 +101,12 @@ implemented:
     - Function
     - Geometry
     - Hash (aka Functional/Hash)
+    - Intrusive
     - Lambda
     - Math
     - MultiArray
     - NumericConversion
+    - Pointer Container
     - Preprocessor
     - PointerContainer
     - Utility
@@ -147,6 +149,7 @@ The following libraries are supported:
   - System
   - Test (aka Unit Test Framework)
   - Threads
+  - Timer
   - Wave
 Thus you can invoke BOOST_GRAPH (for instance) or BOOST_THREADS([mt-d]).
 The optional argument is made of one or more of the following letters:

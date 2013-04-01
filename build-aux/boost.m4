@@ -642,6 +642,13 @@ BOOST_DEFUN([Hash],
 [BOOST_FIND_HEADER([boost/functional/hash.hpp])])
 
 
+# BOOST_INTRUSIVE()
+# ------------
+# Look for Boost.Intrusive any_hook
+BOOST_DEFUN([Intrusive],
+[BOOST_FIND_HEADER([boost/intrusive/any_hook.hpp])])
+
+
 # BOOST_LAMBDA()
 # --------------
 # Look for Boost.Lambda
@@ -704,6 +711,13 @@ BOOST_DEFUN([Numeric_Conversion],
 # Look for Boost.Optional
 BOOST_DEFUN([Optional],
 [BOOST_FIND_HEADER([boost/optional.hpp])])
+
+
+# BOOST_POINTER_CONTAINER()
+# --------------------------
+# Look for Boost.Pointer Container
+BOOST_DEFUN([Pointer_Container],
+[BOOST_FIND_HEADER([boost/ptr_container/ptr_list.hpp])])
 
 
 # BOOST_PREPROCESSOR()
@@ -917,6 +931,30 @@ LIBS=$boost_threads_save_LIBS
 LDFLAGS=$boost_threads_save_LDFLAGS
 CPPFLAGS=$boost_threads_save_CPPFLAGS
 ])# BOOST_THREADS
+
+
+# BOOST_TIMER([PREFERRED-RT-OPT])
+# --------------------------------
+# Look for Boost.Timer.
+BOOST_DEFUN([Timer],
+[# Timer additionally requires System, which didn't exist < 1.35.
+if test $boost_major_version -ge 135; then
+BOOST_SYSTEM([$1])
+fi # end of the Boost.System check.
+boost_timer_save_LIBS=$LIBS
+boost_timer_save_LDFLAGS=$LDFLAGS
+m4_pattern_allow([^BOOST_SYSTEM_(LIBS|LDFLAGS)$])dnl
+LIBS="$LIBS $BOOST_SYSTEM_LIBS"
+LDFLAGS="$LDFLAGS $BOOST_SYSTEM_LDFLAGS"
+BOOST_FIND_LIB([timer], [$1],
+               [boost/timer/timer.hpp],
+               [boost::timer::auto_cpu_timer t;])
+if test $enable_static_boost = yes && test $boost_major_version -ge 135; then
+    AC_SUBST([BOOST_TIMER_LIBS], ["$BOOST_TIMER_LIBS $BOOST_SYSTEM_LIBS"])
+fi
+LIBS=$boost_timer_save_LIBS
+LDFLAGS=$boost_timer_save_LDFLAGS
+])# BOOST_TIMER
 
 
 # BOOST_TOKENIZER()
