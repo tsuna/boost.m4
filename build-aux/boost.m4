@@ -817,6 +817,30 @@ CPPFLAGS=$boost_threads_save_CPPFLAGS
 ])# BOOST_THREADS
 
 
+# BOOST_TIMER([PREFERRED-RT-OPT])
+# --------------------------------
+# Look for Boost.Timer.
+BOOST_DEFUN([Timer],
+[# Timer additionally requires System, which didn't exist < 1.35.
+if test $boost_major_version -ge 135; then
+BOOST_SYSTEM([$1])
+fi # end of the Boost.System check.
+boost_timer_save_LIBS=$LIBS
+boost_timer_save_LDFLAGS=$LDFLAGS
+m4_pattern_allow([^BOOST_SYSTEM_(LIBS|LDFLAGS)$])dnl
+LIBS="$LIBS $BOOST_SYSTEM_LIBS"
+LDFLAGS="$LDFLAGS $BOOST_SYSTEM_LDFLAGS"
+BOOST_FIND_LIB([timer], [$1],
+               [boost/timer/timer.hpp],
+               [boost::timer::auto_cpu_timer t;])
+if test $enable_static_boost = yes && test $boost_major_version -ge 135; then
+    AC_SUBST([BOOST_TIMER_LIBS], ["$BOOST_TIMER_LIBS $BOOST_SYSTEM_LIBS"])
+fi
+LIBS=$boost_timer_save_LIBS
+LDFLAGS=$boost_timer_save_LDFLAGS
+])# BOOST_TIMER
+
+
 # BOOST_TOKENIZER()
 # -----------------
 # Look for Boost.Tokenizer
