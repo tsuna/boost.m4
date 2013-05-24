@@ -265,7 +265,7 @@ fi
 
 
 # BOOST_FIND_LIB([LIB-NAME], [PREFERRED-RT-OPT], [HEADER-NAME], [CXX-TEST],
-#                [CXX-PROLOGUE])
+#                [CXX-PROLOGUE], [CXX-PREHEADER])
 # -------------------------------------------------------------------------
 # Look for the Boost library LIB-NAME (e.g., LIB-NAME = `thread', for
 # libboost_thread).  Check that HEADER-NAME works and check that
@@ -335,7 +335,8 @@ AC_CACHE_CHECK([for the Boost $1 library], [Boost_lib],
     AC_MSG_ERROR([the libext variable is empty, did you invoke Libtool?])
   boost_save_ac_objext=$ac_objext
   # Generate the test file.
-  AC_LANG_CONFTEST([AC_LANG_PROGRAM([#include <$3>
+  AC_LANG_CONFTEST([AC_LANG_PROGRAM([$6
+#include <$3>
 $5], [$4])])
 dnl Optimization hacks: compiling C++ is slow, especially with Boost.  What
 dnl we're trying to do here is guess the right combination of link flags
@@ -654,9 +655,11 @@ BOOST_DEFUN([Lambda],
 # Look for Boost.Log For the documentation of PREFERRED-RT-OPT, see the
 # documentation of BOOST_FIND_LIB above.
 BOOST_DEFUN([Log],
-[BOOST_FIND_LIB([log], [$1],
-    [boost/log/core/core.hpp],
-    [boost::log::attribute a; a.get_value();])
+[m4_pattern_allow([BOOST_LOG_DYN_LINK])dnl
+BOOST_FIND_LIB([log], [$1],
+    [boost/log/attributes/constant.hpp],
+    [boost::log::attributes::constant<int> a(0); a.get_value();],
+    [], [#define BOOST_LOG_DYN_LINK 1])
 ])# BOOST_LOG
 
 
@@ -666,9 +669,11 @@ BOOST_DEFUN([Log],
 # documentation of BOOST_FIND_LIB above.
 BOOST_DEFUN([Log_Setup],
 [AC_REQUIRE([BOOST_LOG])dnl
+m4_pattern_allow([BOOST_LOG_DYN_LINK])dnl
 BOOST_FIND_LIB([log_setup], [$1],
-    [boost/log/utility/init/from_settings.hpp],
-    [boost::log::basic_settings<char> bs; bs.empty();])
+    [boost/log/utility/setup/from_settings.hpp],
+    [boost::log::basic_settings<char> bs; bs.empty();],
+    [], [#define BOOST_LOG_DYN_LINK 1])
 ])# BOOST_LOG_SETUP
 
 
