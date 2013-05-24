@@ -655,10 +655,10 @@ BOOST_DEFUN([Lambda],
 # Look for Boost.Log For the documentation of PREFERRED-RT-OPT, see the
 # documentation of BOOST_FIND_LIB above.
 BOOST_DEFUN([Log],
-[m4_pattern_allow([BOOST_LOG_DYN_LINK])dnl
+[m4_pattern_allow([BOOST_LOG_DYN_LINK])
 BOOST_FIND_LIB([log], [$1],
-    [boost/log/attributes/constant.hpp],
-    [boost::log::attributes::constant<int> a(0); a.get_value();],
+    [boost/log/core/core.hpp],
+    [boost::log::attribute a; a.get_value();],
     [], [#define BOOST_LOG_DYN_LINK 1])
 ])# BOOST_LOG
 
@@ -669,9 +669,9 @@ BOOST_FIND_LIB([log], [$1],
 # documentation of BOOST_FIND_LIB above.
 BOOST_DEFUN([Log_Setup],
 [AC_REQUIRE([BOOST_LOG])dnl
-m4_pattern_allow([BOOST_LOG_DYN_LINK])dnl
+m4_pattern_allow([BOOST_LOG_DYN_LINK])
 BOOST_FIND_LIB([log_setup], [$1],
-    [boost/log/utility/setup/from_settings.hpp],
+    [boost/log/utility/init/from_settings.hpp],
     [boost::log::basic_settings<char> bs; bs.empty();],
     [], [#define BOOST_LOG_DYN_LINK 1])
 ])# BOOST_LOG_SETUP
