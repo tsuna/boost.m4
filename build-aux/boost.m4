@@ -764,6 +764,14 @@ BOOST_DEFUN([MultiArray],
 [BOOST_FIND_HEADER([boost/multi_array.hpp])])
 
 
+# BOOST_NUMERIC_UBLAS()
+# --------------------------
+# Look for Boost.NumericUblas (Basic Linear Algebra)
+BOOST_DEFUN([Numeric_Ublas],
+[BOOST_FIND_HEADER([boost/numeric/ublas/vector.hpp])
+])# BOOST_NUMERIC_UBLAS
+
+
 # BOOST_NUMERIC_CONVERSION()
 # --------------------------
 # Look for Boost.NumericConversion (policy-based numeric conversion)
