@@ -684,6 +684,28 @@ BOOST_DEFUN([Math],
 [BOOST_FIND_HEADER([boost/math/special_functions.hpp])])
 
 
+# BOOST_MPI([PREFERRED-RT-OPT])
+# -------------------------------
+# Look for Boost MPI.  For the documentation of PREFERRED-RT-OPT, see the
+# documentation of BOOST_FIND_LIB above.  Uses MPICXX variable if it is
+# set, otherwise tries CXX
+# 
+BOOST_DEFUN([MPI],
+[
+  boost_save_CXX=${CXX}
+  boost_save_CXXCPP=${CXXCPP}
+  if test x"${MPICXX}" != x; then
+    CXX=${MPICXX}
+    CXXCPP="${MPICXX} -E"
+  fi
+  BOOST_FIND_LIB([mpi], [$1],
+                [boost/mpi.hpp],
+                [int argc = 0; char **argv = 0; boost::mpi::environment env(argc,argv);])
+  CXX=${boost_save_CXX}
+  CXXCPP=${boost_save_CXXCPP}
+])# BOOST_MPI
+
+
 # BOOST_MULTIARRAY()
 # ------------------
 # Look for Boost.MultiArray
