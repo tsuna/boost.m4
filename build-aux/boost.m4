@@ -206,6 +206,7 @@ AC_LANG_POP([C++])dnl
   AC_CACHE_CHECK([for Boost's header version],
     [boost_cv_lib_version],
     [m4_pattern_allow([^BOOST_LIB_VERSION$])dnl
+    AC_LANG_PUSH([C++])dnl
      _BOOST_SED_CPP([/^boost-lib-version = /{s///;s/\"//g;p;q;}],
                     [#include <boost/version.hpp>
 boost-lib-version = BOOST_LIB_VERSION],
@@ -217,6 +218,7 @@ boost-lib-version = BOOST_LIB_VERSION],
         AC_MSG_ERROR([invalid value: boost_major_version=$boost_major_version])
         ;;
     esac
+    AC_LANG_POP([C++])dnl
 fi
 CPPFLAGS=$boost_save_CPPFLAGS
 ])# BOOST_REQUIRE
@@ -1183,6 +1185,7 @@ fi])dnl end of AC_CACHE_CHECK
 # Thread) flavors of Boost.  Sets boost_guess_use_mt accordingly.
 AC_DEFUN([_BOOST_GUESS_WHETHER_TO_USE_MT],
 [# Check whether we do better use `mt' even though we weren't ask to.
+AC_LANG_PUSH([C++])dnl
 AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
 #if defined _REENTRANT || defined _MT || defined __MT__
 /* use -mt */
@@ -1190,6 +1193,7 @@ AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
 # error MT not needed
 #endif
 ]])], [boost_guess_use_mt=:], [boost_guess_use_mt=false])
+AC_LANG_POP([C++])dnl
 ])
 
 # _BOOST_AC_LINK_IFELSE(PROGRAM, [ACTION-IF-TRUE], [ACTION-IF-FALSE])
