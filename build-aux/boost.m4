@@ -59,7 +59,8 @@ m4_pattern_forbid([^_?(BOOST|Boost)_])
 # It could be useful to turn this into a macro which extracts the
 # value of any macro.
 m4_define([_BOOST_SED_CPP],
-[AC_LANG_PREPROC_REQUIRE()dnl
+[AC_LANG_PUSH([C++])dnl
+AC_LANG_PREPROC_REQUIRE()dnl
 AC_REQUIRE([AC_PROG_SED])dnl
 AC_LANG_CONFTEST([AC_LANG_SOURCE([[$2]])])
 AS_IF([dnl eval is necessary to expand ac_cpp.
@@ -77,6 +78,7 @@ dnl Cannot use 'dnl' after [$4] because a trailing dnl may break AC_CACHE_CHECK
   [$3],
   [$4])
 rm -rf conftest*
+AC_LANG_POP([C++])dnl
 ])# _BOOST_SED_CPP
 
 
@@ -1202,6 +1204,7 @@ fi])dnl end of AC_CACHE_CHECK
 # Thread) flavors of Boost.  Sets boost_guess_use_mt accordingly.
 AC_DEFUN([_BOOST_GUESS_WHETHER_TO_USE_MT],
 [# Check whether we do better use `mt' even though we weren't ask to.
+AC_LANG_PUSH([C++])dnl
 AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
 #if defined _REENTRANT || defined _MT || defined __MT__
 /* use -mt */
@@ -1209,6 +1212,7 @@ AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
 # error MT not needed
 #endif
 ]])], [boost_guess_use_mt=:], [boost_guess_use_mt=false])
+AC_LANG_POP([C++])dnl
 ])
 
 # _BOOST_AC_LINK_IFELSE(PROGRAM, [ACTION-IF-TRUE], [ACTION-IF-FALSE])
