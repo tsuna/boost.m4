@@ -77,7 +77,7 @@ dnl Cannot use 'dnl' after [$4] because a trailing dnl may break AC_CACHE_CHECK
   [$3],
   [$4])
 rm -rf conftest*
-])# AC_EGREP_CPP
+])# _BOOST_SED_CPP
 
 
 
