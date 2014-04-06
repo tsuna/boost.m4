@@ -208,6 +208,7 @@ AC_LANG_POP([C++])dnl
   AC_CACHE_CHECK([for Boost's header version],
     [boost_cv_lib_version],
     [m4_pattern_allow([^BOOST_LIB_VERSION$])dnl
+    AC_LANG_PUSH([C++])dnl
      _BOOST_SED_CPP([/^boost-lib-version = /{s///;s/\"//g;p;q;}],
                     [#include <boost/version.hpp>
 boost-lib-version = BOOST_LIB_VERSION],
@@ -219,6 +220,7 @@ boost-lib-version = BOOST_LIB_VERSION],
         AC_MSG_ERROR([invalid value: boost_major_version=$boost_major_version])
         ;;
     esac
+    AC_LANG_POP([C++])dnl
 fi
 CPPFLAGS=$boost_save_CPPFLAGS
 ])# BOOST_REQUIRE
