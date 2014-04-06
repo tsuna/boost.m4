@@ -1030,6 +1030,14 @@ AC_LANG_POP([C++])dnl
 m4_define([_BOOST_gcc_test],
 ["defined __GNUC__ && __GNUC__ == $1 && __GNUC_MINOR__ == $2 && !defined __ICC @ gcc$1$2"])dnl
 
+# _BOOST_mingw_test(MAJOR, MINOR)
+# -----------------------------
+# Internal helper for _BOOST_FIND_COMPILER_TAG.
+m4_define([_BOOST_mingw_test],
+["defined __GNUC__ && __GNUC__ == $1 && __GNUC_MINOR__ == $2 && !defined __ICC && \
+  (defined WIN32 || defined WINNT || defined _WIN32 || defined __WIN32 \
+         || defined __WIN32__ || defined __WINNT || defined __WINNT__) @ mgw$1$2"])dnl
+
 
 # _BOOST_FIND_COMPILER_TAG()
 # --------------------------
@@ -1057,14 +1065,23 @@ if test x$boost_cv_inc_path != xno; then
   # I'm not sure about my test for `il' (be careful: Intel's ICC pre-defines
   # the same defines as GCC's).
   for i in \
+    _BOOST_mingw_test(4,8) \
     _BOOST_gcc_test(4, 8) \
+    _BOOST_mingw_test(4,7) \
     _BOOST_gcc_test(4, 7) \
+    _BOOST_mingw_test(4,6) \
     _BOOST_gcc_test(4, 6) \
+    _BOOST_mingw_test(4,5) \
     _BOOST_gcc_test(4, 5) \
+    _BOOST_mingw_test(4,4) \
     _BOOST_gcc_test(4, 4) \
+    _BOOST_mingw_test(4,3) \
     _BOOST_gcc_test(4, 3) \
+    _BOOST_mingw_test(4,2) \
     _BOOST_gcc_test(4, 2) \
+    _BOOST_mingw_test(4,1) \
     _BOOST_gcc_test(4, 1) \
+    _BOOST_mingw_test(4,0) \
     _BOOST_gcc_test(4, 0) \
     "defined __GNUC__ && __GNUC__ == 3 && !defined __ICC \
      && (defined WIN32 || defined WINNT || defined _WIN32 || defined __WIN32 \
