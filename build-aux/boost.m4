@@ -1,5 +1,5 @@
 # boost.m4: Locate Boost headers and libraries for autoconf-based projects.
-# Copyright (C) 2007, 2008, 2009, 2010, 2011  Benoit Sigoure <tsuna@lrde.epita.fr>
+# Copyright (C) 2007-2011, 2014  Benoit Sigoure <tsuna@lrde.epita.fr>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 m4_define([_BOOST_SERIAL], [m4_translit([
-# serial 18
+# serial 19
 ], [#
 ], [])])
 
@@ -223,6 +223,7 @@ fi
 CPPFLAGS=$boost_save_CPPFLAGS
 ])# BOOST_REQUIRE
 
+
 # BOOST_STATIC()
 # --------------
 # Add the "--enable-static-boost" configure argument. If this argument is given
@@ -233,6 +234,7 @@ AC_DEFUN([BOOST_STATIC],
                [Prefer the static boost libraries over the shared ones [no]])],
      [enable_static_boost=yes],
      [enable_static_boost=no])])# BOOST_STATIC
+
 
 # BOOST_FIND_HEADER([HEADER-NAME], [ACTION-IF-NOT-FOUND], [ACTION-IF-FOUND])
 # --------------------------------------------------------------------------
@@ -266,14 +268,16 @@ fi
 ])# BOOST_FIND_HEADER
 
 
-# BOOST_FIND_LIB([LIB-NAME], [PREFERRED-RT-OPT], [HEADER-NAME], [CXX-TEST],
-#                [CXX-PROLOGUE])
-# -------------------------------------------------------------------------
-# Look for the Boost library LIB-NAME (e.g., LIB-NAME = `thread', for
-# libboost_thread).  Check that HEADER-NAME works and check that
-# libboost_LIB-NAME can link with the code CXX-TEST.  The optional argument
-# CXX-PROLOGUE can be used to include some C++ code before the `main'
-# function.
+# BOOST_FIND_LIBS([COMPONENT-NAME], [CANDIDATE-LIB-NAMES],
+#                 [PREFERRED-RT-OPT], [HEADER-NAME], [CXX-TEST],
+#                 [CXX-PROLOGUE])
+# --------------------------------------------------------------
+# Look for the Boost library COMPONENT-NAME (e.g., `threads', for
+# libboost_thread) under the possible CANDIDATE-LIB-NAMES (e.g.,
+# "thread_win32 thread").  Check that HEADER-NAME works and check that
+# libboost_LIB-NAME can link with the code CXX-TEST.  The optional
+# argument CXX-PROLOGUE can be used to include some C++ code before
+# the `main' function.
 #
 # Invokes BOOST_FIND_HEADER([HEADER-NAME]) (see above).
 #
@@ -287,7 +291,7 @@ fi
 # builds.  Some sample values for PREFERRED-RT-OPT: (nothing), mt, d, mt-d, gdp
 # ...  If you want to make sure you have a specific version of Boost
 # (eg, >= 1.33) you *must* invoke BOOST_REQUIRE before this macro.
-AC_DEFUN([BOOST_FIND_LIB],
+AC_DEFUN([BOOST_FIND_LIBS],
 [AC_REQUIRE([BOOST_REQUIRE])dnl
 AC_REQUIRE([_BOOST_FIND_COMPILER_TAG])dnl
 AC_REQUIRE([BOOST_STATIC])dnl
@@ -301,32 +305,69 @@ AS_VAR_PUSHDEF([Boost_lib], [boost_cv_lib_$1])dnl
 AS_VAR_PUSHDEF([Boost_lib_LDFLAGS], [boost_cv_lib_$1_LDFLAGS])dnl
 AS_VAR_PUSHDEF([Boost_lib_LDPATH], [boost_cv_lib_$1_LDPATH])dnl
 AS_VAR_PUSHDEF([Boost_lib_LIBS], [boost_cv_lib_$1_LIBS])dnl
-BOOST_FIND_HEADER([$3])
+BOOST_FIND_HEADER([$4])
 boost_save_CPPFLAGS=$CPPFLAGS
 CPPFLAGS="$CPPFLAGS $BOOST_CPPFLAGS"
-# Now let's try to find the library.  The algorithm is as follows: first look
-# for a given library name according to the user's PREFERRED-RT-OPT.  For each
-# library name, we prefer to use the ones that carry the tag (toolset name).
-# Each library is searched through the various standard paths were Boost is
-# usually installed.  If we can't find the standard variants, we try to
-# enforce -mt (for instance on MacOSX, libboost_threads.dylib doesn't exist
-# but there's -obviously- libboost_threads-mt.dylib).
 AC_CACHE_CHECK([for the Boost $1 library], [Boost_lib],
-  [Boost_lib=no
-  case "$2" in #(
-    mt | mt-) boost_mt=-mt; boost_rtopt=;; #(
-    mt* | mt-*) boost_mt=-mt; boost_rtopt=`expr "X$2" : 'Xmt-*\(.*\)'`;; #(
-    *) boost_mt=; boost_rtopt=$2;;
+               [_BOOST_FIND_LIBS($@)])
+case $Boost_lib in #(
+  (no) _AC_MSG_LOG_CONFTEST
+    AC_MSG_ERROR([cannot find the flags to link with Boost $1])
+    ;;
+esac
+AC_SUBST(AS_TR_CPP([BOOST_$1_LDFLAGS]), [$Boost_lib_LDFLAGS])dnl
+AC_SUBST(AS_TR_CPP([BOOST_$1_LDPATH]), [$Boost_lib_LDPATH])dnl
+AC_SUBST([BOOST_LDPATH], [$Boost_lib_LDPATH])dnl
+AC_SUBST(AS_TR_CPP([BOOST_$1_LIBS]), [$Boost_lib_LIBS])dnl
+CPPFLAGS=$boost_save_CPPFLAGS
+AS_VAR_POPDEF([Boost_lib])dnl
+AS_VAR_POPDEF([Boost_lib_LDFLAGS])dnl
+AS_VAR_POPDEF([Boost_lib_LDPATH])dnl
+AS_VAR_POPDEF([Boost_lib_LIBS])dnl
+AC_LANG_POP([C++])dnl
+fi
+])
+
+
+# BOOST_FIND_LIB([LIB-NAME],
+#                [PREFERRED-RT-OPT], [HEADER-NAME], [CXX-TEST],
+#                [CXX-PROLOGUE])
+# --------------------------------------------------------------
+# Backward compatibility wrapper for BOOST_FIND_LIBS.
+AC_DEFUN([BOOST_FIND_LIB],
+[BOOST_FIND_LIBS([$1], $@)])
+
+
+# _BOOST_FIND_LIBS([LIB-NAME], [CANDIDATE-LIB-NAMES],
+#                 [PREFERRED-RT-OPT], [HEADER-NAME], [CXX-TEST],
+#                 [CXX-PROLOGUE])
+# --------------------------------------------------------------
+# Real implementation of BOOST_FIND_LIBS: rely on these local macros:
+# Boost_lib, Boost_lib_LDFLAGS, Boost_lib_LDPATH, Boost_lib_LIBS
+#
+# The algorithm is as follows: first look for a given library name
+# according to the user's PREFERRED-RT-OPT.  For each library name, we
+# prefer to use the ones that carry the tag (toolset name).  Each
+# library is searched through the various standard paths were Boost is
+# usually installed.  If we can't find the standard variants, we try
+# to enforce -mt (for instance on MacOSX, libboost_threads.dylib
+# doesn't exist but there's -obviously- libboost_threads-mt.dylib).
+AC_DEFUN([_BOOST_FIND_LIBS],
+[Boost_lib=no
+  case "$3" in #(
+    (mt | mt-) boost_mt=-mt; boost_rtopt=;; #(
+    (mt* | mt-*) boost_mt=-mt; boost_rtopt=`expr "X$3" : 'Xmt-*\(.*\)'`;; #(
+    (*) boost_mt=; boost_rtopt=$3;;
   esac
   if test $enable_static_boost = yes; then
     boost_rtopt="s$boost_rtopt"
   fi
   # Find the proper debug variant depending on what we've been asked to find.
   case $boost_rtopt in #(
-    *d*) boost_rt_d=$boost_rtopt;; #(
-    *[[sgpn]]*) # Insert the `d' at the right place (in between `sg' and `pn')
+    (*d*) boost_rt_d=$boost_rtopt;; #(
+    (*[[sgpn]]*) # Insert the `d' at the right place (in between `sg' and `pn')
       boost_rt_d=`echo "$boost_rtopt" | sed 's/\(s*g*\)\(p*n*\)/\1\2/'`;; #(
-    *) boost_rt_d='-d';;
+    (*) boost_rt_d='-d';;
   esac
   # If the PREFERRED-RT-OPT are not empty, prepend a `-'.
   test -n "$boost_rtopt" && boost_rtopt="-$boost_rtopt"
@@ -337,8 +378,8 @@ AC_CACHE_CHECK([for the Boost $1 library], [Boost_lib],
     AC_MSG_ERROR([the libext variable is empty, did you invoke Libtool?])
   boost_save_ac_objext=$ac_objext
   # Generate the test file.
-  AC_LANG_CONFTEST([AC_LANG_PROGRAM([#include <$3>
-$5], [$4])])
+  AC_LANG_CONFTEST([AC_LANG_PROGRAM([#include <$4>
+$6], [$5])])
 dnl Optimization hacks: compiling C++ is slow, especially with Boost.  What
 dnl we're trying to do here is guess the right combination of link flags
 dnl (LIBS / LDFLAGS) to use a given library.  This can take several
@@ -360,21 +401,22 @@ dnl start the for loops).
     [AC_MSG_ERROR([cannot compile a test that uses Boost $1])])
   ac_objext=$boost_save_ac_objext
   boost_failed_libs=
-# Don't bother to ident the 6 nested for loops, only the 2 innermost ones
-# matter.
+# Don't bother to ident the following nested for loops, only the 2
+# innermost ones matter.
+for boost_lib_ in $2; do
 for boost_tag_ in -$boost_cv_lib_tag ''; do
 for boost_ver_ in -$boost_cv_lib_version ''; do
 for boost_mt_ in $boost_mt -mt ''; do
 for boost_rtopt_ in $boost_rtopt '' -d; do
   for boost_lib in \
-    boost_$1$boost_tag_$boost_mt_$boost_rtopt_$boost_ver_ \
-    boost_$1$boost_tag_$boost_rtopt_$boost_ver_ \
-    boost_$1$boost_tag_$boost_mt_$boost_ver_ \
-    boost_$1$boost_tag_$boost_ver_
+    boost_$boost_lib_$boost_tag_$boost_mt_$boost_rtopt_$boost_ver_ \
+    boost_$boost_lib_$boost_tag_$boost_rtopt_$boost_ver_ \
+    boost_$boost_lib_$boost_tag_$boost_mt_$boost_ver_ \
+    boost_$boost_lib_$boost_tag_$boost_ver_
   do
     # Avoid testing twice the same lib
     case $boost_failed_libs in #(
-      *@$boost_lib@*) continue;;
+      (*@$boost_lib@*) continue;;
     esac
     # If with_boost is empty, we'll search in /lib first, which is not quite
     # right so instead we'll try to a location based on where the headers are.
@@ -388,10 +430,10 @@ for boost_rtopt_ in $boost_rtopt '' -d; do
       boost_save_LDFLAGS=$LDFLAGS
       # Are we looking for a static library?
       case $boost_ldpath:$boost_rtopt_ in #(
-        *?*:*s*) # Yes (Non empty boost_ldpath + s in rt opt)
+        (*?*:*s*) # Yes (Non empty boost_ldpath + s in rt opt)
           Boost_lib_LIBS="$boost_ldpath/lib$boost_lib.$libext"
           test -e "$Boost_lib_LIBS" || continue;; #(
-        *) # No: use -lboost_foo to find the shared library.
+        (*) # No: use -lboost_foo to find the shared library.
           Boost_lib_LIBS="-l$boost_lib";;
       esac
       boost_save_LIBS=$LIBS
@@ -425,7 +467,7 @@ dnl generated only once above (before we start the for loops).
           ])
         Boost_lib_LDFLAGS="-L$boost_ldpath $boost_cv_rpath_link_ldflag$boost_ldpath"
         Boost_lib_LDPATH="$boost_ldpath"
-        break 6
+        break 7
       else
         boost_failed_libs="$boost_failed_libs@$boost_lib@"
       fi
@@ -435,25 +477,10 @@ done
 done
 done
 done
+done # boost_lib_
 rm -f conftest.$ac_objext
 ])
-case $Boost_lib in #(
-  no) _AC_MSG_LOG_CONFTEST
-    AC_MSG_ERROR([cannot find the flags to link with Boost $1])
-    ;;
-esac
-AC_SUBST(AS_TR_CPP([BOOST_$1_LDFLAGS]), [$Boost_lib_LDFLAGS])dnl
-AC_SUBST(AS_TR_CPP([BOOST_$1_LDPATH]), [$Boost_lib_LDPATH])dnl
-AC_SUBST([BOOST_LDPATH], [$Boost_lib_LDPATH])dnl
-AC_SUBST(AS_TR_CPP([BOOST_$1_LIBS]), [$Boost_lib_LIBS])dnl
-CPPFLAGS=$boost_save_CPPFLAGS
-AS_VAR_POPDEF([Boost_lib])dnl
-AS_VAR_POPDEF([Boost_lib_LDFLAGS])dnl
-AS_VAR_POPDEF([Boost_lib_LDPATH])dnl
-AS_VAR_POPDEF([Boost_lib_LIBS])dnl
-AC_LANG_POP([C++])dnl
-fi
-])# BOOST_FIND_LIB
+
 
 
 # --------------------------------------- #
