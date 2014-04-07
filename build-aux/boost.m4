@@ -22,7 +22,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 m4_define([_BOOST_SERIAL], [m4_translit([
-# serial 20
+# serial 21
 ], [#
 ], [])])
 
@@ -811,9 +811,9 @@ BOOST_DEFUN([Python],
 _BOOST_PYTHON_CONFIG([LDFLAGS],   [ldflags])
 _BOOST_PYTHON_CONFIG([LIBS],      [libs])
 m4_pattern_allow([^BOOST_PYTHON_MODULE$])dnl
-BOOST_FIND_LIB([python], [$1],
-               [boost/python.hpp],
-               [], [BOOST_PYTHON_MODULE(empty) {}])
+BOOST_FIND_LIBS([python], [python python3], [$1],
+                [boost/python.hpp],
+                [], [BOOST_PYTHON_MODULE(empty) {}])
 CPPFLAGS=$boost_python_save_CPPFLAGS
 LDFLAGS=$boost_python_save_LDFLAGS
 LIBS=$boost_python_save_LIBS
