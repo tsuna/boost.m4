@@ -272,7 +272,7 @@ fi
 #                 [PREFERRED-RT-OPT], [HEADER-NAME], [CXX-TEST],
 #                 [CXX-PROLOGUE])
 # --------------------------------------------------------------
-# Look for the Boost library COMPONENT-NAME (e.g., `threads', for
+# Look for the Boost library COMPONENT-NAME (e.g., `thread', for
 # libboost_thread) under the possible CANDIDATE-LIB-NAMES (e.g.,
 # "thread_win32 thread").  Check that HEADER-NAME works and check that
 # libboost_LIB-NAME can link with the code CXX-TEST.  The optional
@@ -350,8 +350,8 @@ AC_DEFUN([BOOST_FIND_LIB],
 # prefer to use the ones that carry the tag (toolset name).  Each
 # library is searched through the various standard paths were Boost is
 # usually installed.  If we can't find the standard variants, we try
-# to enforce -mt (for instance on MacOSX, libboost_threads.dylib
-# doesn't exist but there's -obviously- libboost_threads-mt.dylib).
+# to enforce -mt (for instance on MacOSX, libboost_thread.dylib
+# doesn't exist but there's -obviously- libboost_thread-mt.dylib).
 AC_DEFUN([_BOOST_FIND_LIBS],
 [Boost_lib=no
   case "$3" in #(
@@ -919,19 +919,19 @@ BOOST_FIND_LIB([unit_test_framework], [$1],
 ])# BOOST_TEST
 
 
-# BOOST_THREADS([PREFERRED-RT-OPT])
+# BOOST_THREAD([PREFERRED-RT-OPT])
 # ---------------------------------
 # Look for Boost.Thread.  For the documentation of PREFERRED-RT-OPT, see the
 # documentation of BOOST_FIND_LIB above.
 # FIXME: Provide an alias "BOOST_THREAD".
-BOOST_DEFUN([Threads],
+BOOST_DEFUN([Thread],
 [dnl Having the pthread flag is required at least on GCC3 where
 dnl boost/thread.hpp would complain if we try to compile without
 dnl -pthread on GNU/Linux.
 AC_REQUIRE([_BOOST_PTHREAD_FLAG])dnl
-boost_threads_save_LIBS=$LIBS
-boost_threads_save_LDFLAGS=$LDFLAGS
-boost_threads_save_CPPFLAGS=$CPPFLAGS
+boost_thread_save_LIBS=$LIBS
+boost_thread_save_LDFLAGS=$LDFLAGS
+boost_thread_save_CPPFLAGS=$CPPFLAGS
 # Link-time dependency from thread to system was added as of 1.49.0.
 if test $boost_major_version -ge 149; then
 BOOST_SYSTEM([$1])
@@ -958,10 +958,12 @@ BOOST_FIND_LIBS([thread], [thread$boost_thread_lib_ext],
 BOOST_THREAD_LIBS="$BOOST_THREAD_LIBS $BOOST_SYSTEM_LIBS $boost_cv_pthread_flag"
 BOOST_THREAD_LDFLAGS="$BOOST_SYSTEM_LDFLAGS"
 BOOST_CPPFLAGS="$BOOST_CPPFLAGS $boost_cv_pthread_flag"
-LIBS=$boost_threads_save_LIBS
-LDFLAGS=$boost_threads_save_LDFLAGS
-CPPFLAGS=$boost_threads_save_CPPFLAGS
-])# BOOST_THREADS
+LIBS=$boost_thread_save_LIBS
+LDFLAGS=$boost_thread_save_LDFLAGS
+CPPFLAGS=$boost_thread_save_CPPFLAGS
+])# BOOST_THREAD
+
+AU_ALIAS([BOOST_THREADS], [BOOST_THREAD])
 
 
 # BOOST_TOKENIZER()
@@ -1026,7 +1028,7 @@ BOOST_FIND_HEADER([boost/ptr_container/ptr_map.hpp])
 # BOOST_WAVE([PREFERRED-RT-OPT])
 # ------------------------------
 # NOTE: If you intend to use Wave/Spirit with thread support, make sure you
-# call BOOST_THREADS first.
+# call BOOST_THREAD first.
 # Look for Boost.Wave.  For the documentation of PREFERRED-RT-OPT, see the
 # documentation of BOOST_FIND_LIB above.
 BOOST_DEFUN([Wave],
@@ -1061,7 +1063,7 @@ BOOST_DEFUN([Xpressive],
 
 # _BOOST_PTHREAD_FLAG()
 # ---------------------
-# Internal helper for BOOST_THREADS.  Based on ACX_PTHREAD:
+# Internal helper for BOOST_THREAD.  Based on ACX_PTHREAD:
 # http://autoconf-archive.cryp.to/acx_pthread.html
 AC_DEFUN([_BOOST_PTHREAD_FLAG],
 [AC_REQUIRE([AC_PROG_CXX])dnl
