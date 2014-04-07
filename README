@@ -40,7 +40,7 @@ HOWTO
 5. Adjust your Makefile.am where you build targets that depend on Boost so
    that they use $(BOOST_CPPFLAGS), $(BOOST_*_LDFLAGS) and $(BOOST_*_LIBS)
    where appropriate (where `*' is the capitalized name of one of the
-   libraries you checked for, e.g.: $(BOOST_THREADS_LDFLAGS)). E.g.:
+   libraries you checked for, e.g.: $(BOOST_THREAD_LDFLAGS)). E.g.:
       bin_PROGRAMS = foo
       foo_SOURCES = foo.cc
       foo_CPPFLAGS = $(BOOST_CPPFLAGS)
@@ -54,7 +54,7 @@ HOWTO
       foo_SOURCES = foo.cc
       bar_SOURCES = bar.cc
       AM_CPPFLAGS = $(BOOST_CPPFLAGS)
-      AM_LDFLAGS = $(BOOST_THREADS_LDFLAGS)
+      AM_LDFLAGS = $(BOOST_THREAD_LDFLAGS)
       LIBS = $(BOOST_THREAD_LIBS)
    Remember that for targets that are programs, you must use LDADD or
    progname_LDADD, but for libraries you must use LIBS or libname_LIBS.
@@ -146,9 +146,9 @@ The following libraries are supported:
   - Signals
   - System
   - Test (aka Unit Test Framework)
-  - Threads
+  - Thread
   - Wave
-Thus you can invoke BOOST_GRAPH (for instance) or BOOST_THREADS([mt-d]).
+Thus you can invoke BOOST_GRAPH (for instance) or BOOST_THREAD([mt-d]).
 The optional argument is made of one or more of the following letters:
   sgdpn (in that order)
 where:
@@ -170,7 +170,7 @@ BOOST_UNIT_TEST_FRAMEWORK_LIBS, not BOOST_TEST_LFDLAGS and BOOST_TEST_LIBS.
 Sorry for the inconsistency.
 
 NOTE: If you intend to use Wave/Spirit with thread support, make sure you
-call BOOST_THREADS first.
+call BOOST_THREAD first.
 
   Writing your own checks / supporting more Boost libraries
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
