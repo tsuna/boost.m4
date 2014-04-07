@@ -22,7 +22,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 m4_define([_BOOST_SERIAL], [m4_translit([
-# serial 19
+# serial 20
 ], [#
 ], [])])
 
@@ -949,18 +949,11 @@ CPPFLAGS="$CPPFLAGS $boost_cv_pthread_flag"
 # When compiling for the Windows platform, the threads library is named
 # differently.
 case $host_os in
-  (*mingw*)
-    BOOST_FIND_LIB([thread_win32], [$1],
-                   [boost/thread.hpp], [boost::thread t; boost::mutex m;])
-    BOOST_THREAD_LDFLAGS=$BOOST_THREAD_WIN32_LDFLAGS
-    BOOST_THREAD_LDPATH=$BOOST_THREAD_WIN32_LDPATH
-    BOOST_THREAD_LIBS=$BOOST_THREAD_WIN32_LIBS
-  ;;
-  (*)
-    BOOST_FIND_LIB([thread], [$1],
-                   [boost/thread.hpp], [boost::thread t; boost::mutex m;])
-  ;;
+  (*mingw*) boost_thread_lib_ext=_win32;;
 esac
+BOOST_FIND_LIBS([thread], [thread$boost_thread_lib_ext],
+                [$1],
+                [boost/thread.hpp], [boost::thread t; boost::mutex m;])
 
 BOOST_THREAD_LIBS="$BOOST_THREAD_LIBS $BOOST_SYSTEM_LIBS $boost_cv_pthread_flag"
 BOOST_THREAD_LDFLAGS="$BOOST_SYSTEM_LDFLAGS"
