@@ -680,7 +680,7 @@ BOOST_DEFUN([Lambda],
 
 # BOOST_LOG([PREFERRED-RT-OPT])
 # -----------------------------
-# Look for Boost.Log For the documentation of PREFERRED-RT-OPT, see the
+# Look for Boost.Log.  For the documentation of PREFERRED-RT-OPT, see the
 # documentation of BOOST_FIND_LIB above.
 BOOST_DEFUN([Log],
 [BOOST_FIND_LIB([log], [$1],
@@ -691,12 +691,12 @@ BOOST_DEFUN([Log],
 
 # BOOST_LOG_SETUP([PREFERRED-RT-OPT])
 # -----------------------------------
-# Look for Boost.Log For the documentation of PREFERRED-RT-OPT, see the
+# Look for Boost.Log.  For the documentation of PREFERRED-RT-OPT, see the
 # documentation of BOOST_FIND_LIB above.
 BOOST_DEFUN([Log_Setup],
 [AC_REQUIRE([BOOST_LOG])dnl
 BOOST_FIND_LIB([log_setup], [$1],
-    [boost/log/utility/init/from_settings.hpp],
+    [boost/log/utility/setup/from_settings.hpp],
     [boost::log::basic_settings<char> bs; bs.empty();])
 ])# BOOST_LOG_SETUP
 
