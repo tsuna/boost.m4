@@ -96,6 +96,7 @@ implemented:
     - Bind
     - Conversion
     - CRC
+    - Flyweight (with a dependency on pthread)
     - Foreach
     - Format
     - Function
