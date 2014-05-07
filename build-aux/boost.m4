@@ -22,7 +22,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 m4_define([_BOOST_SERIAL], [m4_translit([
-# serial 21
+# serial 22
 ], [#
 ], [])])
 
@@ -426,7 +426,10 @@ for boost_rtopt_ in $boost_rtopt '' -d; do
              /opt/local/lib* /usr/local/lib* /opt/lib* /usr/lib* \
              "$with_boost" C:/Boost/lib /lib*
     do
-      test -e "$boost_ldpath" || continue
+      # Don't waste time with directories that don't exist.
+      if test x"$boost_ldpath" != x && test ! -e "$boost_ldpath"; then
+        continue
+      fi
       boost_save_LDFLAGS=$LDFLAGS
       # Are we looking for a static library?
       case $boost_ldpath:$boost_rtopt_ in #(
@@ -447,25 +450,33 @@ dnl generated only once above (before we start the for loops).
       LDFLAGS=$boost_save_LDFLAGS
       LIBS=$boost_save_LIBS
       if test x"$Boost_lib" = xyes; then
-        # Check or used cached result of whether or not using -R or -rpath makes sense.
-        # Some implementations of ld, such as for Mac OSX, require -rpath but
-        # -R is the flag known to work on other systems.
-        # https://github.com/tsuna/boost.m4/issues/19
+        # Check or used cached result of whether or not using -R or
+        # -rpath makes sense.  Some implementations of ld, such as for
+        # Mac OSX, require -rpath but -R is the flag known to work on
+        # other systems.  https://github.com/tsuna/boost.m4/issues/19
         AC_CACHE_VAL([boost_cv_rpath_link_ldflag],
-          [for boost_cv_rpath_link_ldflag in -Wl,-R, -Wl,-rpath,; do
-            LDFLAGS="$boost_save_LDFLAGS -L$boost_ldpath $boost_cv_rpath_link_ldflag$boost_ldpath"
-            LIBS="$boost_save_LIBS $Boost_lib_LIBS"
-            _BOOST_AC_LINK_IFELSE([],
-              [boost_rpath_link_ldflag_found=yes
-              break],
-              [boost_rpath_link_ldflag_found=no])
-          done
+          [case $boost_ldpath in
+           '') # Nothing to do.
+             boost_cv_rpath_link_ldflag=
+             boost_rpath_link_ldflag_found=yes;;
+           *)
+            for boost_cv_rpath_link_ldflag in -Wl,-R, -Wl,-rpath,; do
+              LDFLAGS="$boost_save_LDFLAGS -L$boost_ldpath $boost_cv_rpath_link_ldflag$boost_ldpath"
+              LIBS="$boost_save_LIBS $Boost_lib_LIBS"
+              _BOOST_AC_LINK_IFELSE([],
+                [boost_rpath_link_ldflag_found=yes
+                break],
+                [boost_rpath_link_ldflag_found=no])
+            done
+            ;;
+          esac
           AS_IF([test "x$boost_rpath_link_ldflag_found" != "xyes"],
             [AC_MSG_ERROR([Unable to determine whether to use -R or -rpath])])
           LDFLAGS=$boost_save_LDFLAGS
           LIBS=$boost_save_LIBS
           ])
-        Boost_lib_LDFLAGS="-L$boost_ldpath $boost_cv_rpath_link_ldflag$boost_ldpath"
+        test x"$boost_ldpath" != x &&
+          Boost_lib_LDFLAGS="-L$boost_ldpath $boost_cv_rpath_link_ldflag$boost_ldpath"
         Boost_lib_LDPATH="$boost_ldpath"
         break 7
       else
