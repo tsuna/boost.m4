@@ -564,6 +564,33 @@ LDFLAGS=$boost_filesystem_save_LDFLAGS
 ])# BOOST_CHRONO
 
 
+# BOOST_CONTEXT([PREFERRED-RT-OPT])
+# -----------------------------------
+# Look for Boost.Context.  For the documentation of PREFERRED-RT-OPT, see the
+# documentation of BOOST_FIND_LIB above.  This library was introduced in Boost
+# 1.51.0
+BOOST_DEFUN([Context],
+[BOOST_FIND_LIB([context], [$1],
+                [boost/context/all.hpp],[
+// creates a stack
+void * stack_pointer = new void*[[4096]];
+std::size_t const size = sizeof(void*[[4096]]);
+
+// context fc uses f() as context function
+// fcontext_t is placed on top of context stack
+// a pointer to fcontext_t is returned
+fc = ctx::make_fcontext(stack_pointer, size, f);
+return ctx::jump_fcontext(&fcm, fc, 3) == 6;],[dnl
+namespace ctx = boost::context;
+// context
+static ctx::fcontext_t fcm, *fc;
+// context-function
+static void f(intptr_t i) {
+    ctx::jump_fcontext(fc, &fcm, i * 2);
+}])
+])# BOOST_CONTEXT
+
+
 # BOOST_CONVERSION()
 # ------------------
 # Look for Boost.Conversion (cast / lexical_cast)
@@ -571,6 +598,32 @@ BOOST_DEFUN([Conversion],
 [BOOST_FIND_HEADER([boost/cast.hpp])
 BOOST_FIND_HEADER([boost/lexical_cast.hpp])
 ])# BOOST_CONVERSION
+
+
+# BOOST_COROUTINE([PREFERRED-RT-OPT])
+# -----------------------------------
+# Look for Boost.Coroutine.  For the documentation of PREFERRED-RT-OPT, see the
+# documentation of BOOST_FIND_LIB above.  This library was introduced in Boost
+# 1.53.0
+BOOST_DEFUN([Coroutine],
+[
+boost_coroutine_save_LIBS=$LIBS
+boost_coroutine_save_LDFLAGS=$LDFLAGS
+# Link-time dependency from coroutine to context
+BOOST_CONTEXT([$1])
+m4_pattern_allow([^BOOST_CONTEXT_(LIBS|LDFLAGS)])
+LIBS="$LIBS $BOOST_CONTEXT_LIBS"
+LDFLAGS="$LDFLAGS $BOOST_CONTEXT_LDFLAGS"
+
+BOOST_FIND_LIB([coroutine], [$1],
+                [boost/coroutine/coroutine.hpp],
+                [boost::coroutines::coroutine< int(int) > coro; coro.empty();])
+
+BOOST_COROUTINE_LIBS="$BOOST_COROUTINE_LIBS $BOOST_CONTEXT_LIBS"
+BOOST_COROUTINE_LDFLAGS="$BOOST_COROUTINE_LDFLAGS $BOOST_CONTEXT_LDFLAGS"
+LIBS=$boost_coroutine_save_LIBS
+LDFLAGS=$boost_coroutine_save_LDFLAGS
+])# BOOST_COROUTINE
 
 
 # BOOST_CRC()
