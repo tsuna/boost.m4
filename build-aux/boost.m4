@@ -1180,7 +1180,8 @@ m4_define([_BOOST_mingw_test],
 AC_DEFUN([_BOOST_FIND_COMPILER_TAG],
 [AC_REQUIRE([AC_PROG_CXX])dnl
 AC_REQUIRE([AC_CANONICAL_HOST])dnl
-AC_CACHE_CHECK([for the toolset name used by Boost for $CXX], [boost_cv_lib_tag],
+AC_CACHE_CHECK([for the toolset name used by Boost for $CXX],
+               [boost_cv_lib_tag],
 [boost_cv_lib_tag=unknown
 if test x$boost_cv_inc_path != xno; then
   AC_LANG_PUSH([C++])dnl
@@ -1198,23 +1199,23 @@ if test x$boost_cv_inc_path != xno; then
   # I'm not sure about my test for `il' (be careful: Intel's ICC pre-defines
   # the same defines as GCC's).
   for i in \
-    _BOOST_mingw_test(4,8) \
+    _BOOST_mingw_test(4, 8) \
     _BOOST_gcc_test(4, 8) \
-    _BOOST_mingw_test(4,7) \
+    _BOOST_mingw_test(4, 7) \
     _BOOST_gcc_test(4, 7) \
-    _BOOST_mingw_test(4,6) \
+    _BOOST_mingw_test(4, 6) \
     _BOOST_gcc_test(4, 6) \
-    _BOOST_mingw_test(4,5) \
+    _BOOST_mingw_test(4, 5) \
     _BOOST_gcc_test(4, 5) \
-    _BOOST_mingw_test(4,4) \
+    _BOOST_mingw_test(4, 4) \
     _BOOST_gcc_test(4, 4) \
-    _BOOST_mingw_test(4,3) \
+    _BOOST_mingw_test(4, 3) \
     _BOOST_gcc_test(4, 3) \
-    _BOOST_mingw_test(4,2) \
+    _BOOST_mingw_test(4, 2) \
     _BOOST_gcc_test(4, 2) \
-    _BOOST_mingw_test(4,1) \
+    _BOOST_mingw_test(4, 1) \
     _BOOST_gcc_test(4, 1) \
-    _BOOST_mingw_test(4,0) \
+    _BOOST_mingw_test(4, 0) \
     _BOOST_gcc_test(4, 0) \
     "defined __GNUC__ && __GNUC__ == 3 && !defined __ICC \
      && (defined WIN32 || defined WINNT || defined _WIN32 || defined __WIN32 \
