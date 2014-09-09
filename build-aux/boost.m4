@@ -571,16 +571,16 @@ LDFLAGS=$boost_filesystem_save_LDFLAGS
 # 1.51.0
 BOOST_DEFUN([Context],
 [BOOST_FIND_LIB([context], [$1],
-                [boost/context/all.hpp],[
+                [boost/context/all.hpp],[[
 // creates a stack
-void * stack_pointer = new void*[[4096]];
-std::size_t const size = sizeof(void*[[4096]]);
+void * stack_pointer = new void*[4096];
+std::size_t const size = sizeof(void*[4096]);
 
 // context fc uses f() as context function
 // fcontext_t is placed on top of context stack
 // a pointer to fcontext_t is returned
 fc = ctx::make_fcontext(stack_pointer, size, f);
-return ctx::jump_fcontext(&fcm, fc, 3) == 6;],[dnl
+return ctx::jump_fcontext(&fcm, fc, 3) == 6;]],[dnl
 namespace ctx = boost::context;
 // context
 static ctx::fcontext_t fcm, *fc;
