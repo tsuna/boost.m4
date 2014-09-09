@@ -636,8 +636,12 @@ BOOST_FIND_LIB([coroutine], [$1],
                 [boost/coroutine/coroutine.hpp],
                 [boost::coroutines::coroutine< int(int) > coro; coro.empty();])
 
-BOOST_COROUTINE_LIBS="$BOOST_COROUTINE_LIBS $BOOST_CONTEXT_LIBS"
-BOOST_COROUTINE_LDFLAGS="$BOOST_COROUTINE_LDFLAGS $BOOST_CONTEXT_LDFLAGS"
+# Link-time dependency from coroutine to context, existed only in 1.53, in 1.54
+# coroutine doesn't use context from its headers but from its library.
+if test $boost_major_version -eq 153 || test $enable_static_boost = yes && test $boost_major_version -ge 154; then
+  BOOST_COROUTINE_LIBS="$BOOST_COROUTINE_LIBS $BOOST_CONTEXT_LIBS"
+  BOOST_COROUTINE_LDFLAGS="$BOOST_COROUTINE_LDFLAGS $BOOST_CONTEXT_LDFLAGS"
+fi
 LIBS=$boost_coroutine_save_LIBS
 LDFLAGS=$boost_coroutine_save_LDFLAGS
 ])# BOOST_COROUTINE
