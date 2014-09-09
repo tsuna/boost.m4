@@ -628,8 +628,12 @@ boost_coroutine_save_LIBS=$LIBS
 boost_coroutine_save_LDFLAGS=$LDFLAGS
 # Link-time dependency from coroutine to context
 BOOST_CONTEXT([$1])
-m4_pattern_allow([^BOOST_CONTEXT_(LIBS|LDFLAGS)])
-LIBS="$LIBS $BOOST_CONTEXT_LIBS"
+# Starting from Boost 1.55 a dependency on Boost.System is added
+if test $boost_major_version -ge 155; then
+  BOOST_SYSTEM([$1])
+fi
+m4_pattern_allow([^BOOST_(CONTEXT|SYSTEM)_(LIBS|LDFLAGS)])
+LIBS="$LIBS $BOOST_CONTEXT_LIBS $BOOST_SYSTEM_LIBS"
 LDFLAGS="$LDFLAGS $BOOST_CONTEXT_LDFLAGS"
 
 BOOST_FIND_LIB([coroutine], [$1],
@@ -641,6 +645,10 @@ BOOST_FIND_LIB([coroutine], [$1],
 if test $boost_major_version -eq 153 || test $enable_static_boost = yes && test $boost_major_version -ge 154; then
   BOOST_COROUTINE_LIBS="$BOOST_COROUTINE_LIBS $BOOST_CONTEXT_LIBS"
   BOOST_COROUTINE_LDFLAGS="$BOOST_COROUTINE_LDFLAGS $BOOST_CONTEXT_LDFLAGS"
+fi
+if test $enable_static_boost = yes && test $boost_major_version -ge 155; then
+  BOOST_COROUTINE_LIBS="$BOOST_COROUTINE_LIBS $BOOST_SYSTEM_LIBS"
+  BOOST_COROUTINE_LDFLAGS="$BOOST_COROUTINE_LDFLAGS $BOOST_SYSTEM_LDFLAGS"
 fi
 LIBS=$boost_coroutine_save_LIBS
 LDFLAGS=$boost_coroutine_save_LDFLAGS
