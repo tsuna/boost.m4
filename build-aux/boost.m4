@@ -1067,15 +1067,24 @@ LDFLAGS="$LDFLAGS $BOOST_SYSTEM_LDFLAGS"
 CPPFLAGS="$CPPFLAGS $boost_cv_pthread_flag"
 
 # When compiling for the Windows platform, the threads library is named
-# differently.
-case $host_os in
-  (*mingw*) boost_thread_lib_ext=_win32;;
-esac
+# differently.  This suffix doesn't exist in new versions of Boost, or
+# possibly new versions of GCC on mingw I am assuming it's Boost's change for
+# now and I am setting version to 1.48, for lack of knowledge as to when this
+# change occurred.
+if test $boost_major_version -lt 148; then
+  case $host_os in
+    (*mingw*) boost_thread_lib_ext=_win32;;
+  esac
+fi
 BOOST_FIND_LIBS([thread], [thread$boost_thread_lib_ext],
                 [$1],
                 [boost/thread.hpp], [boost::thread t; boost::mutex m;])
 
-BOOST_THREAD_LIBS="$BOOST_THREAD_LIBS $BOOST_SYSTEM_LIBS $boost_cv_pthread_flag"
+case $host_os in
+  (*mingw*) boost_thread_w32_socket_link=-lws2_32;;
+esac
+
+BOOST_THREAD_LIBS="$BOOST_THREAD_LIBS $BOOST_SYSTEM_LIBS $boost_cv_pthread_flag $boost_thread_w32_socket_link"
 BOOST_THREAD_LDFLAGS="$BOOST_SYSTEM_LDFLAGS"
 BOOST_CPPFLAGS="$BOOST_CPPFLAGS $boost_cv_pthread_flag"
 LIBS=$boost_thread_save_LIBS
