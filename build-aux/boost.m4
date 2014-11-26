@@ -22,7 +22,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 m4_define([_BOOST_SERIAL], [m4_translit([
-# serial 23
+# serial 24
 ], [#
 ], [])])
 
@@ -72,8 +72,25 @@ dnl strip `\n' with backquotes, not the `\r'.  This results in
 dnl boost_cv_lib_version='1_37\r' for instance, which breaks
 dnl everything else.
 dnl Cannot use 'dnl' after [$4] because a trailing dnl may break AC_CACHE_CHECK
+dnl
+dnl Beware that GCC 5, when expanding macros, may embed # line directives
+dnl a within single line:
+dnl
+dnl # 1 "conftest.cc"
+dnl # 1 "<built-in>"
+dnl # 1 "<command-line>"
+dnl # 1 "conftest.cc"
+dnl # 1 "/opt/local/include/boost/version.hpp" 1 3
+dnl # 2 "conftest.cc" 2
+dnl boost-lib-version =
+dnl # 2 "conftest.cc" 3
+dnl                    "1_56"
+dnl
+dnl So get rid of the # lines, and glue the remaining ones together.
 (eval "$ac_cpp conftest.$ac_ext") 2>&AS_MESSAGE_LOG_FD |
+  grep -v '#' |
   tr -d '\r' |
+  tr -s '\n' ' ' |
   $SED -n -e "$1" >conftest.i 2>&1],
   [$3],
   [$4])
@@ -208,7 +225,7 @@ AC_LANG_POP([C++])dnl
   AC_CACHE_CHECK([for Boost's header version],
     [boost_cv_lib_version],
     [m4_pattern_allow([^BOOST_LIB_VERSION$])dnl
-     _BOOST_SED_CPP([/^boost-lib-version = /{s///;s/\"//g;p;q;}],
+     _BOOST_SED_CPP([[/^boost-lib-version = /{s///;s/[\" ]//g;p;q;}]],
                     [#include <boost/version.hpp>
 boost-lib-version = BOOST_LIB_VERSION],
     [boost_cv_lib_version=`cat conftest.i`])])
@@ -216,7 +233,7 @@ boost-lib-version = BOOST_LIB_VERSION],
     boost_major_version=`echo "$boost_cv_lib_version" | sed 's/_//;s/_.*//'`
     case $boost_major_version in #(
       '' | *[[!0-9]]*)
-        AC_MSG_ERROR([invalid value: boost_major_version=$boost_major_version])
+        AC_MSG_ERROR([invalid value: boost_major_version='$boost_major_version'])
         ;;
     esac
 fi
@@ -1199,6 +1216,8 @@ if test x$boost_cv_inc_path != xno; then
   # I'm not sure about my test for `il' (be careful: Intel's ICC pre-defines
   # the same defines as GCC's).
   for i in \
+    _BOOST_mingw_test(5, 0) \
+    _BOOST_gcc_test(5, 0) \
     _BOOST_mingw_test(4, 10) \
     _BOOST_gcc_test(4, 10) \
     _BOOST_mingw_test(4, 9) \
