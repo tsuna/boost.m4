@@ -794,6 +794,12 @@ BOOST_DEFUN([Preprocessor],
 [BOOST_FIND_HEADER([boost/preprocessor/repeat.hpp])])
 
 
+# BOOST_RANGE()
+# --------------------
+# Look for Boost.Range
+BOOST_DEFUN([Range],
+[BOOST_FIND_HEADER([boost/range/adaptors.hpp])])
+
 # BOOST_UNORDERED()
 # -----------------
 # Look for Boost.Unordered
