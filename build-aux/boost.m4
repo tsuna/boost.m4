@@ -781,6 +781,15 @@ BOOST_DEFUN([Lambda],
 [BOOST_FIND_HEADER([boost/lambda/lambda.hpp])])
 
 
+# BOOST_LOCALE()
+# --------------
+# Look for Boost.Locale
+BOOST_DEFUN([Locale],
+[BOOST_FIND_LIB([locale], [$1],
+    [boost/locale.hpp],
+    [[boost::locale::generator gen; std::locale::global(gen(""));]])
+])# BOOST_LOCALE
+
 # BOOST_LOG([PREFERRED-RT-OPT])
 # -----------------------------
 # Look for Boost.Log.  For the documentation of PREFERRED-RT-OPT, see the
