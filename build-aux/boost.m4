@@ -110,7 +110,7 @@ AC_LANG_POP([C++])dnl
 # On # success, defines HAVE_BOOST.  On failure, calls the optional
 # ACTION-IF-NOT-FOUND action if one was supplied.
 # Otherwise aborts with an error message.
-AC_DEFUN([BOOST_REQUIRE],
+AC_DEFUN_ONCE([BOOST_REQUIRE],
 [AC_REQUIRE([AC_PROG_CXX])dnl
 AC_REQUIRE([AC_PROG_GREP])dnl
 echo "$as_me: this is boost.m4[]_BOOST_SERIAL" >&AS_MESSAGE_LOG_FD
