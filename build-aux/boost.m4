@@ -881,9 +881,19 @@ LDFLAGS=$boost_locale_save_LDFLAGS
 # Look for Boost.Log.  For the documentation of PREFERRED-RT-OPT, see the
 # documentation of BOOST_FIND_LIB above.
 BOOST_DEFUN([Log],
-[BOOST_FIND_LIB([log], [$1],
+[boost_log_save_LIBS=$LIBS
+boost_log_save_LDFLAGS=$LDFLAGS
+BOOST_SYSTEM([$1])
+BOOST_FILESYSTEM([$1])
+BOOST_DATE_TIME([$1])
+m4_pattern_allow([^BOOST_(SYSTEM|FILESYSTEM|DATE_TIME)_(LIBS|LDFLAGS)$])dnl
+LIBS="$LIBS $BOOST_DATE_TIME_LIBS $BOOST_FILESYSTEM_LIBS $BOOST_SYSTEM_LIBS"
+LDFLAGS="$LDFLAGS $BOOST_DATE_TIME_LDFLAGS $BOOST_FILESYSTEM_LDFLAGS $BOOST_SYSTEM_LDFLAGS"
+BOOST_FIND_LIB([log], [$1],
     [boost/log/core/core.hpp],
     [boost::log::attribute a; a.get_value();])
+LIBS=$boost_log_save_LIBS
+LDFLAGS=$boost_log_save_LDFLAGS
 ])# BOOST_LOG
 
 
