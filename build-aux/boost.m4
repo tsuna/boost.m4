@@ -814,8 +814,19 @@ BOOST_DEFUN([Geometry],
 # Look for Boost.Graphs.  For the documentation of PREFERRED-RT-OPT, see the
 # documentation of BOOST_FIND_LIB above.
 BOOST_DEFUN([Graph],
-[BOOST_FIND_LIB([graph], [$1],
+[boost_graph_save_LIBS=$LIBS
+boost_graph_save_LDFLAGS=$LDFLAGS
+# Link-time dependency from graph to regex was added as of 1.40.0.
+if test $boost_major_version -ge 140; then
+  BOOST_REGEX([$1])
+  m4_pattern_allow([^BOOST_REGEX_(LIBS|LDFLAGS)$])dnl
+  LIBS="$LIBS $BOOST_REGEX_LIBS"
+  LDFLAGS="$LDFLAGS $BOOST_REGEX_LDFLAGS"
+fi
+BOOST_FIND_LIB([graph], [$1],
                 [boost/graph/adjacency_list.hpp], [boost::adjacency_list<> g;])
+LIBS=$boost_graph_save_LIBS
+LDFLAGS=$boost_graph_save_LDFLAGS
 ])# BOOST_GRAPH
 
 
