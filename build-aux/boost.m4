@@ -688,16 +688,21 @@ m4_pattern_allow([^BOOST_(CONTEXT|SYSTEM)_(LIBS|LDFLAGS)])
 LIBS="$LIBS $BOOST_CONTEXT_LIBS $BOOST_SYSTEM_LIBS"
 LDFLAGS="$LDFLAGS $BOOST_CONTEXT_LDFLAGS"
 
-BOOST_FIND_LIB([coroutine], [$1],
-                [boost/coroutine/coroutine.hpp],
-                [
-#include <boost/version.hpp>
-#if   BOOST_VERSION <= 105500
-boost::coroutines::coroutine<int(int)> coro; coro.get();
-#else
-boost::coroutines::asymmetric_coroutine<int>::pull_type coro; coro.get();
-#endif
-])
+# in 1.53 coroutine was a header only library
+if test $boost_major_version -eq 153; then
+  BOOST_FIND_HEADER([boost/coroutine/coroutine.hpp])
+else
+  BOOST_FIND_LIB([coroutine], [$1],
+		  [boost/coroutine/coroutine.hpp],
+		  [
+  #include <boost/version.hpp>
+  #if   BOOST_VERSION <= 105500
+  boost::coroutines::coroutine<int(int)> coro; coro.get();
+  #else
+  boost::coroutines::asymmetric_coroutine<int>::pull_type coro; coro.get();
+  #endif
+  ])
+fi
 # Link-time dependency from coroutine to context, existed only in 1.53, in 1.54
 # coroutine doesn't use context from its headers but from its library.
 if test $boost_major_version -eq 153 || test $enable_static_boost = yes && test $boost_major_version -ge 154; then
