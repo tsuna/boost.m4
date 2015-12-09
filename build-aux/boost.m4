@@ -902,10 +902,17 @@ LDFLAGS=$boost_log_save_LDFLAGS
 # Look for Boost.Log.  For the documentation of PREFERRED-RT-OPT, see the
 # documentation of BOOST_FIND_LIB above.
 BOOST_DEFUN([Log_Setup],
-[AC_REQUIRE([BOOST_LOG])dnl
+[boost_log_setup_save_LIBS=$LIBS
+boost_log_setup_save_LDFLAGS=$LDFLAGS
+BOOST_LOG([$1])
+m4_pattern_allow([^BOOST_LOG_(LIBS|LDFLAGS)$])dnl
+LIBS="$LIBS $BOOST_LOG_LIBS"
+LDFLAGS="$LDFLAGS $BOOST_LOG_LDFLAGS"
 BOOST_FIND_LIB([log_setup], [$1],
     [boost/log/utility/setup/from_settings.hpp],
     [boost::log::basic_settings<char> bs; bs.empty();])
+LIBS=$boost_log_setup_save_LIBS
+LDFLAGS=$boost_log_setup_save_LDFLAGS
 ])# BOOST_LOG_SETUP
 
 
