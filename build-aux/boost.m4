@@ -859,9 +859,21 @@ BOOST_DEFUN([Lambda],
 # --------------
 # Look for Boost.Locale
 BOOST_DEFUN([Locale],
-[BOOST_FIND_LIB([locale], [$1],
+[
+boost_locale_save_LIBS=$LIBS
+boost_locale_save_LDFLAGS=$LDFLAGS
+# require SYSTEM for boost-1.50.0 and up
+if test $boost_major_version -ge 150; then
+  BOOST_SYSTEM([$1])
+  m4_pattern_allow([^BOOST_SYSTEM_(LIBS|LDFLAGS)$])dnl
+  LIBS="$LIBS $BOOST_SYSTEM_LIBS"
+  LDFLAGS="$LDFLAGS $BOOST_SYSTEM_LDFLAGS"
+fi # end of the Boost.System check.
+BOOST_FIND_LIB([locale], [$1],
     [boost/locale.hpp],
     [[boost::locale::generator gen; std::locale::global(gen(""));]])
+LIBS=$boost_locale_save_LIBS
+LDFLAGS=$boost_locale_save_LDFLAGS
 ])# BOOST_LOCALE
 
 # BOOST_LOG([PREFERRED-RT-OPT])
