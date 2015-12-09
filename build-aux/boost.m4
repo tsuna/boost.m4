@@ -605,18 +605,34 @@ BOOST_FIND_LIB([context], [$1],
 void * stack_pointer = new void*[4096];
 std::size_t const size = sizeof(void*[4096]);
 
-// context fc uses f() as context function
-// fcontext_t is placed on top of context stack
-// a fcontext_t is returned
-fc = ctx::make_fcontext(stack_pointer, size, f);
+#if BOOST_VERSION <= 105100
+ctx::make_fcontext(&fc, f);
+return ctx::jump_fcontext(&fcm, &fc, 3) == 6;
 
+#else
+
+fc = ctx::make_fcontext(stack_pointer, size, f);
 return ctx::jump_fcontext(&fcm, fc, 3) == 6;
 
+#endif
+
+
 ]],[dnl
-namespace ctx = boost::context;
 
 #include <boost/version.hpp>
-#if BOOST_VERSION < 105600
+#if BOOST_VERSION <= 105100
+
+namespace ctx = boost::ctx;
+
+static ctx::fcontext_t fcm, fc;
+
+static void f(intptr_t i) {
+    ctx::jump_fcontext(&fc, &fcm, i * 2);
+}
+
+#elif BOOST_VERSION <= 105500
+
+namespace ctx = boost::context;
 
 // context
 static ctx::fcontext_t fcm, *fc;
@@ -627,6 +643,9 @@ static void f(intptr_t i) {
 }
 
 #else
+
+namespace ctx = boost::context;
+
 // context
 static ctx::fcontext_t fcm, fc;
 
@@ -634,7 +653,7 @@ static ctx::fcontext_t fcm, fc;
 static void f(intptr_t i) {
     ctx::jump_fcontext(&fc, fcm, i * 2);
 }
-#endif // older than BOOST 1.56.0
+#endif
 ])
 LIBS=$boost_context_save_LIBS
 LDFLAGS=$boost_context_save_LDFLAGS
