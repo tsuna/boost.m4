@@ -453,6 +453,7 @@ dnl start the for loops).
     ])
   ac_objext=$boost_save_ac_objext
   boost_failed_libs=
+  eval eval _boost_shrext=$shrext_cmds
 # Don't bother to ident the following nested for loops, only the 2
 # innermost ones matter.
 for boost_lib_ in $2; do
@@ -500,7 +501,7 @@ for boost_rtopt_ in $boost_rtopt '' -d; do
         (*?*:*s*) # Yes (Non empty boost_ldpath + s in rt opt)
           Boost_lib_LIBS="$boost_ldpath/lib$boost_lib.$libext" ;;
         (*) # No:
-          Boost_lib_LIBS="$boost_ldpath/lib$boost_lib$shrext_cmds" ;;
+          Boost_lib_LIBS="$boost_ldpath/lib$boost_lib$_boost_shrext" ;;
       esac
       # Don't waste time with libraries that don't exist
       test -e "$Boost_lib_LIBS" || continue
