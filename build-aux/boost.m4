@@ -599,7 +599,7 @@ if test $boost_major_version -ge 157; then
   LDFLAGS="$LDFLAGS $BOOST_THREAD_LDFLAGS"
 fi
 BOOST_FIND_LIB([context], [$1],
-                [boost/context/all.hpp],[[
+                [boost/context/fcontext.hpp],[[
 
 // creates a stack
 void * stack_pointer = new void*[4096];
