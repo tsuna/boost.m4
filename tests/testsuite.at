@@ -306,6 +306,7 @@ AT_CHECK_MACRO([BOOST_WAVE], [lib])
 AT_BANNER([Boost header-only libraries])
 
 AT_CHECK_MACRO([BOOST_ARRAY], [header])
+AT_CHECK_MACRO([BOOST_ASSIGN], [header])
 AT_CHECK_MACRO([BOOST_BIND], [header])
 AT_CHECK_MACRO([BOOST_CONVERSION], [header])
 AT_CHECK_MACRO([BOOST_FLYWEIGHT], [header])

@@ -22,7 +22,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 m4_define([_BOOST_SERIAL], [m4_translit([
-# serial 25
+# serial 26
 ], [#
 ], [])])
 
@@ -546,6 +546,13 @@ BOOST_DEFUN([Array],
 BOOST_DEFUN([Asio],
 [AC_REQUIRE([BOOST_SYSTEM])dnl
 BOOST_FIND_HEADER([boost/asio.hpp])])
+
+
+# BOOST_ASSIGN()
+# -------------
+# Look for Boost.Assign
+BOOST_DEFUN([Assign],
+[BOOST_FIND_HEADER([boost/assign.hpp])])
 
 
 # BOOST_BIND()
