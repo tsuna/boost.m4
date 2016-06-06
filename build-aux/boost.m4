@@ -548,6 +548,13 @@ BOOST_DEFUN([Asio],
 BOOST_FIND_HEADER([boost/asio.hpp])])
 
 
+# BOOST_ASSIGN()
+# -------------
+# Look for Boost.Assign
+BOOST_DEFUN([Assign],
+[BOOST_FIND_HEADER([boost/assign.hpp])])
+
+
 # BOOST_BIND()
 # ------------
 # Look for Boost.Bind.
