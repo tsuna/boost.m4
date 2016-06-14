@@ -86,9 +86,10 @@ dnl boost-lib-version =
 dnl # 2 "conftest.cc" 3
 dnl                    "1_56"
 dnl
-dnl So get rid of the # lines, and glue the remaining ones together.
+dnl So get rid of the # and empty lines, and glue the remaining ones together.
 (eval "$ac_cpp conftest.$ac_ext") 2>&AS_MESSAGE_LOG_FD |
   grep -v '#' |
+  grep -v '^[[[:space:]]]*$' |
   tr -d '\r' |
   tr -s '\n' ' ' |
   $SED -n -e "$1" >conftest.i 2>&1],
