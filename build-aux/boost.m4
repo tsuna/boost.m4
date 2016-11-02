@@ -22,7 +22,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 m4_define([_BOOST_SERIAL], [m4_translit([
-# serial 26
+# serial 27
 ], [#
 ], [])])
 
@@ -317,7 +317,7 @@ AC_REQUIRE([_BOOST_GUESS_WHETHER_TO_USE_MT])dnl
 if test x"$boost_cv_inc_path" = xno; then
   AC_MSG_NOTICE([Boost not available, not searching for the Boost $1 library])
 else
-dnl The else branch is huge and wasn't intended on purpose.
+dnl The else branch is huge and wasn't indented on purpose.
 AC_LANG_PUSH([C++])dnl
 AS_VAR_PUSHDEF([Boost_lib], [boost_cv_lib_$1])dnl
 AS_VAR_PUSHDEF([Boost_lib_LDFLAGS], [boost_cv_lib_$1_LDFLAGS])dnl
@@ -330,7 +330,7 @@ AC_CACHE_CHECK([for the Boost $1 library], [Boost_lib],
                [_BOOST_FIND_LIBS($@)])
 case $Boost_lib in #(
   (no) _AC_MSG_LOG_CONFTEST
-    AC_MSG_ERROR([cannot find the flags to link with Boost $1])
+    AC_MSG_ERROR([cannot find flags to link with the Boost $1 library (libboost-$1)])
     ;;
 esac
 AC_SUBST(AS_TR_CPP([BOOST_$1_LDFLAGS]), [$Boost_lib_LDFLAGS])dnl
