@@ -1041,10 +1041,10 @@ BOOST_DEFUN([Program_Options],
 # _BOOST_PYTHON_CONFIG(VARIABLE, FLAG)
 # ------------------------------------
 # Save VARIABLE, and define it via `python-config --FLAG`.
-# Substitute BOOST_PYTHON_VARIABLE.
+# Substitute BOOST_PYTHON_<VARIABLE>.
 m4_define([_BOOST_PYTHON_CONFIG],
-[AC_SUBST([BOOST_PYTHON_$1],
-          [`${PYTHON-python}-config --$2 2>/dev/null`])dnl
+[_boost_py_$1=`${PYTHON-python}-config --$2 2>/dev/null`
+AC_SUBST([BOOST_PYTHON_$1], [$_boost_py_$1])dnl
 boost_python_save_$1=$$1
 $1="$$1 $BOOST_PYTHON_$1"])
 
@@ -1067,6 +1067,9 @@ BOOST_FIND_LIBS([python], [$PYTHON python python3],
                 [$1], [boost/python.hpp],
                 [], [BOOST_PYTHON_MODULE(empty) {}],
                 [$_boost_py])
+# Add the dependencies revealed by python-config.
+BOOST_PYTHON_LDFLAGS="$BOOST_PYTHON_LDFLAGS $_boost_py_LDFLAGS"
+BOOST_PYTHON_LIBS="$BOOST_PYTHON_LIBS $_boost_py_LIBS"
 CPPFLAGS=$boost_python_save_CPPFLAGS
 LDFLAGS=$boost_python_save_LDFLAGS
 LIBS=$boost_python_save_LIBS
