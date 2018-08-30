@@ -1,0 +1,10 @@
+language: cpp
+addons:
+  apt:
+    packages:
+      - libboost-all-dev
+
+script:
+  - autoreconf -fi
+  - ./configure
+  - make check
