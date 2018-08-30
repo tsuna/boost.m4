@@ -91,24 +91,33 @@ For each of the Boost libraries that are only made of headers, the macro to
 invoke is BOOST_<LIB-NAME> where <LIB-NAME> is the capitalized name of the
 library.  Here is the list of libraries for which checks have been
 implemented:
+    - Any
     - Array
     - Asio
+    - Bimap
     - Bind
+    - Cast
     - Conversion
     - CRC
+    - Exception
     - Flyweight (with a dependency on pthread)
     - Foreach
     - Format
     - Function
+    - Fusion
     - Geometry
     - Hash (aka Functional/Hash)
+    - Iterator
     - Lambda
     - Math
+    - MPL
     - MultiArray
+    - MultiIndexContainer
     - NumericConversion
-    - Preprocessor
     - PointerContainer
-    - Utility
+    - Preprocessor
+    - PropertyTree
+    - Random
     - Ref
     - Signals2
     - SmartPtr
@@ -116,6 +125,7 @@ implemented:
     - Tokenizer
     - Tribool
     - Tuple
+    - Utility
     - Variant
     - Xpressive
 Thus you can invoke BOOST_FOREACH (for instance).  It will check that
