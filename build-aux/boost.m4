@@ -41,6 +41,7 @@ m4_define([_BOOST_SERIAL], [m4_translit([
 # your configure so that users can specify non standard locations.
 # If the user's environment contains BOOST_ROOT and --with-boost was not
 # specified, --with-boost=$BOOST_ROOT is implicitly used.
+#
 # For more README and documentation, go to http://github.com/tsuna/boost.m4
 # Note: THESE MACROS ASSUME THAT YOU USE LIBTOOL.  If you don't, don't worry,
 # simply read the README, it will show you what to do step by step.
@@ -106,6 +107,7 @@ AC_LANG_POP([C++])dnl
 # Look for Boost.  If version is given, it must either be a literal of the form
 # "X.Y.Z" where X, Y and Z are integers (the ".Z" part being optional) or a
 # variable "$var".
+#
 # Defines the value BOOST_CPPFLAGS.  This macro only checks for headers with
 # the required version, it does not check for any of the Boost libraries.
 # On # success, defines HAVE_BOOST.  On failure, calls the optional
@@ -286,16 +288,16 @@ fi
 ])# BOOST_FIND_HEADER
 
 
-# BOOST_FIND_LIBS([COMPONENT-NAME], [CANDIDATE-LIB-NAMES],
-#                 [PREFERRED-RT-OPT], [HEADER-NAME], [CXX-TEST],
-#                 [CXX-PROLOGUE])
+# BOOST_FIND_LIBS($1: LIB-NAME, $2: CANDIDATE-LIB-NAMES,
+#                 [$3: PREFERRED-RT-OPT], [$4: HEADER-NAME],
+#                 [$5: CXX-TEST], [$6: CXX-PROLOGUE],
+#                 [$7: LIB-SUFFIXES])
 # --------------------------------------------------------------
 # Look for the Boost library COMPONENT-NAME (e.g., `thread', for
-# libboost_thread) under the possible CANDIDATE-LIB-NAMES (e.g.,
-# "thread_win32 thread").  Check that HEADER-NAME works and check that
-# libboost_LIB-NAME can link with the code CXX-TEST.  The optional
-# argument CXX-PROLOGUE can be used to include some C++ code before
-# the `main' function.
+# libboost_thread) under the possible CANDIDATE-LIB-NAMES (e.g., "thread_win32
+# thread").  Check that HEADER-NAME works and check that libboost_LIB-NAME can
+# link with the code CXX-TEST.  The optional argument CXX-PROLOGUE can be used
+# to include some C++ code before the `main' function.
 #
 # Invokes BOOST_FIND_HEADER([HEADER-NAME]) (see above).
 #
@@ -309,6 +311,11 @@ fi
 # builds.  Some sample values for PREFERRED-RT-OPT: (nothing), mt, d, mt-d, gdp
 # ...  If you want to make sure you have a specific version of Boost
 # (eg, >= 1.33) you *must* invoke BOOST_REQUIRE before this macro.
+#
+# LIB-SUFFIXES is required in some cases.  For instance Debian installs
+# 'libboost_python-py27.so', 'libboost_python-py34.so', or even
+# 'libboost_python-mt-py27.so', so here LIB-SUFFIXES would be '-py27'.  The
+# empty suffix is always tried last, there is no need to pass it.
 AC_DEFUN([BOOST_FIND_LIBS],
 [AC_REQUIRE([BOOST_REQUIRE])dnl
 AC_REQUIRE([_BOOST_FIND_COMPILER_TAG])dnl
@@ -349,16 +356,17 @@ fi
 
 # BOOST_FIND_LIB([LIB-NAME],
 #                [PREFERRED-RT-OPT], [HEADER-NAME], [CXX-TEST],
-#                [CXX-PROLOGUE])
+#                [CXX-PROLOGUE], [LIB-SUFFIXES])
 # --------------------------------------------------------------
 # Backward compatibility wrapper for BOOST_FIND_LIBS.
 AC_DEFUN([BOOST_FIND_LIB],
 [BOOST_FIND_LIBS([$1], $@)])
 
 
-# _BOOST_FIND_LIBS([LIB-NAME], [CANDIDATE-LIB-NAMES],
-#                 [PREFERRED-RT-OPT], [HEADER-NAME], [CXX-TEST],
-#                 [CXX-PROLOGUE])
+# _BOOST_FIND_LIBS($1: LIB-NAME, $2: CANDIDATE-LIB-NAMES,
+#                  [$3: PREFERRED-RT-OPT], [$4: HEADER-NAME],
+#                  [$5: CXX-TEST], [$6: CXX-PROLOGUE],
+#                  [$7: LIB-SUFFIXES])
 # --------------------------------------------------------------
 # Real implementation of BOOST_FIND_LIBS: rely on these local macros:
 # Boost_lib, Boost_lib_LDFLAGS, Boost_lib_LDPATH, Boost_lib_LIBS
@@ -426,11 +434,12 @@ for boost_tag_ in -$boost_cv_lib_tag ''; do
 for boost_ver_ in -$boost_cv_lib_version ''; do
 for boost_mt_ in $boost_mt -mt ''; do
 for boost_rtopt_ in $boost_rtopt '' -d; do
+for boost_suffix_ in $7 ''; do
   for boost_lib in \
-    boost_$boost_lib_$boost_tag_$boost_mt_$boost_rtopt_$boost_ver_ \
-    boost_$boost_lib_$boost_tag_$boost_rtopt_$boost_ver_ \
-    boost_$boost_lib_$boost_tag_$boost_mt_$boost_ver_ \
-    boost_$boost_lib_$boost_tag_$boost_ver_
+    boost_$boost_lib_$boost_tag_$boost_mt_$boost_rtopt_$boost_ver_$boost_suffix_ \
+    boost_$boost_lib_$boost_tag_$boost_rtopt_$boost_ver_$boost_suffix_ \
+    boost_$boost_lib_$boost_tag_$boost_mt_$boost_ver_$boost_suffix_ \
+    boost_$boost_lib_$boost_tag_$boost_ver_$boost_suffix_
   do
     # Avoid testing twice the same lib
     case $boost_failed_libs in #(
@@ -496,16 +505,17 @@ dnl generated only once above (before we start the for loops).
         test x"$boost_ldpath" != x &&
           Boost_lib_LDFLAGS="-L$boost_ldpath $boost_cv_rpath_link_ldflag$boost_ldpath"
         Boost_lib_LDPATH="$boost_ldpath"
-        break 7
+        break 8
       else
         boost_failed_libs="$boost_failed_libs@$boost_lib@"
       fi
-    done
-  done
-done
-done
-done
-done
+    done # boost_ldpath
+  done # boost_lib
+done # boost_suffix_
+done # boost_rtopt_
+done # boost_mt_
+done # boost_ver_
+done # boost_tag_
 done # boost_lib_
 rm -f conftest.$ac_objext
 ])
@@ -1105,10 +1115,10 @@ BOOST_DEFUN([Program_Options],
 # _BOOST_PYTHON_CONFIG(VARIABLE, FLAG)
 # ------------------------------------
 # Save VARIABLE, and define it via `python-config --FLAG`.
-# Substitute BOOST_PYTHON_VARIABLE.
+# Substitute BOOST_PYTHON_<VARIABLE>.
 m4_define([_BOOST_PYTHON_CONFIG],
-[AC_SUBST([BOOST_PYTHON_$1],
-          [`python-config --$2 2>/dev/null`])dnl
+[_boost_py_$1=`${PYTHON-python}-config --$2 2>/dev/null`
+AC_SUBST([BOOST_PYTHON_$1], [$_boost_py_$1])dnl
 boost_python_save_$1=$$1
 $1="$$1 $BOOST_PYTHON_$1"])
 
@@ -1117,14 +1127,23 @@ $1="$$1 $BOOST_PYTHON_$1"])
 # --------------------------------
 # Look for Boost.Python.  For the documentation of PREFERRED-RT-OPT,
 # see the documentation of BOOST_FIND_LIB above.
+#
 BOOST_DEFUN([Python],
 [_BOOST_PYTHON_CONFIG([CPPFLAGS], [includes])
 _BOOST_PYTHON_CONFIG([LDFLAGS],   [ldflags])
 _BOOST_PYTHON_CONFIG([LIBS],      [libs])
 m4_pattern_allow([^BOOST_PYTHON_MODULE$])dnl
-BOOST_FIND_LIBS([python], [python python3], [$1],
-                [boost/python.hpp],
-                [], [BOOST_PYTHON_MODULE(empty) {}])
+# Debian installs 'libboost_python-py27.so',
+# 'libboost_python-py34.so', or even 'libboost_python-mt-py27.so':
+# note that the '-pyXY' extension is _after_ the '-mt'.
+_boost_py=$(echo "-py$PYTHON_VERSION" | sed -e 's/\.//')
+BOOST_FIND_LIBS([python], [$PYTHON python python3],
+                [$1], [boost/python.hpp],
+                [], [BOOST_PYTHON_MODULE(empty) {}],
+                [$_boost_py])
+# Add the dependencies revealed by python-config.
+BOOST_PYTHON_LDFLAGS="$BOOST_PYTHON_LDFLAGS $_boost_py_LDFLAGS"
+BOOST_PYTHON_LIBS="$BOOST_PYTHON_LIBS $_boost_py_LIBS"
 CPPFLAGS=$boost_python_save_CPPFLAGS
 LDFLAGS=$boost_python_save_LDFLAGS
 LIBS=$boost_python_save_LIBS
@@ -1644,5 +1663,6 @@ rm -f core conftest.err conftest_ipa8_conftest.oo \
 ])# _BOOST_AC_LINK_IFELSE
 
 # Local Variables:
+# fill-column: 78
 # mode: autoconf
 # End:
