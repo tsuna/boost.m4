@@ -396,8 +396,8 @@ AC_DEFUN([_BOOST_FIND_LIBS],
     AC_MSG_ERROR([the libext variable is empty, did you invoke Libtool?])
   boost_save_ac_objext=$ac_objext
   # Generate the test file.
-  AC_LANG_CONFTEST([AC_LANG_PROGRAM([#include <$4>
-$6], [$5])])
+  AC_LANG_CONFTEST([AC_LANG_PROGRAM([$6
+#include <$4>], [$5])])
 dnl Optimization hacks: compiling C++ is slow, especially with Boost.  What
 dnl we're trying to do here is guess the right combination of link flags
 dnl (LIBS / LDFLAGS) to use a given library.  This can take several
@@ -572,6 +572,23 @@ BOOST_DEFUN([Bimap],
 # Look for Boost.Assign
 BOOST_DEFUN([Assign],
 [BOOST_FIND_HEADER([boost/assign.hpp])])
+
+
+# BOOST_ATOMIC([PREFERRED-RT-OPT])
+# -------------------------------
+# Look for Boost.Atomic.  For the documentation of PREFERRED-RT-OPT, see the
+# documentation of BOOST_FIND_LIB above.
+BOOST_DEFUN([Atomic],
+[BOOST_FIND_LIB([atomic], [$1],
+                [boost/atomic.hpp],
+                [boost::atomic<int> a;],
+                [#ifdef HAVE_UNISTD_H
+#include <unistd.h>
+#endif
+#ifdef HAVE_STDINT_H
+#include <stdint.h>
+#endif])
+])# BOOST_ATOMIC
 
 
 # BOOST_BIND()
