@@ -7,4 +7,4 @@ addons:
 script:
   - autoreconf -fi
   - ./configure
-  - make check
+  - make check || (cat tests/testsuite.log; false)
