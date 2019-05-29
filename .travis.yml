@@ -1,0 +1,15 @@
+language: cpp
+compiler:
+  - gcc
+  - clang
+addons:
+  apt:
+    packages:
+      - libboost-all-dev
+      - ccache
+
+script:
+  - export PATH=/usr/lib/ccache:$PATH
+  - autoreconf -fi
+  - ./configure
+  - make check || (cat tests/testsuite.log; false)
