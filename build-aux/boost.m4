@@ -22,7 +22,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 m4_define([_BOOST_SERIAL], [m4_translit([
-# serial 29
+# serial 30
 ], [#
 ], [])])
 
@@ -335,9 +335,6 @@ case $Boost_lib in #(
     AC_SUBST(AS_TR_CPP([BOOST_$1_LDPATH]), [$Boost_lib_LDPATH])dnl
     AC_SUBST([BOOST_LDPATH], [$Boost_lib_LDPATH])dnl
     AC_SUBST(AS_TR_CPP([BOOST_$1_LIBS]), [$Boost_lib_LIBS])dnl
-    ;;
-  (no) _AC_MSG_LOG_CONFTEST
-    AC_MSG_ERROR([cannot find flags to link with the Boost $1 library (libboost-$1)])
     ;;
 esac
 CPPFLAGS=$boost_save_CPPFLAGS
