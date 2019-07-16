@@ -326,7 +326,8 @@ AS_VAR_PUSHDEF([Boost_lib], [boost_cv_lib_$1])dnl
 AS_VAR_PUSHDEF([Boost_lib_LDFLAGS], [boost_cv_lib_$1_LDFLAGS])dnl
 AS_VAR_PUSHDEF([Boost_lib_LDPATH], [boost_cv_lib_$1_LDPATH])dnl
 AS_VAR_PUSHDEF([Boost_lib_LIBS], [boost_cv_lib_$1_LIBS])dnl
-BOOST_FIND_HEADER([$4])
+AS_IF([test x"$7" != "xno"], [not_found_header=':'])
+BOOST_FIND_HEADER([$4], [$not_found_header])
 boost_save_CPPFLAGS=$CPPFLAGS
 CPPFLAGS="$CPPFLAGS $BOOST_CPPFLAGS"
 AC_CACHE_CHECK([for the Boost $1 library], [Boost_lib],
@@ -773,6 +774,7 @@ BOOST_FIND_HEADER([boost/lexical_cast.hpp])
 # 1.53.0
 BOOST_DEFUN([Coroutine],
 [
+AS_IF([test x"$2" != "xno"], [not_found_header=':'])
 boost_coroutine_save_LIBS=$LIBS
 boost_coroutine_save_LDFLAGS=$LDFLAGS
 # Link-time dependency from coroutine to context
@@ -787,7 +789,7 @@ LDFLAGS="$LDFLAGS $BOOST_CONTEXT_LDFLAGS"
 
 # in 1.53 coroutine was a header only library
 if test $boost_major_version -eq 153; then
-  BOOST_FIND_HEADER([boost/coroutine/coroutine.hpp])
+  BOOST_FIND_HEADER([boost/coroutine/coroutine.hpp], [$not_found_header])
 else
   BOOST_FIND_LIB([coroutine], [$1],
 		  [boost/coroutine/coroutine.hpp],
