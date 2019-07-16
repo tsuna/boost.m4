@@ -22,7 +22,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 m4_define([_BOOST_SERIAL], [m4_translit([
-# serial 29
+# serial 30
 ], [#
 ], [])])
 
@@ -288,7 +288,7 @@ fi
 
 # BOOST_FIND_LIBS([COMPONENT-NAME], [CANDIDATE-LIB-NAMES],
 #                 [PREFERRED-RT-OPT], [HEADER-NAME], [CXX-TEST],
-#                 [CXX-PROLOGUE])
+#                 [CXX-PROLOGUE], [ERROR_ON_UNUSABLE])
 # --------------------------------------------------------------
 # Look for the Boost library COMPONENT-NAME (e.g., `thread', for
 # libboost_thread) under the possible CANDIDATE-LIB-NAMES (e.g.,
@@ -309,6 +309,9 @@ fi
 # builds.  Some sample values for PREFERRED-RT-OPT: (nothing), mt, d, mt-d, gdp
 # ...  If you want to make sure you have a specific version of Boost
 # (eg, >= 1.33) you *must* invoke BOOST_REQUIRE before this macro.
+#
+# ERROR_ON_UNUSABLE can be set to "no" if the caller does not want their
+# configure to fail
 AC_DEFUN([BOOST_FIND_LIBS],
 [AC_REQUIRE([BOOST_REQUIRE])dnl
 AC_REQUIRE([_BOOST_FIND_COMPILER_TAG])dnl
@@ -337,7 +340,9 @@ case $Boost_lib in #(
     AC_SUBST(AS_TR_CPP([BOOST_$1_LIBS]), [$Boost_lib_LIBS])dnl
     ;;
   (no) _AC_MSG_LOG_CONFTEST
-    AC_MSG_ERROR([cannot find flags to link with the Boost $1 library (libboost-$1)])
+    AS_IF([test x"$7" != "xno"], [
+      AC_MSG_ERROR([cannot find flags to link with the Boost $1 library (libboost-$1)])
+    ])
     ;;
 esac
 CPPFLAGS=$boost_save_CPPFLAGS
@@ -352,16 +357,18 @@ fi
 
 # BOOST_FIND_LIB([LIB-NAME],
 #                [PREFERRED-RT-OPT], [HEADER-NAME], [CXX-TEST],
-#                [CXX-PROLOGUE])
+#                [CXX-PROLOGUE], [ERROR_ON_UNUSABLE])
 # --------------------------------------------------------------
 # Backward compatibility wrapper for BOOST_FIND_LIBS.
+# ERROR_ON_UNUSABLE can be set to "no" if the caller does not want their
+# configure to fail
 AC_DEFUN([BOOST_FIND_LIB],
 [BOOST_FIND_LIBS([$1], $@)])
 
 
 # _BOOST_FIND_LIBS([LIB-NAME], [CANDIDATE-LIB-NAMES],
 #                 [PREFERRED-RT-OPT], [HEADER-NAME], [CXX-TEST],
-#                 [CXX-PROLOGUE])
+#                 [CXX-PROLOGUE], [ERROR_ON_UNUSABLE])
 # --------------------------------------------------------------
 # Real implementation of BOOST_FIND_LIBS: rely on these local macros:
 # Boost_lib, Boost_lib_LDFLAGS, Boost_lib_LDPATH, Boost_lib_LIBS
@@ -373,6 +380,9 @@ AC_DEFUN([BOOST_FIND_LIB],
 # usually installed.  If we can't find the standard variants, we try
 # to enforce -mt (for instance on MacOSX, libboost_thread.dylib
 # doesn't exist but there's -obviously- libboost_thread-mt.dylib).
+#
+# ERROR_ON_UNUSABLE can be set to "no" if the caller does not want their
+# configure to fail
 AC_DEFUN([_BOOST_FIND_LIBS],
 [Boost_lib=no
   case "$3" in #(
@@ -420,7 +430,10 @@ dnl empty because the test file is generated only once above (before we
 dnl start the for loops).
   AC_COMPILE_IFELSE([],
     [ac_objext=do_not_rm_me_plz],
-    [AC_MSG_ERROR([cannot compile a test that uses Boost $1])])
+    [AS_IF([test x"$7" != x"no"], [
+       AC_MSG_ERROR([cannot compile a test that uses Boost $1])
+     ])
+    ])
   ac_objext=$boost_save_ac_objext
   boost_failed_libs=
 # Don't bother to ident the following nested for loops, only the 2
