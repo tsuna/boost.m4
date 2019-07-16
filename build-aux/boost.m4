@@ -591,7 +591,7 @@ BOOST_DEFUN([Assign],
 [BOOST_FIND_HEADER([boost/assign.hpp])])
 
 
-# BOOST_ATOMIC([PREFERRED-RT-OPT])
+# BOOST_ATOMIC([PREFERRED-RT-OPT], [ERROR_ON_UNUSABLE])
 # -------------------------------
 # Look for Boost.Atomic.  For the documentation of PREFERRED-RT-OPT, see the
 # documentation of BOOST_FIND_LIB above.
@@ -599,13 +599,12 @@ BOOST_DEFUN([Atomic],
 [BOOST_FIND_LIB([atomic], [$1],
                 [boost/atomic.hpp],
                 [boost::atomic<int> a;],
-                [ ],
                 [#ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
 #ifdef HAVE_STDINT_H
 #include <stdint.h>
-#endif])
+#endif], [$2])
 ])# BOOST_ATOMIC
 
 
@@ -623,7 +622,7 @@ BOOST_DEFUN([Cast],
 [BOOST_FIND_HEADER([boost/cast.hpp])])
 
 
-# BOOST_CHRONO()
+# BOOST_CHRONO([PREFERRED-RT-OPT], [ERROR_ON_UNUSABLE])
 # --------------
 # Look for Boost.Chrono.
 BOOST_DEFUN([Chrono],
@@ -631,7 +630,7 @@ BOOST_DEFUN([Chrono],
 # added as of 1.35.0.  If we have a version <1.35, we must not attempt to
 # find Boost.System as it didn't exist by then.
 if test $boost_major_version -ge 135; then
-  BOOST_SYSTEM([$1])
+  BOOST_SYSTEM([$1], [$2])
 fi # end of the Boost.System check.
 boost_filesystem_save_LIBS=$LIBS
 boost_filesystem_save_LDFLAGS=$LDFLAGS
@@ -640,7 +639,7 @@ LIBS="$LIBS $BOOST_SYSTEM_LIBS"
 LDFLAGS="$LDFLAGS $BOOST_SYSTEM_LDFLAGS"
 BOOST_FIND_LIB([chrono], [$1],
                 [boost/chrono.hpp],
-                [boost::chrono::thread_clock d;])
+                [boost::chrono::thread_clock d;], [], [$2])
 if test $enable_static_boost = yes && test $boost_major_version -ge 135; then
   BOOST_CHRONO_LIBS="$BOOST_CHRONO_LIBS $BOOST_SYSTEM_LIBS"
 fi
@@ -649,7 +648,7 @@ LDFLAGS=$boost_filesystem_save_LDFLAGS
 ])# BOOST_CHRONO
 
 
-# BOOST_CONTEXT([PREFERRED-RT-OPT])
+# BOOST_CONTEXT([PREFERRED-RT-OPT], [ERROR_ON_UNUSABLE])
 # -----------------------------------
 # Look for Boost.Context.  For the documentation of PREFERRED-RT-OPT, see the
 # documentation of BOOST_FIND_LIB above.
@@ -689,7 +688,7 @@ for (int j=0;j<10;++j) {
     source=source.resume();
 }
 return a == 34;
-]])
+]], [], [$2])
 
 else
 
@@ -749,7 +748,7 @@ static void f(intptr_t i) {
     ctx::jump_fcontext(&fc, fcm, i * 2);
 }
 #endif
-])
+], [], [$2])
 
 fi
 
@@ -767,7 +766,7 @@ BOOST_FIND_HEADER([boost/lexical_cast.hpp])
 ])# BOOST_CONVERSION
 
 
-# BOOST_COROUTINE([PREFERRED-RT-OPT])
+# BOOST_COROUTINE([PREFERRED-RT-OPT], [ERROR_ON_UNUSABLE])
 # -----------------------------------
 # Look for Boost.Coroutine.  For the documentation of PREFERRED-RT-OPT, see the
 # documentation of BOOST_FIND_LIB above.  This library was introduced in Boost
@@ -777,10 +776,10 @@ BOOST_DEFUN([Coroutine],
 boost_coroutine_save_LIBS=$LIBS
 boost_coroutine_save_LDFLAGS=$LDFLAGS
 # Link-time dependency from coroutine to context
-BOOST_CONTEXT([$1])
+BOOST_CONTEXT([$1], [$2])
 # Starting from Boost 1.55 a dependency on Boost.System is added
 if test $boost_major_version -ge 155; then
-  BOOST_SYSTEM([$1])
+  BOOST_SYSTEM([$1], [$2])
 fi
 m4_pattern_allow([^BOOST_(CONTEXT|SYSTEM)_(LIBS|LDFLAGS)])
 LIBS="$LIBS $BOOST_CONTEXT_LIBS $BOOST_SYSTEM_LIBS"
@@ -799,7 +798,7 @@ else
   #else
   boost::coroutines::asymmetric_coroutine<int>::pull_type coro; coro.get();
   #endif
-  ])
+  ], [], [$2])
 fi
 # Link-time dependency from coroutine to context, existed only in 1.53, in 1.54
 # coroutine doesn't use context from its headers but from its library.
@@ -824,14 +823,14 @@ BOOST_DEFUN([CRC],
 ])# BOOST_CRC
 
 
-# BOOST_DATE_TIME([PREFERRED-RT-OPT])
+# BOOST_DATE_TIME([PREFERRED-RT-OPT], [ERROR_ON_UNUSABLE])
 # -----------------------------------
 # Look for Boost.Date_Time.  For the documentation of PREFERRED-RT-OPT, see the
 # documentation of BOOST_FIND_LIB above.
 BOOST_DEFUN([Date_Time],
 [BOOST_FIND_LIB([date_time], [$1],
                 [boost/date_time/posix_time/posix_time.hpp],
-                [boost::posix_time::ptime t;])
+                [boost::posix_time::ptime t;], [], [$2])
 ])# BOOST_DATE_TIME
 
 
@@ -842,7 +841,7 @@ BOOST_DEFUN([Exception],
 [BOOST_FIND_HEADER([boost/exception/all.hpp])])
 
 
-# BOOST_FILESYSTEM([PREFERRED-RT-OPT])
+# BOOST_FILESYSTEM([PREFERRED-RT-OPT], [ERROR_ON_UNUSABLE])
 # ------------------------------------
 # Look for Boost.Filesystem.  For the documentation of PREFERRED-RT-OPT, see
 # the documentation of BOOST_FIND_LIB above.
@@ -853,7 +852,7 @@ BOOST_DEFUN([Filesystem],
 # added as of 1.35.0.  If we have a version <1.35, we must not attempt to
 # find Boost.System as it didn't exist by then.
 if test $boost_major_version -ge 135; then
-  BOOST_SYSTEM([$1])
+  BOOST_SYSTEM([$1], [$2])
 fi # end of the Boost.System check.
 boost_filesystem_save_LIBS=$LIBS
 boost_filesystem_save_LDFLAGS=$LDFLAGS
@@ -861,7 +860,8 @@ m4_pattern_allow([^BOOST_SYSTEM_(LIBS|LDFLAGS)$])dnl
 LIBS="$LIBS $BOOST_SYSTEM_LIBS"
 LDFLAGS="$LDFLAGS $BOOST_SYSTEM_LDFLAGS"
 BOOST_FIND_LIB([filesystem], [$1],
-                [boost/filesystem/path.hpp], [boost::filesystem::path p;])
+                [boost/filesystem/path.hpp], [boost::filesystem::path p;],
+                [], [$2])
 if test $enable_static_boost = yes && test $boost_major_version -ge 135; then
   BOOST_FILESYSTEM_LIBS="$BOOST_FILESYSTEM_LIBS $BOOST_SYSTEM_LIBS"
 fi
@@ -921,7 +921,7 @@ BOOST_DEFUN([Geometry],
 ])# BOOST_GEOMETRY
 
 
-# BOOST_GRAPH([PREFERRED-RT-OPT])
+# BOOST_GRAPH([PREFERRED-RT-OPT], [ERROR_ON_UNUSABLE])
 # -------------------------------
 # Look for Boost.Graphs.  For the documentation of PREFERRED-RT-OPT, see the
 # documentation of BOOST_FIND_LIB above.
@@ -930,13 +930,14 @@ BOOST_DEFUN([Graph],
 boost_graph_save_LDFLAGS=$LDFLAGS
 # Link-time dependency from graph to regex was added as of 1.40.0.
 if test $boost_major_version -ge 140; then
-  BOOST_REGEX([$1])
+  BOOST_REGEX([$1], [$2])
   m4_pattern_allow([^BOOST_REGEX_(LIBS|LDFLAGS)$])dnl
   LIBS="$LIBS $BOOST_REGEX_LIBS"
   LDFLAGS="$LDFLAGS $BOOST_REGEX_LDFLAGS"
 fi
 BOOST_FIND_LIB([graph], [$1],
-                [boost/graph/adjacency_list.hpp], [boost::adjacency_list<> g;])
+                [boost/graph/adjacency_list.hpp], [boost::adjacency_list<> g;],
+                [], [$2])
 LIBS=$boost_graph_save_LIBS
 LDFLAGS=$boost_graph_save_LDFLAGS
 ])# BOOST_GRAPH
@@ -949,14 +950,15 @@ BOOST_DEFUN([Hash],
 [BOOST_FIND_HEADER([boost/functional/hash.hpp])])
 
 
-# BOOST_IOSTREAMS([PREFERRED-RT-OPT])
+# BOOST_IOSTREAMS([PREFERRED-RT-OPT], [ERROR_ON_UNUSABLE])
 # -----------------------------------
 # Look for Boost.IOStreams.  For the documentation of PREFERRED-RT-OPT, see the
 # documentation of BOOST_FIND_LIB above.
 BOOST_DEFUN([IOStreams],
 [BOOST_FIND_LIB([iostreams], [$1],
                 [boost/iostreams/device/file_descriptor.hpp],
-                [boost::iostreams::file_descriptor fd; fd.close();])
+                [boost::iostreams::file_descriptor fd; fd.close();],
+                [], [$2])
 ])# BOOST_IOSTREAMS
 
 
@@ -974,7 +976,7 @@ BOOST_DEFUN([Lambda],
 [BOOST_FIND_HEADER([boost/lambda/lambda.hpp])])
 
 
-# BOOST_LOCALE()
+# BOOST_LOCALE([PREFERRED-RT-OPT], [ERROR_ON_UNUSABLE])
 # --------------
 # Look for Boost.Locale
 BOOST_DEFUN([Locale],
@@ -983,40 +985,40 @@ boost_locale_save_LIBS=$LIBS
 boost_locale_save_LDFLAGS=$LDFLAGS
 # require SYSTEM for boost-1.50.0 and up
 if test $boost_major_version -ge 150; then
-  BOOST_SYSTEM([$1])
+  BOOST_SYSTEM([$1], [$2])
   m4_pattern_allow([^BOOST_SYSTEM_(LIBS|LDFLAGS)$])dnl
   LIBS="$LIBS $BOOST_SYSTEM_LIBS"
   LDFLAGS="$LDFLAGS $BOOST_SYSTEM_LDFLAGS"
 fi # end of the Boost.System check.
 BOOST_FIND_LIB([locale], [$1],
     [boost/locale.hpp],
-    [[boost::locale::generator gen; std::locale::global(gen(""));]])
+    [[boost::locale::generator gen; std::locale::global(gen(""));]], [], [$2])
 LIBS=$boost_locale_save_LIBS
 LDFLAGS=$boost_locale_save_LDFLAGS
 ])# BOOST_LOCALE
 
-# BOOST_LOG([PREFERRED-RT-OPT])
+# BOOST_LOG([PREFERRED-RT-OPT], [ERROR_ON_UNUSABLE])
 # -----------------------------
 # Look for Boost.Log.  For the documentation of PREFERRED-RT-OPT, see the
 # documentation of BOOST_FIND_LIB above.
 BOOST_DEFUN([Log],
 [boost_log_save_LIBS=$LIBS
 boost_log_save_LDFLAGS=$LDFLAGS
-BOOST_SYSTEM([$1])
-BOOST_FILESYSTEM([$1])
-BOOST_DATE_TIME([$1])
+BOOST_SYSTEM([$1], [$2])
+BOOST_FILESYSTEM([$1], [$2])
+BOOST_DATE_TIME([$1], [$2])
 m4_pattern_allow([^BOOST_(SYSTEM|FILESYSTEM|DATE_TIME)_(LIBS|LDFLAGS)$])dnl
 LIBS="$LIBS $BOOST_DATE_TIME_LIBS $BOOST_FILESYSTEM_LIBS $BOOST_SYSTEM_LIBS"
 LDFLAGS="$LDFLAGS $BOOST_DATE_TIME_LDFLAGS $BOOST_FILESYSTEM_LDFLAGS $BOOST_SYSTEM_LDFLAGS"
 BOOST_FIND_LIB([log], [$1],
     [boost/log/core/core.hpp],
-    [boost::log::attribute a; a.get_value();])
+    [boost::log::attribute a; a.get_value();], [], [$2])
 LIBS=$boost_log_save_LIBS
 LDFLAGS=$boost_log_save_LDFLAGS
 ])# BOOST_LOG
 
 
-# BOOST_LOG_SETUP([PREFERRED-RT-OPT])
+# BOOST_LOG_SETUP([PREFERRED-RT-OPT], [ERROR_ON_UNUSABLE])
 # -----------------------------------
 # Look for Boost.Log.  For the documentation of PREFERRED-RT-OPT, see the
 # documentation of BOOST_FIND_LIB above.
@@ -1029,7 +1031,7 @@ LIBS="$LIBS $BOOST_LOG_LIBS"
 LDFLAGS="$LDFLAGS $BOOST_LOG_LDFLAGS"
 BOOST_FIND_LIB([log_setup], [$1],
     [boost/log/utility/setup/from_settings.hpp],
-    [boost::log::basic_settings<char> bs; bs.empty();])
+    [boost::log::basic_settings<char> bs; bs.empty();], [], [$2])
 LIBS=$boost_log_setup_save_LIBS
 LDFLAGS=$boost_log_setup_save_LDFLAGS
 ])# BOOST_LOG_SETUP
@@ -1047,7 +1049,7 @@ BOOST_DEFUN([Math],
 [BOOST_FIND_HEADER([boost/math/special_functions.hpp])])
 
 
-# BOOST_MPI([PREFERRED-RT-OPT])
+# BOOST_MPI([PREFERRED-RT-OPT], [ERROR_ON_UNUSABLE])
 # -------------------------------
 # Look for Boost MPI.  For the documentation of PREFERRED-RT-OPT, see the
 # documentation of BOOST_FIND_LIB above.  Uses MPICXX variable if it is
@@ -1064,7 +1066,8 @@ BOOST_FIND_LIB([mpi], [$1],
                [boost/mpi.hpp],
                [int argc = 0;
                 char **argv = 0;
-                boost::mpi::environment env(argc,argv);])
+                boost::mpi::environment env(argc,argv);],
+               [], [$2])
 CXX=${boost_save_CXX}
 CXXCPP=${boost_save_CXXCPP}
 ])# BOOST_MPI
@@ -1121,14 +1124,15 @@ BOOST_DEFUN([Preprocessor],
 [BOOST_FIND_HEADER([boost/preprocessor/repeat.hpp])])
 
 
-# BOOST_PROPERTY_TREE([PREFERRED-RT-OPT])
+# BOOST_PROPERTY_TREE([PREFERRED-RT-OPT], [ERROR_ON_UNUSABLE])
 # -----------------------------------------
 # Look for Boost.Property_Tree.  For the documentation of PREFERRED-RT-OPT,
 # see the documentation of BOOST_FIND_LIB above.
 BOOST_DEFUN([Property_Tree],
 [BOOST_FIND_LIB([property_tree], [$1],
                 [boost/property_tree/ptree.hpp],
-                [boost::property_tree::ptree pt; boost::property_tree::read_xml d("test", pt);])
+                [boost::property_tree::ptree pt; boost::property_tree::read_xml d("test", pt);],
+                [], [$2])
 ])# BOOST_PROPERTY_TREE
 
 
@@ -1159,14 +1163,15 @@ BOOST_DEFUN([Uuid],
 [BOOST_FIND_HEADER([boost/uuid/uuid.hpp])])
 
 
-# BOOST_PROGRAM_OPTIONS([PREFERRED-RT-OPT])
+# BOOST_PROGRAM_OPTIONS([PREFERRED-RT-OPT], [ERROR_ON_UNUSABLE])
 # -----------------------------------------
 # Look for Boost.Program_options.  For the documentation of PREFERRED-RT-OPT,
 # see the documentation of BOOST_FIND_LIB above.
 BOOST_DEFUN([Program_Options],
 [BOOST_FIND_LIB([program_options], [$1],
                 [boost/program_options.hpp],
-                [boost::program_options::options_description d("test");])
+                [boost::program_options::options_description d("test");],
+                [], [$2])
 ])# BOOST_PROGRAM_OPTIONS
 
 
@@ -1182,7 +1187,7 @@ boost_python_save_$1=$$1
 $1="$$1 $BOOST_PYTHON_$1"])
 
 
-# BOOST_PYTHON([PREFERRED-RT-OPT])
+# BOOST_PYTHON([PREFERRED-RT-OPT], [ERROR_ON_UNUSABLE])
 # --------------------------------
 # Look for Boost.Python.  For the documentation of PREFERRED-RT-OPT,
 # see the documentation of BOOST_FIND_LIB above.
@@ -1193,7 +1198,7 @@ _BOOST_PYTHON_CONFIG([LIBS],      [libs])
 m4_pattern_allow([^BOOST_PYTHON_MODULE$])dnl
 BOOST_FIND_LIBS([python], [python python3], [$1],
                 [boost/python.hpp],
-                [], [BOOST_PYTHON_MODULE(empty) {}])
+                [], [BOOST_PYTHON_MODULE(empty) {}], [$2])
 CPPFLAGS=$boost_python_save_CPPFLAGS
 LDFLAGS=$boost_python_save_LDFLAGS
 LIBS=$boost_python_save_LIBS
@@ -1207,14 +1212,15 @@ BOOST_DEFUN([Ref],
 [BOOST_FIND_HEADER([boost/ref.hpp])])
 
 
-# BOOST_REGEX([PREFERRED-RT-OPT])
+# BOOST_REGEX([PREFERRED-RT-OPT], [ERROR_ON_UNUSABLE])
 # -------------------------------
 # Look for Boost.Regex.  For the documentation of PREFERRED-RT-OPT, see the
 # documentation of BOOST_FIND_LIB above.
 BOOST_DEFUN([Regex],
 [BOOST_FIND_LIB([regex], [$1],
                 [boost/regex.hpp],
-                [boost::regex exp("*"); boost::regex_match("foo", exp);])
+                [boost::regex exp("*"); boost::regex_match("foo", exp);],
+                [], [$2])
 ])# BOOST_REGEX
 
 
@@ -1225,7 +1231,7 @@ BOOST_DEFUN([SCOPE_EXIT],
 [BOOST_FIND_HEADER([boost/scope_exit.hpp])])
 
 
-# BOOST_SERIALIZATION([PREFERRED-RT-OPT])
+# BOOST_SERIALIZATION([PREFERRED-RT-OPT], [ERROR_ON_UNUSABLE])
 # ---------------------------------------
 # Look for Boost.Serialization.  For the documentation of PREFERRED-RT-OPT, see
 # the documentation of BOOST_FIND_LIB above.
@@ -1233,18 +1239,20 @@ BOOST_DEFUN([Serialization],
 [BOOST_FIND_LIB([serialization], [$1],
                 [boost/archive/text_oarchive.hpp],
                 [std::ostream* o = 0; // Cheap way to get an ostream...
-                boost::archive::text_oarchive t(*o);])
+                boost::archive::text_oarchive t(*o);],
+                [], [$2])
 ])# BOOST_SERIALIZATION
 
 
-# BOOST_SIGNALS([PREFERRED-RT-OPT])
+# BOOST_SIGNALS([PREFERRED-RT-OPT], [ERROR_ON_UNUSABLE])
 # ---------------------------------
 # Look for Boost.Signals.  For the documentation of PREFERRED-RT-OPT, see the
 # documentation of BOOST_FIND_LIB above.
 BOOST_DEFUN([Signals],
 [BOOST_FIND_LIB([signals], [$1],
                 [boost/signal.hpp],
-                [boost::signal<void ()> s;])
+                [boost::signal<void ()> s;],
+                [], [$2])
 ])# BOOST_SIGNALS
 
 
@@ -1280,7 +1288,7 @@ BOOST_DEFUN([String_Algo],
 ])
 
 
-# BOOST_SYSTEM([PREFERRED-RT-OPT])
+# BOOST_SYSTEM([PREFERRED-RT-OPT], [ERROR_ON_UNUSABLE])
 # --------------------------------
 # Look for Boost.System.  For the documentation of PREFERRED-RT-OPT, see the
 # documentation of BOOST_FIND_LIB above.  This library was introduced in Boost
@@ -1288,11 +1296,11 @@ BOOST_DEFUN([String_Algo],
 BOOST_DEFUN([System],
 [BOOST_FIND_LIB([system], [$1],
                 [boost/system/error_code.hpp],
-                [boost::system::error_code e; e.clear();])
+                [boost::system::error_code e; e.clear();], [], [$2])
 ])# BOOST_SYSTEM
 
 
-# BOOST_TEST([PREFERRED-RT-OPT])
+# BOOST_TEST([PREFERRED-RT-OPT], [ERROR_ON_UNUSABLE])
 # ------------------------------
 # Look for Boost.Test.  For the documentation of PREFERRED-RT-OPT, see the
 # documentation of BOOST_FIND_LIB above.
@@ -1302,11 +1310,11 @@ BOOST_FIND_LIB([unit_test_framework], [$1],
                [boost/test/unit_test.hpp], [BOOST_CHECK(2 == 2);],
                [using boost::unit_test::test_suite;
                test_suite* init_unit_test_suite(int argc, char ** argv)
-               { return NULL; }])
+               { return NULL; }], [$2])
 ])# BOOST_TEST
 
 
-# BOOST_THREAD([PREFERRED-RT-OPT])
+# BOOST_THREAD([PREFERRED-RT-OPT], [ERROR_ON_UNUSABLE])
 # ---------------------------------
 # Look for Boost.Thread.  For the documentation of PREFERRED-RT-OPT, see the
 # documentation of BOOST_FIND_LIB above.
@@ -1320,7 +1328,7 @@ boost_thread_save_LDFLAGS=$LDFLAGS
 boost_thread_save_CPPFLAGS=$CPPFLAGS
 # Link-time dependency from thread to system was added as of 1.49.0.
 if test $boost_major_version -ge 149; then
-BOOST_SYSTEM([$1])
+BOOST_SYSTEM([$1], [$2])
 fi # end of the Boost.System check.
 m4_pattern_allow([^BOOST_SYSTEM_(LIBS|LDFLAGS)$])dnl
 LIBS="$LIBS $BOOST_SYSTEM_LIBS $boost_cv_pthread_flag"
@@ -1339,7 +1347,7 @@ if test $boost_major_version -lt 148; then
 fi
 BOOST_FIND_LIBS([thread], [thread$boost_thread_lib_ext],
                 [$1],
-                [boost/thread.hpp], [boost::thread t; boost::mutex m;])
+                [boost/thread.hpp], [boost::thread t; boost::mutex m;], [], [$2])
 
 case $host_os in
   (*mingw*) boost_thread_w32_socket_link=-lws2_32;;
@@ -1415,7 +1423,7 @@ BOOST_FIND_HEADER([boost/ptr_container/ptr_map.hpp])
 ])# BOOST_POINTER_CONTAINER
 
 
-# BOOST_WAVE([PREFERRED-RT-OPT])
+# BOOST_WAVE([PREFERRED-RT-OPT], [ERROR_ON_UNUSABLE])
 # ------------------------------
 # NOTE: If you intend to use Wave/Spirit with thread support, make sure you
 # call BOOST_THREAD first.
@@ -1433,7 +1441,7 @@ LDFLAGS="$LDFLAGS $BOOST_SYSTEM_LDFLAGS $BOOST_FILESYSTEM_LDFLAGS \
 $BOOST_DATE_TIME_LDFLAGS $BOOST_THREAD_LDFLAGS"
 BOOST_FIND_LIB([wave], [$1],
                 [boost/wave.hpp],
-                [boost::wave::token_id id; get_token_name(id);])
+                [boost::wave::token_id id; get_token_name(id);], [], [$2])
 LIBS=$boost_wave_save_LIBS
 LDFLAGS=$boost_wave_save_LDFLAGS
 ])# BOOST_WAVE
