@@ -288,14 +288,17 @@ fi
 
 # BOOST_FIND_LIBS([COMPONENT-NAME], [CANDIDATE-LIB-NAMES],
 #                 [PREFERRED-RT-OPT], [HEADER-NAME], [CXX-TEST],
-#                 [CXX-PROLOGUE], [ERROR_ON_UNUSABLE])
+#                 [CXX-PROLOGUE], [CXX-POST-INCLUDE-PROLOGUE],
+#                 [ERROR_ON_UNUSABLE])
 # --------------------------------------------------------------
 # Look for the Boost library COMPONENT-NAME (e.g., `thread', for
 # libboost_thread) under the possible CANDIDATE-LIB-NAMES (e.g.,
 # "thread_win32 thread").  Check that HEADER-NAME works and check that
 # libboost_LIB-NAME can link with the code CXX-TEST.  The optional
 # argument CXX-PROLOGUE can be used to include some C++ code before
-# the `main' function.
+# the `main' function. The CXX-POST-INCLUDE-PROLOGUE can be used to
+# include some code before the `main' function, but after the
+# `#include <HEADER-NAME>'.
 #
 # Invokes BOOST_FIND_HEADER([HEADER-NAME]) (see above).
 #
@@ -326,7 +329,7 @@ AS_VAR_PUSHDEF([Boost_lib], [boost_cv_lib_$1])dnl
 AS_VAR_PUSHDEF([Boost_lib_LDFLAGS], [boost_cv_lib_$1_LDFLAGS])dnl
 AS_VAR_PUSHDEF([Boost_lib_LDPATH], [boost_cv_lib_$1_LDPATH])dnl
 AS_VAR_PUSHDEF([Boost_lib_LIBS], [boost_cv_lib_$1_LIBS])dnl
-AS_IF([test x"$7" != "xno"], [not_found_header=':'])
+AS_IF([test x"$8" = "xno"], [not_found_header='true'])
 BOOST_FIND_HEADER([$4], [$not_found_header])
 boost_save_CPPFLAGS=$CPPFLAGS
 CPPFLAGS="$CPPFLAGS $BOOST_CPPFLAGS"
@@ -341,7 +344,7 @@ case $Boost_lib in #(
     AC_SUBST(AS_TR_CPP([BOOST_$1_LIBS]), [$Boost_lib_LIBS])dnl
     ;;
   (no) _AC_MSG_LOG_CONFTEST
-    AS_IF([test x"$7" != "xno"], [
+    AS_IF([test x"$8" != "xno"], [
       AC_MSG_ERROR([cannot find flags to link with the Boost $1 library (libboost-$1)])
     ])
     ;;
@@ -358,7 +361,8 @@ fi
 
 # BOOST_FIND_LIB([LIB-NAME],
 #                [PREFERRED-RT-OPT], [HEADER-NAME], [CXX-TEST],
-#                [CXX-PROLOGUE], [ERROR_ON_UNUSABLE])
+#                [CXX-PROLOGUE], [CXX-POST-INCLUDE-PROLOGUE],
+#                [ERROR_ON_UNUSABLE])
 # --------------------------------------------------------------
 # Backward compatibility wrapper for BOOST_FIND_LIBS.
 # ERROR_ON_UNUSABLE can be set to "no" if the caller does not want their
@@ -369,7 +373,8 @@ AC_DEFUN([BOOST_FIND_LIB],
 
 # _BOOST_FIND_LIBS([LIB-NAME], [CANDIDATE-LIB-NAMES],
 #                 [PREFERRED-RT-OPT], [HEADER-NAME], [CXX-TEST],
-#                 [CXX-PROLOGUE], [ERROR_ON_UNUSABLE])
+#                 [CXX-PROLOGUE], [CXX-POST-INCLUDE-PROLOGUE],
+#                 [ERROR_ON_UNUSABLE])
 # --------------------------------------------------------------
 # Real implementation of BOOST_FIND_LIBS: rely on these local macros:
 # Boost_lib, Boost_lib_LDFLAGS, Boost_lib_LDPATH, Boost_lib_LIBS
@@ -431,7 +436,7 @@ dnl empty because the test file is generated only once above (before we
 dnl start the for loops).
   AC_COMPILE_IFELSE([],
     [ac_objext=do_not_rm_me_plz],
-    [AS_IF([test x"$7" != x"no"], [
+    [AS_IF([test x"$8" != x"no"], [
        AC_MSG_ERROR([cannot compile a test that uses Boost $1])
      ])
     ])
@@ -605,7 +610,7 @@ BOOST_DEFUN([Atomic],
 #endif
 #ifdef HAVE_STDINT_H
 #include <stdint.h>
-#endif], [$2])
+#endif], [], [$2])
 ])# BOOST_ATOMIC
 
 
@@ -640,7 +645,7 @@ LIBS="$LIBS $BOOST_SYSTEM_LIBS"
 LDFLAGS="$LDFLAGS $BOOST_SYSTEM_LDFLAGS"
 BOOST_FIND_LIB([chrono], [$1],
                 [boost/chrono.hpp],
-                [boost::chrono::thread_clock d;], [], [$2])
+                [boost::chrono::thread_clock d;], [], [], [$2])
 if test $enable_static_boost = yes && test $boost_major_version -ge 135; then
   BOOST_CHRONO_LIBS="$BOOST_CHRONO_LIBS $BOOST_SYSTEM_LIBS"
 fi
@@ -662,7 +667,7 @@ BOOST_DEFUN([Context],
 [boost_context_save_LIBS=$LIBS
  boost_context_save_LDFLAGS=$LDFLAGS
 if test $boost_major_version -ge 157; then
-  BOOST_THREAD([$1])
+  BOOST_THREAD([$1], [$2])
   m4_pattern_allow([^BOOST_THREAD_(LIBS|LDFLAGS)$])dnl
   LIBS="$LIBS $BOOST_THREAD_LIBS"
   LDFLAGS="$LDFLAGS $BOOST_THREAD_LDFLAGS"
@@ -689,7 +694,7 @@ for (int j=0;j<10;++j) {
     source=source.resume();
 }
 return a == 34;
-]], [], [$2])
+]], [], [], [$2])
 
 else
 
@@ -749,7 +754,7 @@ static void f(intptr_t i) {
     ctx::jump_fcontext(&fc, fcm, i * 2);
 }
 #endif
-], [], [$2])
+], [], [], [$2])
 
 fi
 
@@ -774,7 +779,6 @@ BOOST_FIND_HEADER([boost/lexical_cast.hpp])
 # 1.53.0
 BOOST_DEFUN([Coroutine],
 [
-AS_IF([test x"$2" != "xno"], [not_found_header=':'])
 boost_coroutine_save_LIBS=$LIBS
 boost_coroutine_save_LDFLAGS=$LDFLAGS
 # Link-time dependency from coroutine to context
@@ -789,6 +793,7 @@ LDFLAGS="$LDFLAGS $BOOST_CONTEXT_LDFLAGS"
 
 # in 1.53 coroutine was a header only library
 if test $boost_major_version -eq 153; then
+  AS_IF([test x"$2" = "xno"], [not_found_header='true'])
   BOOST_FIND_HEADER([boost/coroutine/coroutine.hpp], [$not_found_header])
 else
   BOOST_FIND_LIB([coroutine], [$1],
@@ -800,7 +805,7 @@ else
   #else
   boost::coroutines::asymmetric_coroutine<int>::pull_type coro; coro.get();
   #endif
-  ], [], [$2])
+  ], [], [], [$2])
 fi
 # Link-time dependency from coroutine to context, existed only in 1.53, in 1.54
 # coroutine doesn't use context from its headers but from its library.
@@ -832,7 +837,7 @@ BOOST_DEFUN([CRC],
 BOOST_DEFUN([Date_Time],
 [BOOST_FIND_LIB([date_time], [$1],
                 [boost/date_time/posix_time/posix_time.hpp],
-                [boost::posix_time::ptime t;], [], [$2])
+                [boost::posix_time::ptime t;], [], [], [$2])
 ])# BOOST_DATE_TIME
 
 
@@ -863,7 +868,7 @@ LIBS="$LIBS $BOOST_SYSTEM_LIBS"
 LDFLAGS="$LDFLAGS $BOOST_SYSTEM_LDFLAGS"
 BOOST_FIND_LIB([filesystem], [$1],
                 [boost/filesystem/path.hpp], [boost::filesystem::path p;],
-                [], [$2])
+                [], [], [$2])
 if test $enable_static_boost = yes && test $boost_major_version -ge 135; then
   BOOST_FILESYSTEM_LIBS="$BOOST_FILESYSTEM_LIBS $BOOST_SYSTEM_LIBS"
 fi
@@ -939,7 +944,7 @@ if test $boost_major_version -ge 140; then
 fi
 BOOST_FIND_LIB([graph], [$1],
                 [boost/graph/adjacency_list.hpp], [boost::adjacency_list<> g;],
-                [], [$2])
+                [], [], [$2])
 LIBS=$boost_graph_save_LIBS
 LDFLAGS=$boost_graph_save_LDFLAGS
 ])# BOOST_GRAPH
@@ -960,7 +965,7 @@ BOOST_DEFUN([IOStreams],
 [BOOST_FIND_LIB([iostreams], [$1],
                 [boost/iostreams/device/file_descriptor.hpp],
                 [boost::iostreams::file_descriptor fd; fd.close();],
-                [], [$2])
+                [], [], [$2])
 ])# BOOST_IOSTREAMS
 
 
@@ -994,7 +999,7 @@ if test $boost_major_version -ge 150; then
 fi # end of the Boost.System check.
 BOOST_FIND_LIB([locale], [$1],
     [boost/locale.hpp],
-    [[boost::locale::generator gen; std::locale::global(gen(""));]], [], [$2])
+    [[boost::locale::generator gen; std::locale::global(gen(""));]], [], [], [$2])
 LIBS=$boost_locale_save_LIBS
 LDFLAGS=$boost_locale_save_LDFLAGS
 ])# BOOST_LOCALE
@@ -1014,7 +1019,7 @@ LIBS="$LIBS $BOOST_DATE_TIME_LIBS $BOOST_FILESYSTEM_LIBS $BOOST_SYSTEM_LIBS"
 LDFLAGS="$LDFLAGS $BOOST_DATE_TIME_LDFLAGS $BOOST_FILESYSTEM_LDFLAGS $BOOST_SYSTEM_LDFLAGS"
 BOOST_FIND_LIB([log], [$1],
     [boost/log/core/core.hpp],
-    [boost::log::attribute a; a.get_value();], [], [$2])
+    [boost::log::attribute a; a.get_value();], [], [], [$2])
 LIBS=$boost_log_save_LIBS
 LDFLAGS=$boost_log_save_LDFLAGS
 ])# BOOST_LOG
@@ -1033,7 +1038,7 @@ LIBS="$LIBS $BOOST_LOG_LIBS"
 LDFLAGS="$LDFLAGS $BOOST_LOG_LDFLAGS"
 BOOST_FIND_LIB([log_setup], [$1],
     [boost/log/utility/setup/from_settings.hpp],
-    [boost::log::basic_settings<char> bs; bs.empty();], [], [$2])
+    [boost::log::basic_settings<char> bs; bs.empty();], [], [], [$2])
 LIBS=$boost_log_setup_save_LIBS
 LDFLAGS=$boost_log_setup_save_LDFLAGS
 ])# BOOST_LOG_SETUP
@@ -1069,7 +1074,7 @@ BOOST_FIND_LIB([mpi], [$1],
                [int argc = 0;
                 char **argv = 0;
                 boost::mpi::environment env(argc,argv);],
-               [], [$2])
+               [], [], [$2])
 CXX=${boost_save_CXX}
 CXXCPP=${boost_save_CXXCPP}
 ])# BOOST_MPI
@@ -1134,7 +1139,7 @@ BOOST_DEFUN([Property_Tree],
 [BOOST_FIND_LIB([property_tree], [$1],
                 [boost/property_tree/ptree.hpp],
                 [boost::property_tree::ptree pt; boost::property_tree::read_xml d("test", pt);],
-                [], [$2])
+                [], [], [$2])
 ])# BOOST_PROPERTY_TREE
 
 
@@ -1173,7 +1178,7 @@ BOOST_DEFUN([Program_Options],
 [BOOST_FIND_LIB([program_options], [$1],
                 [boost/program_options.hpp],
                 [boost::program_options::options_description d("test");],
-                [], [$2])
+                [], [], [$2])
 ])# BOOST_PROGRAM_OPTIONS
 
 
@@ -1200,7 +1205,7 @@ _BOOST_PYTHON_CONFIG([LIBS],      [libs])
 m4_pattern_allow([^BOOST_PYTHON_MODULE$])dnl
 BOOST_FIND_LIBS([python], [python python3], [$1],
                 [boost/python.hpp],
-                [], [BOOST_PYTHON_MODULE(empty) {}], [$2])
+                [], [BOOST_PYTHON_MODULE(empty) {}], [], [$2])
 CPPFLAGS=$boost_python_save_CPPFLAGS
 LDFLAGS=$boost_python_save_LDFLAGS
 LIBS=$boost_python_save_LIBS
@@ -1222,7 +1227,7 @@ BOOST_DEFUN([Regex],
 [BOOST_FIND_LIB([regex], [$1],
                 [boost/regex.hpp],
                 [boost::regex exp("*"); boost::regex_match("foo", exp);],
-                [], [$2])
+                [], [], [$2])
 ])# BOOST_REGEX
 
 
@@ -1242,7 +1247,7 @@ BOOST_DEFUN([Serialization],
                 [boost/archive/text_oarchive.hpp],
                 [std::ostream* o = 0; // Cheap way to get an ostream...
                 boost::archive::text_oarchive t(*o);],
-                [], [$2])
+                [], [], [$2])
 ])# BOOST_SERIALIZATION
 
 
@@ -1254,7 +1259,7 @@ BOOST_DEFUN([Signals],
 [BOOST_FIND_LIB([signals], [$1],
                 [boost/signal.hpp],
                 [boost::signal<void ()> s;],
-                [], [$2])
+                [], [], [$2])
 ])# BOOST_SIGNALS
 
 
@@ -1298,7 +1303,7 @@ BOOST_DEFUN([String_Algo],
 BOOST_DEFUN([System],
 [BOOST_FIND_LIB([system], [$1],
                 [boost/system/error_code.hpp],
-                [boost::system::error_code e; e.clear();], [], [$2])
+                [boost::system::error_code e; e.clear();], [], [], [$2])
 ])# BOOST_SYSTEM
 
 
@@ -1312,7 +1317,7 @@ BOOST_FIND_LIB([unit_test_framework], [$1],
                [boost/test/unit_test.hpp], [BOOST_CHECK(2 == 2);],
                [using boost::unit_test::test_suite;
                test_suite* init_unit_test_suite(int argc, char ** argv)
-               { return NULL; }], [$2])
+               { return NULL; }], [], [$2])
 ])# BOOST_TEST
 
 
@@ -1349,7 +1354,7 @@ if test $boost_major_version -lt 148; then
 fi
 BOOST_FIND_LIBS([thread], [thread$boost_thread_lib_ext],
                 [$1],
-                [boost/thread.hpp], [boost::thread t; boost::mutex m;], [], [$2])
+                [boost/thread.hpp], [boost::thread t; boost::mutex m;], [], [], [$2])
 
 case $host_os in
   (*mingw*) boost_thread_w32_socket_link=-lws2_32;;
@@ -1443,7 +1448,7 @@ LDFLAGS="$LDFLAGS $BOOST_SYSTEM_LDFLAGS $BOOST_FILESYSTEM_LDFLAGS \
 $BOOST_DATE_TIME_LDFLAGS $BOOST_THREAD_LDFLAGS"
 BOOST_FIND_LIB([wave], [$1],
                 [boost/wave.hpp],
-                [boost::wave::token_id id; get_token_name(id);], [], [$2])
+                [boost::wave::token_id id; get_token_name(id);], [], [], [$2])
 LIBS=$boost_wave_save_LIBS
 LDFLAGS=$boost_wave_save_LDFLAGS
 ])# BOOST_WAVE
