@@ -605,12 +605,13 @@ BOOST_DEFUN([Atomic],
 [BOOST_FIND_LIB([atomic], [$1],
                 [boost/atomic.hpp],
                 [boost::atomic<int> a;],
+                [ ],
                 [#ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
 #ifdef HAVE_STDINT_H
 #include <stdint.h>
-#endif], [], [$2])
+#endif], [$2])
 ])# BOOST_ATOMIC
 
 
