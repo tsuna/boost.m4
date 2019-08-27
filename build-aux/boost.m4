@@ -500,8 +500,6 @@ for boost_rtopt_ in $boost_rtopt '' -d; do
         continue
       fi
       boost_save_LDFLAGS=$LDFLAGS
-      # use an absolute path to the requested library to avoid finding it
-      # in the linker's default search path
       # Are we looking for a static library?
       case $boost_ldpath:$boost_rtopt_ in #(
         (*?*:*s*) # Yes (Non empty boost_ldpath + s in rt opt)
