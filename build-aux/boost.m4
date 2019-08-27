@@ -479,7 +479,12 @@ for boost_rtopt_ in $boost_rtopt '' -d; do
     # otherwise search the "standard" places, starting with a location
     # based upon where the headers are.
     AS_IF( [ test x"$with_boost" = x ],
-	  [ boost_ldpaths=`_boost_join_path ${boost_cv_inc_path%/include} ''  \
+	  [
+            AS_IF( [ test x"$boost_cv_inc_path" = xno || test x"$boost_cv_inc_path" = xyes ],
+                   [boost_tmp_lib=],
+                   [boost_tmp_lib=${boost_cv_inc_path%/include} ]
+                 )
+            boost_ldpaths=`_boost_join_path  $boost_tmp_lib ''  \
 	                  /opt/local/lib* /usr/local/lib* /opt/lib* /usr/lib* \
 		          C:/Boost/lib /lib*` ],
           [ boost_ldpaths=`_boost_join_path "$with_boost" "$with_boost/lib"` ]
