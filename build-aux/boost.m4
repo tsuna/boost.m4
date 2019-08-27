@@ -512,7 +512,9 @@ for boost_rtopt_ in $boost_rtopt '' -d; do
           Boost_lib_LIBS="-l$boost_lib";;
       esac
       # Don't waste time with libraries that don't exist
-      test -e "$Boost_lib_abs_path" || continue
+      if test x"$boost_ldpath" != x && test ! -e "$boost_lib_abs_path"; then
+        continue
+      fi
       boost_save_LIBS=$LIBS
       LIBS="$Boost_lib_LIBS $LIBS"
       test x"$boost_ldpath" != x && LDFLAGS=" -L$boost_ldpath $LDFLAGS"
