@@ -339,6 +339,7 @@ AS_VAR_PUSHDEF([Boost_lib], [boost_cv_lib_$1])dnl
 AS_VAR_PUSHDEF([Boost_lib_LDFLAGS], [boost_cv_lib_$1_LDFLAGS])dnl
 AS_VAR_PUSHDEF([Boost_lib_LDPATH], [boost_cv_lib_$1_LDPATH])dnl
 AS_VAR_PUSHDEF([Boost_lib_LIBS], [boost_cv_lib_$1_LIBS])dnl
+AS_VAR_PUSHDEF([Boost_lib_abs_path], [boost_cv_lib_$1_abs_path])dnl
 AS_IF([test x"$8" = "xno"], [not_found_header='true'])
 BOOST_FIND_HEADER([$4], [$not_found_header])
 boost_save_CPPFLAGS=$CPPFLAGS
@@ -499,15 +500,17 @@ for boost_rtopt_ in $boost_rtopt '' -d; do
       # Are we looking for a static library?
       case $boost_ldpath:$boost_rtopt_ in #(
         (*?*:*s*) # Yes (Non empty boost_ldpath + s in rt opt)
-          Boost_lib_LIBS="$boost_ldpath/lib$boost_lib.$libext" ;;
+          Boost_lib_abs_path="$boost_ldpath/lib$boost_lib.$libext"
+          Boost_lib_LIBS="$Boost_lib_abs_path" ;;
         (*) # No:
-          Boost_lib_LIBS="$boost_ldpath/lib$boost_lib$_boost_shrext" ;;
+          Boost_lib_abs_path="$boost_ldpath/lib$boost_lib$_boost_shrext"
+          Boost_lib_LIBS="-l$boost_lib";;
       esac
       # Don't waste time with libraries that don't exist
-      test -e "$Boost_lib_LIBS" || continue
+      test -e "$Boost_lib_abs_path" || continue
       boost_save_LIBS=$LIBS
       LIBS="$Boost_lib_LIBS $LIBS"
-      test x"$boost_ldpath" != x && LDFLAGS="$LDFLAGS -L$boost_ldpath"
+      test x"$boost_ldpath" != x && LDFLAGS=" -L$boost_ldpath $LDFLAGS"
 dnl First argument of AC_LINK_IFELSE left empty because the test file is
 dnl generated only once above (before we start the for loops).
       _BOOST_AC_LINK_IFELSE([],
@@ -527,8 +530,8 @@ dnl generated only once above (before we start the for loops).
              boost_rpath_link_ldflag_found=yes;;
            *)
             for boost_cv_rpath_link_ldflag in -Wl,-R, -Wl,-rpath,; do
-              LDFLAGS="$boost_save_LDFLAGS -L$boost_ldpath $boost_cv_rpath_link_ldflag$boost_ldpath"
-              LIBS="$Boost_lib_LIBS $boost_save_LIBS"
+              LDFLAGS="-L$boost_ldpath $boost_save_LDFLAGS $boost_cv_rpath_link_ldflag$boost_ldpath"
+              LIBS="$boost_save_LIBS $Boost_lib_LIBS"
               _BOOST_AC_LINK_IFELSE([],
                 [boost_rpath_link_ldflag_found=yes
                 break],
