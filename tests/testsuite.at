@@ -109,7 +109,7 @@ done
 AT_DATA([configure.ac],
 [[AC_INIT
 AC_CONFIG_AUX_DIR([$top_srcdir/build-aux])]
-AC_PROG_LIBTOOL
+LT_INIT
 AC_PROG_CXX
 $1
 [AC_OUTPUT
