@@ -787,7 +787,7 @@ static void f(intptr_t i) {
     ctx::jump_fcontext(&fc, fcm, i * 2);
 }
 #endif
-], [], [], [$2])
+], [], [$2])
 
 fi
 
