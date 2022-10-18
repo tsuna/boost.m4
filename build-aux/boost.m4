@@ -22,7 +22,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 m4_define([_BOOST_SERIAL], [m4_translit([
-# serial 38
+# serial 39
 ], [#
 ], [])])
 
@@ -226,7 +226,7 @@ AC_LANG_POP([C++])dnl
   AC_CACHE_CHECK([for Boost's header version],
     [boost_cv_lib_version],
     [m4_pattern_allow([^BOOST_LIB_VERSION$])dnl
-     _BOOST_SED_CPP([[/^boost-lib-version = /{s///;s/[\" ]//g;p;q;}]],
+     _BOOST_SED_CPP([[/^.*boost-lib-version = /{s///;s/[\" ]//g;p;q;}]],
                     [#include <boost/version.hpp>
 boost-lib-version = BOOST_LIB_VERSION],
     [boost_cv_lib_version=`cat conftest.i`])])
