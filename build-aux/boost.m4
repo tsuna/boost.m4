@@ -47,6 +47,16 @@ m4_define([_BOOST_SERIAL], [m4_translit([
 
 m4_pattern_forbid([^_?(BOOST|Boost)_])
 
+# _BOOST_SHELL_FUNCTIONS
+# --------------------------------------------------------
+#
+# Useful shell functions. Call
+#   AC_REQUIRE([_BOOST_SHELL_FUNCTIONS])
+# before using
+AC_DEFUN([_BOOST_SHELL_FUNCTIONS],
+[_boost_join_path() { _boost_join_path_save_IFS=$IFS; IFS=@ ; echo "$[]*" ; IFS=$_boost_join_path_save_IFS ; } ]
+)
+
 
 # _BOOST_SED_CPP(SED-PROGRAM, PROGRAM,
 #                [ACTION-IF-FOUND], [ACTION-IF-NOT-FOUND])
@@ -329,6 +339,7 @@ AS_VAR_PUSHDEF([Boost_lib], [boost_cv_lib_$1])dnl
 AS_VAR_PUSHDEF([Boost_lib_LDFLAGS], [boost_cv_lib_$1_LDFLAGS])dnl
 AS_VAR_PUSHDEF([Boost_lib_LDPATH], [boost_cv_lib_$1_LDPATH])dnl
 AS_VAR_PUSHDEF([Boost_lib_LIBS], [boost_cv_lib_$1_LIBS])dnl
+AS_VAR_PUSHDEF([Boost_lib_abs_path], [boost_cv_lib_$1_abs_path])dnl
 AS_IF([test x"$8" = "xno"], [not_found_header='true'])
 BOOST_FIND_HEADER([$4], [$not_found_header])
 boost_save_CPPFLAGS=$CPPFLAGS
@@ -390,7 +401,8 @@ AC_DEFUN([BOOST_FIND_LIB],
 # ERROR_ON_UNUSABLE can be set to "no" if the caller does not want their
 # configure to fail
 AC_DEFUN([_BOOST_FIND_LIBS],
-[Boost_lib=no
+[AC_REQUIRE([_BOOST_SHELL_FUNCTIONS])
+Boost_lib=no
   case "$3" in #(
     (mt | mt-) boost_mt=-mt; boost_rtopt=;; #(
     (mt* | mt-*) boost_mt=-mt; boost_rtopt=`expr "X$3" : 'Xmt-*\(.*\)'`;; #(
@@ -442,6 +454,7 @@ dnl start the for loops).
     ])
   ac_objext=$boost_save_ac_objext
   boost_failed_libs=
+  eval eval _boost_shrext=$shrext_cmds
 # Don't bother to ident the following nested for loops, only the 2
 # innermost ones matter.
 for boost_lib_ in $2; do
@@ -462,14 +475,26 @@ for boost_rtopt_ in $boost_rtopt '' -d; do
     case $boost_failed_libs in #(
       (*@$boost_lib@*) continue;;
     esac
-    # If with_boost is empty, we'll search in /lib first, which is not quite
-    # right so instead we'll try to a location based on where the headers are.
-    boost_tmp_lib=$with_boost
-    test x"$with_boost" = x && boost_tmp_lib=${boost_cv_inc_path%/include}
-    for boost_ldpath in "$boost_tmp_lib/lib" '' \
-             /opt/local/lib* /usr/local/lib* /opt/lib* /usr/lib* \
-             "$with_boost" C:/Boost/lib /lib*
+    # If with_boost is specified; search *only* within that hierarchy,
+    # otherwise search the "standard" places, starting with a location
+    # based upon where the headers are.
+    AS_IF( [ test x"$with_boost" = x ],
+	  [
+            AS_IF( [ test x"$boost_cv_inc_path" = xno || test x"$boost_cv_inc_path" = xyes ],
+                   [boost_tmp_lib=],
+                   [boost_tmp_lib=${boost_cv_inc_path%/include} ]
+                 )
+            boost_ldpaths=`_boost_join_path  $boost_tmp_lib ''  \
+	                  /opt/local/lib* /usr/local/lib* /opt/lib* /usr/lib* \
+		          C:/Boost/lib /lib*` ],
+          [ boost_ldpaths=`_boost_join_path "$with_boost" "$with_boost/lib"` ]
+    )
+
+    save_IFS=$IFS
+    IFS=@
+    for boost_ldpath in `echo "$boost_ldpaths"`
     do
+      IFS=$save_IFS
       # Don't waste time with directories that don't exist.
       if test x"$boost_ldpath" != x && test ! -e "$boost_ldpath"; then
         continue
@@ -478,14 +503,19 @@ for boost_rtopt_ in $boost_rtopt '' -d; do
       # Are we looking for a static library?
       case $boost_ldpath:$boost_rtopt_ in #(
         (*?*:*s*) # Yes (Non empty boost_ldpath + s in rt opt)
-          Boost_lib_LIBS="$boost_ldpath/lib$boost_lib.$libext"
-          test -e "$Boost_lib_LIBS" || continue;; #(
-        (*) # No: use -lboost_foo to find the shared library.
+          Boost_lib_abs_path="$boost_ldpath/lib$boost_lib.$libext"
+          Boost_lib_LIBS="$Boost_lib_abs_path" ;;
+        (*) # No:
+          Boost_lib_abs_path="$boost_ldpath/lib$boost_lib$_boost_shrext"
           Boost_lib_LIBS="-l$boost_lib";;
       esac
+      # Don't waste time with libraries that don't exist
+      if test x"$boost_ldpath" != x && test ! -e "$Boost_lib_abs_path"; then
+        continue
+      fi
       boost_save_LIBS=$LIBS
       LIBS="$Boost_lib_LIBS $LIBS"
-      test x"$boost_ldpath" != x && LDFLAGS="$LDFLAGS -L$boost_ldpath"
+      test x"$boost_ldpath" != x && LDFLAGS=" -L$boost_ldpath $LDFLAGS"
 dnl First argument of AC_LINK_IFELSE left empty because the test file is
 dnl generated only once above (before we start the for loops).
       _BOOST_AC_LINK_IFELSE([],
@@ -505,8 +535,8 @@ dnl generated only once above (before we start the for loops).
              boost_rpath_link_ldflag_found=yes;;
            *)
             for boost_cv_rpath_link_ldflag in -Wl,-R, -Wl,-rpath,; do
-              LDFLAGS="$boost_save_LDFLAGS -L$boost_ldpath $boost_cv_rpath_link_ldflag$boost_ldpath"
-              LIBS="$Boost_lib_LIBS $boost_save_LIBS"
+              LDFLAGS="-L$boost_ldpath $boost_save_LDFLAGS $boost_cv_rpath_link_ldflag$boost_ldpath"
+              LIBS="$boost_save_LIBS $Boost_lib_LIBS"
               _BOOST_AC_LINK_IFELSE([],
                 [boost_rpath_link_ldflag_found=yes
                 break],
