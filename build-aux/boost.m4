@@ -1216,15 +1216,15 @@ BOOST_DEFUN([Program_Options],
 
 
 
-# _BOOST_PYTHON_CONFIG(VARIABLE, FLAG)
+# _BOOST_PYTHON_CONFIG(PYTHON_CONFIG, VARIABLE, FLAG, EXTRA)
 # ------------------------------------
 # Save VARIABLE, and define it via `python-config --FLAG`.
 # Substitute BOOST_PYTHON_VARIABLE.
 m4_define([_BOOST_PYTHON_CONFIG],
-[AC_SUBST([BOOST_PYTHON_$1],
-          [`python-config --$2 2>/dev/null`])dnl
-boost_python_save_$1=$$1
-$1="$$1 $BOOST_PYTHON_$1"])
+[AC_SUBST([BOOST_PYTHON_$2],
+          [`$1 --$3 2>/dev/null`])dnl
+boost_python_save_$2=$$2
+$2="$$2 $BOOST_PYTHON_$2 $4"])
 
 
 # BOOST_PYTHON([PREFERRED-RT-OPT], [ERROR_ON_UNUSABLE])
@@ -1232,15 +1232,27 @@ $1="$$1 $BOOST_PYTHON_$1"])
 # Look for Boost.Python.  For the documentation of PREFERRED-RT-OPT,
 # see the documentation of BOOST_FIND_LIB above.
 BOOST_DEFUN([Python],
-[_BOOST_PYTHON_CONFIG([CPPFLAGS], [includes])
-_BOOST_PYTHON_CONFIG([LDFLAGS],   [ldflags])
-_BOOST_PYTHON_CONFIG([LIBS],      [libs])
+[
+boost_python_version=''
+boost_python_config_prog=''
+
+for python_version in 3.9 3.8 3.7 3.6 3.5 3 ''; do
+  AC_CHECK_PROGS(PYTHON_CONFIG_BIN, [python$python_version-config])
+  boost_python_config_prog=$PYTHON_CONFIG_BIN
+  boost_python_version=$python_version
+  AS_IF([test -n "$boost_python_config_prog"], [break])
+done
+AS_IF([test -z "$boost_python_config_prog"], AC_MSG_ERROR([Could not find a python-config executable]))
+
+_BOOST_PYTHON_CONFIG([$boost_python_config_prog], [CPPFLAGS],  [includes])
+_BOOST_PYTHON_CONFIG([$boost_python_config_prog], [LDFLAGS],   [ldflags], [-lpython$boost_python_version])
+_BOOST_PYTHON_CONFIG([$boost_python_config_prog], [LIBS],      [libs])
 m4_pattern_allow([^BOOST_PYTHON_MODULE$])dnl
 BOOST_FIND_LIBS([python], [python python3], [$1],
                 [boost/python.hpp],
                 [], [BOOST_PYTHON_MODULE(empty) {}], [], [$2])
 CPPFLAGS=$boost_python_save_CPPFLAGS
-LDFLAGS=$boost_python_save_LDFLAGS
+LDFLAGS=$boost_python_save_LDFLAGS -lpython$boost_python_version
 LIBS=$boost_python_save_LIBS
 ])# BOOST_PYTHON
 

@@ -28,7 +28,7 @@ HOWTO
    boost.m4 (set it to `.' if you put boost.m4 in the same, top-level
    directory).
 3. If you don't use GNU Libtool already, then time has come to do the switch.
-   Add AC_PROG_LIBTOOL to your configure.ac then, in all the Makefile.am of
+   Add LT_INIT to your configure.ac then, in all the Makefile.am of
    your project, change *_LIBRARIES to *_LTLIBRARIES (notice the extra `LT')
    for each of your library that depends on Boost.  This way, Automake will
    delegate the build of your libraries to Libtool which will do the necessary
