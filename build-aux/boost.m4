@@ -217,7 +217,7 @@ AC_LANG_POP([C++])dnl
         BOOST_CPPFLAGS=
         ;;#(
       *)
-        AC_SUBST([BOOST_CPPFLAGS], ["-I$boost_cv_inc_path"])dnl
+        AC_SUBST([BOOST_CPPFLAGS], ["-isystem $boost_cv_inc_path"])dnl
         ;;
     esac
   if test x"$boost_cv_inc_path" != xno; then
