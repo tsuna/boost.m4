@@ -1335,7 +1335,6 @@ BOOST_DEFUN([String_Algo],
 # 1.35.0 and is header only since 1.70.
 BOOST_DEFUN([System],
 [
-+[
 if test $boost_major_version -ge 170; then
   BOOST_FIND_HEADER([boost/system/error_code.hpp])
 else
